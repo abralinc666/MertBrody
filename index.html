@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EPİN – Roblox Robux, Valorant VP, PUBG UC ve Oyun Kodları</title>
+<meta name="description" content="Roblox Robux, Valorant VP, PUBG Mobile UC, Steam ve PlayStation dijital kodlarında %11 indirim, çoklu tedarikçi ve 7/24 anında Kod Kasası teslimatı.">
+<link rel="canonical" id="canon" href="https://epin.example.com/">
+<script type="application/ld+json" id="ld"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="ticker-bar" aria-label="Canlı Teslimat Akışı">
+  <div class="wrap ticker-wrap">
+    <span class="ticker-dot"></span>
+    <strong style="color:#4ade80;flex:none">CANLI TESLİMATLAR:</strong>
+    <div class="ticker-items" id="tickerItems"></div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="?cat=all" data-c="all" aria-label="EPİN ana sayfa">
+        <svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 10-13h-6z"/></svg>
+        epinpay<small>7/24 Dijital E-Pin & Top-Up</small>
+      </a>
+      <form class="search" role="search">
+        <input id="q" type="search" placeholder="Roblox Robux, Valorant VP, PUBG UC veya Steam ara…" aria-label="Ürün ara" autocomplete="off">
+        <svg viewBox="0 0 24 24" style="font-size:20px;color:var(--tx2)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </form>
+      <div class="acts">
+        <button class="wallet-pill" id="walletBtn" aria-label="Cüzdan Bakiyesi">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
+          <span class="t">TR /</span> <b id="walAmt">₺0,00</b>
+        </button>
+        <button id="cartBtn" aria-label="Sepet">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h3l3 12h11l2-8H6"/></svg>
+          <span class="badge" id="cnt">0</span>
+        </button>
+        <button id="acc">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span class="t">Giriş Yap</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Epinpay Tarzı Renkli Hap (Pill) Menüler -->
+    <nav class="pill-nav" aria-label="Hızlı Menü">
+      <a class="pill-btn p-green" href="?cat=all" data-c="all">📦 Ürünler</a>
+      <a class="pill-btn p-orange" href="#cekilis" data-info="giveaway">🎁 Çekilişler</a>
+      <a class="pill-btn p-red" href="#yayincilar" data-info="streamers">🎥 Yayıncılarımız</a>
+      <a class="pill-btn p-blue" href="?cat=roblox" data-c="roblox">💎 Roblox Robux</a>
+      <a class="pill-btn p-purple" href="?cat=valorant" data-c="valorant">⚡ Valorant VP</a>
+      <a class="pill-btn p-dark" href="?sort=disc" data-sort="disc">🔥 İndirimdekiler</a>
+      <a class="pill-btn p-dark" href="?sort=best" data-sort="best">🏆 Çok Satanlar</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="bc" id="bc" aria-label="Sayfa yolu"></nav>
+
+  <main>
+    <aside class="side">
+      <nav class="box cats" id="cats" aria-label="Oyun Kategorileri">
+        <h3><svg viewBox="0 0 24 24" style="font-size:18px"><rect x="2" y="6" width="20" height="12" rx="5"/><path d="M7 10v4M5 12h4"/></svg>Kategoriler</h3>
+      </nav>
+      <div class="box promo">
+        <p style="font-size:14px;font-weight:700">Yeni Üyelere Özel</p>
+        <b>₺250 Bakiye + %5</b>
+        <code>HOSGELDIN5</code>
+        <p>Üye ol, ₺250 Deneme Cüzdan Bakiyesi ile anında E-Pin teslimatını test et!</p>
+        <button class="btn" id="join">Hemen Üye Ol</button>
+      </div>
+    </aside>
+
+    <div>
+      <h1 class="sr">EPİN – Roblox Robux, Valorant VP, PUBG Mobile UC ve Oyun Kodları Mağazası</h1>
+      <section class="hero" aria-roledescription="carousel" aria-label="Kampanyalar" id="hero"></section>
+      <nav class="brands" id="brands" aria-label="Oyun Markaları"></nav>
+
+      <section class="box sec">
+        <div class="sh">
+          <h2><svg viewBox="0 0 24 24"><path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-8z"/></svg><span id="ttl">Popüler E-Pin & Oyun Paketleri</span></h2>
+          <a href="?cat=all" id="all">Tümünü Gör →</a>
+        </div>
+        <div class="grid" id="grid" aria-live="polite"></div>
+      </section>
+
+      <section class="box seo-box" id="seoBox" aria-label="Kategori Bilgileri ve Sıkça Sorulan Sorular"></section>
+
+      <section class="ben" aria-label="Avantajlar">
+        <div><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 10-13h-6z"/></svg><p><b>7/24 Otomatik Teslimat</b><span>Kodlarınız saniyesinde Kod Kasanızda</span></p></div>
+        <div><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><p><b>Çoklu Tedarikçi Garantisi</b><span>En uygun VIP üye fiyatları</span></p></div>
+        <div><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14h3v5H4zM17 14h3v5h-3z"/></svg><p><b>Şifresiz ID Yükleme</b><span>PUBG ve MLBB'de 60 sn Top-Up</span></p></div>
+        <div><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><p><b>%1 Nakit Bonus</b><span>Her siparişte cüzdana anında iade</span></p></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div><h4>EPİN</h4><p>Roblox Robux, Valorant VP, PUBG Mobile UC ve dijital oyun kodları merkezi.</p></div>
+      <div><h4>Kurumsal</h4><ul><li><a href="#hakkimizda" data-info="about">Hakkımızda</a></li><li><a href="#iletisim" data-info="contact">İletişim</a></li><li><a href="#blog" data-info="blog">Oyun Rehberi</a></li></ul></div>
+      <div><h4>Yardım</h4><ul><li><a href="#yardim" data-info="contact">Yardım Merkezi</a></li><li><a href="#iade" data-info="refund">İade ve İptal</a></li><li><a href="#ticket" data-info="contact">7/24 Ticket Aç</a></li></ul></div>
+      <div><h4>Yasal</h4><ul><li><a href="#kosullar" data-info="terms">Kullanım Koşulları</a></li><li><a href="#kvkk" data-info="privacy">Gizlilik ve KVKK</a></li><li><a href="#sozlesme" data-info="distance">Mesafeli Satış</a></li></ul></div>
+    </div>
+    <p class="legal">© 2026 EPİN. Tüm oyun ve marka adları ilgili sahiplerine aittir.</p>
+  </div>
+</footer>
+
+<div class="ov" id="ov"></div>
+<aside class="dr" id="dr" aria-label="Sepet" aria-hidden="true">
+  <header><b style="font-size:18px">Sepetim</b><button id="x" aria-label="Kapat">✕</button></header>
+  <div class="dl" id="dl"></div>
+  <div class="df">
+    <div class="cpn-row">
+      <input id="cpnInput" placeholder="Kupon Kodu (HOSGELDIN5)" aria-label="İndirim Kuponu">
+      <button class="sm" id="applyCpn" type="button">Uygula</button>
+    </div>
+    <div class="r"><span>Ara toplam</span><span id="sub">₺0,00</span></div>
+    <div class="r" id="discRow" style="display:none;color:var(--ok)"><span>Kupon İndirimi</span><span id="discVal">−₺0,00</span></div>
+    <div class="r" style="color:var(--cyan)"><span>Kazanılacak Bonus (%1)</span><span id="bonusVal">+₺0,00</span></div>
+    <div class="r t"><span>Ödenecek Toplam</span><span id="tot">₺0,00</span></div>
+    <button class="btn" id="co" disabled>Güvenli Ödemeye Geç</button>
+  </div>
+</aside>
+
+<div class="pgv" id="pgv" role="region" aria-label="Panel">
+  <div class="pt"><b id="pgt"></b><button class="sm" id="pgx">← Mağazaya Dön</button></div>
+  <div class="pb2"><nav class="ps" id="ps"></nav><div class="pc2" id="pcx"></div></div>
+</div>
+
+<div class="md" id="md" role="dialog" aria-modal="true" aria-label="Pencere">
+  <div class="mb"><button class="mx" id="mx" aria-label="Kapat">✕</button><div id="mc"></div></div>
+</div>
+
+<button class="fab-sup" id="supFab" aria-label="7/24 Canlı Destek">
+  <svg viewBox="0 0 24 24" style="font-size:24px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
