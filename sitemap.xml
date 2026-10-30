@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://epin.example.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://epin.example.com/?cat=steam</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://epin.example.com/?cat=valorant</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://epin.example.com/?cat=pubg</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://epin.example.com/?cat=ps</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://epin.example.com/?cat=xbox</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://epin.example.com/?cat=riot</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://epin.example.com/?cat=ml</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://epin.example.com/?cat=gplay</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://epin.example.com/?cat=app</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+</urlset>
