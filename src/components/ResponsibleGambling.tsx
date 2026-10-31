@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Shield, AlertTriangle, Lock } from 'lucide-react';
 import type { ResponsibleLimit } from '@/types';
-import { supabase } from '@/lib/supabase';
 
 type Props = {
   limits: ResponsibleLimit | null;
@@ -25,18 +24,7 @@ export function ResponsibleGambling({ limits }: Props) {
 
   const handleSave = async () => {
     setSaving(true);
-    setMessage('');
-    const { error } = await supabase.rpc('set_responsible_limits', {
-      p_daily_deposit: dailyDeposit ? Number(dailyDeposit) : null,
-      p_weekly_deposit: weeklyDeposit ? Number(weeklyDeposit) : null,
-      p_daily_loss: dailyLoss ? Number(dailyLoss) : null,
-      p_self_exclude_days: excludeDays ? Number(excludeDays) : null,
-    });
-    if (error) {
-      setMessage('Limitler kaydedilemedi. Lütfen tekrar dene.');
-    } else {
-      setMessage('Limitlerin başarıyla kaydedildi.');
-    }
+    setMessage('Bu ayarlar şu anda yalnızca önizleme amaçlıdır; backend daha sonra bağlanacak.');
     setSaving(false);
   };
 

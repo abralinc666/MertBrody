@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Gift, Ticket, CheckCircle2, XCircle } from 'lucide-react';
 import type { Bonus, Freebet } from '@/types';
-import { supabase } from '@/lib/supabase';
 import { bonusTypes } from '@/data/sports';
 
 type Props = {
@@ -17,36 +16,16 @@ export function BonusManager({ bonuses, freebets, onRefresh }: Props) {
   const [message, setMessage] = useState('');
   const [toastType, setToastType] = useState<ToastType>('success');
 
-  const handleClaim = async (type: string, name: string, amount: number, wagering: number) => {
-    setClaiming(type);
-    setMessage('');
-    const { error } = await supabase.rpc('claim_bonus', {
-      p_type: type,
-      p_name: name,
-      p_amount: amount,
-      p_wagering_requirement: wagering,
-    });
-    if (error) {
-      setToastType('error');
-      setMessage('Bonus alınamadı: ' + error.message);
-    } else {
-      setToastType('success');
-      setMessage(`${name} başarıyla hesabına eklendi!`);
-      onRefresh();
-    }
+  const handleClaim = async (_type: string, name: string, _amount: number, _wagering: number) => {
+    setClaiming(_type);
+    setToastType('error');
+    setMessage(`${name}: Bu işlem tasarım önizlemesinde kullanılamaz.`);
     setClaiming(null);
   };
 
   const handleFreebet = async () => {
-    const { error } = await supabase.rpc('grant_freebet', { p_amount: 100 });
-    if (error) {
-      setToastType('error');
-      setMessage('Freebet alınamadı.');
-    } else {
-      setToastType('success');
-      setMessage('100₺ freebet hesabına eklendi!');
-      onRefresh();
-    }
+    setToastType('error');
+    setMessage('Freebet talebi için backend bağlantısı daha sonra eklenecek.');
   };
 
   return (

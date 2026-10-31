@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { X, Activity, Target, Flag, Circle } from 'lucide-react';
 import type { MatchWithMarkets, MatchStats, MatchEvent } from '@/types';
-import { supabase } from '@/lib/supabase';
 
 type Props = {
   match: MatchWithMarkets;
@@ -9,23 +7,10 @@ type Props = {
 };
 
 export function MatchTracker({ match, onClose }: Props) {
-  const [stats, setStats] = useState<MatchStats | null>(null);
-  const [events, setEvents] = useState<MatchEvent[]>([]);
 
-  useEffect(() => {
-    const loadData = async () => {
-      const matchId = match.eventId;
-      const [{ data: statsData }, { data: eventsData }] = await Promise.all([
-        supabase.from('match_stats').select('*').eq('match_id', matchId).maybeSingle(),
-        supabase.from('match_events').select('*').eq('match_id', matchId).order('minute', { ascending: true }),
-      ]);
-      setStats(statsData as MatchStats | null);
-      setEvents((eventsData || []) as MatchEvent[]);
-    };
-    void loadData();
-  }, [match.eventId]);
 
-  const mockStats: MatchStats = stats || {
+
+  const mockStats: MatchStats = {
     match_id: match.eventId,
     home_xg: 1.4, away_xg: 0.8,
     home_possession: 58, away_possession: 42,
@@ -36,7 +21,7 @@ export function MatchTracker({ match, onClose }: Props) {
     home_cards: 1, away_cards: 2,
   };
 
-  const mockEvents: MatchEvent[] = events.length ? events : [
+  const mockEvents: MatchEvent[] = [
     { id: '1', match_id: match.eventId, event_type: 'goal', minute: 23, description: `${match.home} gol`, home_x: 75, home_y: 45, created_at: '' },
     { id: '2', match_id: match.eventId, event_type: 'yellow_card', minute: 34, description: `${match.away} sarı kart`, home_x: 30, home_y: 55, created_at: '' },
     { id: '3', match_id: match.eventId, event_type: 'corner', minute: 41, description: `${match.home} korner`, home_x: 88, home_y: 15, created_at: '' },

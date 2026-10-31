@@ -16,7 +16,6 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import type { MatchWithMarkets, ModalType, SelectedBet, BetSlipType, OddsPreference } from '@/types';
 import { sports, heroSlides, games, liveSportsCounts, navItems, winners } from '@/data/sports';
 import { useUserRealtime } from '@/hooks/useUserRealtime';
@@ -60,71 +59,9 @@ function App() {
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSessionEmail(data.session?.user.email || null);
-    });
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSessionEmail(session?.user.email || null);
-    });
-    return () => authListener.subscription.unsubscribe();
-  }, []);
-
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setAuthError('');
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get('email') || '');
-    const password = String(formData.get('password') || '');
-    const displayName = String(formData.get('displayName') || '');
-
-    if (modal === 'login') {
-      const result = await supabase.auth.signInWithPassword({ email, password });
-      if (result.error) { setAuthError('Bilgiler doğrulanamadı. Lütfen tekrar dene.'); return; }
-      setFormSent(true);
-      setSessionEmail(result.data.user?.email || email);
-      if (result.data.session) await refreshAccount();
-      return;
-    }
-
-    const birthDate = String(formData.get('birth_date') || '');
-    if (birthDate) {
-      const age = (Date.now() - new Date(birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000);
-      if (age < 18) { setAuthError('18 yaşından küçükler bahis oynayamaz.'); return; }
-    }
-
-    const result = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: displayName,
-          first_name: String(formData.get('first_name') || ''),
-          last_name: String(formData.get('last_name') || ''),
-          phone: String(formData.get('phone') || ''),
-          tc_identity: String(formData.get('tc_identity') || ''),
-          birth_date: birthDate,
-          country: String(formData.get('country') || 'Türkiye'),
-          city: String(formData.get('city') || ''),
-          district: String(formData.get('district') || ''),
-          address: String(formData.get('address') || ''),
-          postal_code: String(formData.get('postal_code') || ''),
-          currency: 'TRY',
-        },
-      },
-    });
-    if (result.error) {
-      const msg = result.error.message || '';
-      setAuthError(
-        msg.includes('already') ? 'Bu e-posta adresi zaten kayıtlı.' :
-        msg.includes('TC') ? 'Bu TC kimlik numarası zaten kullanımda.' :
-        'Kayıt oluşturulamadı. Bilgilerini kontrol et.',
-      );
-      return;
-    }
-    setFormSent(true);
-    setSessionEmail(result.data.user?.email || email);
-    if (result.data.session) await refreshAccount();
+    setAuthError('Bu sürüm yalnızca tasarım önizlemesidir. Üyelik ve giriş backend bağlantısı daha sonra eklenecek.');
   };
 
   const toggleBet = (bet: SelectedBet) => {
@@ -142,62 +79,16 @@ function App() {
     setBetSuccess('');
   };
 
-  const placeSelectedBet = async (type: BetSlipType, stake: number, freebetId: string | null) => {
-    if (!sessionEmail) { openModal('login'); return; }
-    if (selectedBets.length === 0) return;
-    setBetError('');
-    setBetSuccess('');
-
-    const selectionsJson = selectedBets.map((b) => ({
-      event_id: b.eventId,
-      sport: 'Futbol',
-      home_team: b.homeTeam,
-      away_team: b.awayTeam,
-      market_type: b.marketType,
-      selection_label: b.selectionLabel,
-      odds: b.odds,
-    }));
-
-    const { data, error } = await supabase.rpc('place_bet_slip', {
-      p_type: type,
-      p_stake: stake,
-      p_selections: selectionsJson,
-      p_freebet_id: freebetId,
-      p_odds_preference: profile?.odds_preference || 'accept_any',
-    });
-
-    if (error) {
-      setBetError(
-        error.message?.includes('Yetersiz bakiye') ? 'Yetersiz bakiye. Bahis oynanamadı.' :
-        error.message?.includes('self-exclusion') ? 'Hesabınız dondurulmuş. Bahis oynayamazsınız.' :
-        'Bahis kaydedilemedi. Lütfen tekrar dene.',
-      );
-      playSound('error');
-      return;
-    }
-
-    playSound('betPlaced');
-    setBetSuccess(`Kuponun oluşturuldu! Olası kazanç: ${Number((data as { potential_payout?: number })?.potential_payout || 0).toFixed(2)} ₺`);
-    setSelectedBets([]);
-    setIsCouponOpen(false);
-    await refreshAccount();
+  const placeSelectedBet = async (_type: BetSlipType, _stake: number, _freebetId: string | null) => {
+    setBetError('Bahis işlemleri tasarım önizlemesinde devre dışıdır. Backend daha sonra bağlanacak.');
   };
 
-  const handleCashout = async (slipId: string) => {
-    const { data: offerData, error: offerError } = await supabase.rpc('calculate_cashout', { p_slip_id: slipId });
-    if (offerError || !offerData) { setBetError('Bozdurma teklifi alınamadı.'); return; }
-    const offer = Number((offerData as { offer?: number }).offer || 0);
-    if (offer <= 0) { setBetError('Bu kupon şu an bozdurulamaz.'); return; }
-    const { error } = await supabase.rpc('execute_cashout', { p_slip_id: slipId, p_offer: offer });
-    if (error) { setBetError('Bozdurma işlemi başarısız.'); playSound('error'); return; }
-    playSound('cashout');
-    setBetSuccess(`Kupon bozduruldu: ${offer.toFixed(2)} ₺ hesabına aktarıldı.`);
-    await refreshAccount();
+  const handleCashout = async (_slipId: string) => {
+    setBetError('Kupon bozdurma tasarım önizlemesinde devre dışıdır.');
   };
 
-  const handleOddsPrefChange = async (pref: OddsPreference) => {
-    await supabase.from('profiles').update({ odds_preference: pref }).eq('id', profile?.id || '');
-    await refreshAccount();
+  const handleOddsPrefChange = async (_pref: OddsPreference) => {
+    setBetSuccess('Oran tercihi önizleme modunda değiştirilemez.');
   };
 
   const activeSlips = useMemo(() =>
@@ -240,7 +131,7 @@ function App() {
               <button className="account-btn" onClick={() => openModal('account')}>
                 <UserRound size={15} /> {profile?.display_name || 'Hesabım'}
               </button>
-              <button className="login-btn" onClick={() => void supabase.auth.signOut()}>Çıkış</button>
+              <button className="login-btn" onClick={() => { setSessionEmail(null); }}>Çıkış</button>
             </>
           ) : (
             <>
