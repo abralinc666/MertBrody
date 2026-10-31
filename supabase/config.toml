@@ -1,0 +1,7 @@
+[functions.live-scores]
+verify_jwt = false
+entrypoint = "./functions/live-scores/index.ts"
+
+[functions.bet-settlement]
+verify_jwt = false
+entrypoint = "./functions/bet-settlement/index.ts"

@@ -1,0 +1,13 @@
+{
+  "projectId": "72526344",
+  "functions": {
+    "live-scores": {
+      "hasChanged": false,
+      "hash": "028e5b09f603bbd660977a7fc83220dca0744e9232428cbd8ebd1eef4f126622"
+    },
+    "bet-settlement": {
+      "hasChanged": false,
+      "hash": "099226bfef938fe473807ecca062d6aaaab6850eee67337fc3268ded5d59990a"
+    }
+  }
+}
