@@ -100,6 +100,7 @@ export const matches: MatchWithMarkets[] = rawMatches.map((m) => ({
   leagueName: m.leagueName || m.league,
   eventId: `${m.home}-${m.away}`,
   suspended: false,
+  status: 'live' as const,
   subMarkets: buildSubMarkets(m.odds, m.home, m.away),
 }));
 
@@ -112,12 +113,12 @@ export const heroSlides: HeroSlide[] = [
 ];
 
 export const games = [
-  { name: 'Sweet Bonanza', color: 'from-pink-500 via-rose-400 to-yellow-400', icon: '🍭' },
-  { name: 'Gates of Olympus', color: 'from-amber-500 via-orange-700 to-blue-900', icon: '⚡' },
-  { name: 'Big Bass Bonanza', color: 'from-green-600 to-lime-300', icon: '🐟' },
-  { name: 'Roulette', color: 'from-red-900 to-amber-500', icon: '◉' },
-  { name: 'Blackjack', color: 'from-emerald-700 to-green-300', icon: '♠' },
-  { name: 'Crazy Time', color: 'from-orange-500 to-red-600', icon: '★' },
+  { name: 'Sweet Bonanza', gradient: 'linear-gradient(135deg,#ec4899,#fb7185 55%,#facc15)', icon: '🍭' },
+  { name: 'Gates of Olympus', gradient: 'linear-gradient(135deg,#f59e0b,#c2410c 55%,#1e3a8a)', icon: '⚡' },
+  { name: 'Big Bass Bonanza', gradient: 'linear-gradient(135deg,#16a34a,#bef264)', icon: '🐟' },
+  { name: 'Roulette', gradient: 'linear-gradient(135deg,#7f1d1d,#f59e0b)', icon: '◉' },
+  { name: 'Blackjack', gradient: 'linear-gradient(135deg,#047857,#86efac)', icon: '♠' },
+  { name: 'Crazy Time', gradient: 'linear-gradient(135deg,#f97316,#dc2626)', icon: '★' },
 ];
 
 export const liveSportsCounts = [67, 28, 12, 9, 7, 6, 5];

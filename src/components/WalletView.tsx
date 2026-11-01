@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { ArrowDownLeft, ArrowUpRight, Gift, Wallet } from 'lucide-react';
+import { api } from '@/services/api';
 import type { Transaction } from '@/types';
 
 type Props = {
@@ -7,6 +9,21 @@ type Props = {
 };
 
 export function WalletView({ transactions, balance }: Props) {
+  const [amount, setAmount] = useState('250');
+  const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const deposit = async () => {
+    setBusy(true); setMsg(null);
+    try {
+      await api.deposit(Number(amount));
+      setMsg({ text: `${Number(amount).toFixed(2)} ₺ demo bakiye eklendi.`, ok: true });
+    } catch (e) {
+      setMsg({ text: (e as Error).message, ok: false });
+    }
+    setBusy(false);
+  };
+
   const typeIcons: Record<string, typeof Wallet> = {
     deposit: ArrowDownLeft,
     withdrawal: ArrowUpRight,
@@ -39,6 +56,20 @@ export function WalletView({ transactions, balance }: Props) {
       <div className="account-balance">
         <strong>{Number(balance).toFixed(0)} ₺</strong>
         <span>Güncel Bakiye</span>
+      </div>
+      <div className="deposit-box">
+        <label htmlFor="deposit-amount">Demo para yatır <span className="demo-pill">Demo</span></label>
+        <div className="deposit-row">
+          <div className="stake-input">
+            <input id="deposit-amount" type="number" inputMode="decimal" min={10} value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <span>₺</span>
+          </div>
+          <button type="button" className="claim-btn" onClick={() => void deposit()} disabled={busy}>Yatır</button>
+        </div>
+        <div className="stake-quick">
+          {[100, 250, 500, 1000].map((v) => <button key={v} type="button" onClick={() => setAmount(String(v))}>{v}₺</button>)}
+        </div>
+        {msg && <p className={msg.ok ? 'limit-message' : 'auth-error'} role="status">{msg.text}</p>}
       </div>
       <div className="wallet-list">
         {transactions.length === 0 ? (

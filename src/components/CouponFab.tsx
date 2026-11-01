@@ -7,7 +7,7 @@ type Props = {
 
 export function CouponFab({ count, onClick }: Props) {
   return (
-    <button className="mobile-coupon-fab" aria-label="Kuponu aç" onClick={onClick}>
+    <button type="button" className="mobile-coupon-fab" aria-label="Kuponu aç" onClick={onClick}>
       <ShoppingBasket size={22} />
       {count > 0 && <span className="fab-badge">{count}</span>}
     </button>

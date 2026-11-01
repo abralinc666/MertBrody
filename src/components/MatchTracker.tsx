@@ -1,38 +1,63 @@
-import { X, Activity, Target, Flag, Circle } from 'lucide-react';
+import { useMemo } from 'react';
+import { Activity, Target, Flag, Circle } from 'lucide-react';
 import type { MatchWithMarkets, MatchStats, MatchEvent } from '@/types';
+import { ModalShell } from '@/components/ModalShell';
 
 type Props = {
   match: MatchWithMarkets;
   onClose: () => void;
 };
 
-export function MatchTracker({ match, onClose }: Props) {
+function seeded(seed: string) {
+  let h = 2166136261;
+  for (const ch of seed) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; };
+}
 
-
-
-  const mockStats: MatchStats = {
+/** Demo istatistik ve olaylar: maçın skoruna ve dakikasına uyumlu, aynı maç için tutarlı üretilir. */
+function buildDemoData(match: MatchWithMarkets): { stats: MatchStats; events: MatchEvent[] } {
+  const rnd = seeded(match.eventId);
+  const minute = Math.max(1, parseInt(match.time, 10) || (match.status === 'ft' ? 90 : 45));
+  const progress = Math.min(1, minute / (match.league === 'Basketbol' ? 48 : 90));
+  const scale = (base: number) => Math.round(base * (0.6 + rnd() * 0.8) * progress);
+  const possession = 40 + Math.round(rnd() * 20);
+  const homeGoals = Number(match.score[0]) || 0;
+  const awayGoals = Number(match.score[1]) || 0;
+  const stats: MatchStats = {
     match_id: match.eventId,
-    home_xg: 1.4, away_xg: 0.8,
-    home_possession: 58, away_possession: 42,
-    home_shots: 12, away_shots: 7,
-    home_shots_on_target: 5, away_shots_on_target: 3,
-    home_corners: 6, away_corners: 3,
-    home_fouls: 8, away_fouls: 11,
-    home_cards: 1, away_cards: 2,
+    home_xg: Number((homeGoals * 0.7 + rnd()).toFixed(1)), away_xg: Number((awayGoals * 0.7 + rnd()).toFixed(1)),
+    home_possession: possession, away_possession: 100 - possession,
+    home_shots: scale(14), away_shots: scale(11),
+    home_shots_on_target: scale(6), away_shots_on_target: scale(4),
+    home_corners: scale(7), away_corners: scale(5),
+    home_fouls: scale(12), away_fouls: scale(13),
+    home_cards: scale(2), away_cards: scale(2),
   };
 
-  const mockEvents: MatchEvent[] = [
-    { id: '1', match_id: match.eventId, event_type: 'goal', minute: 23, description: `${match.home} gol`, home_x: 75, home_y: 45, created_at: '' },
-    { id: '2', match_id: match.eventId, event_type: 'yellow_card', minute: 34, description: `${match.away} sarı kart`, home_x: 30, home_y: 55, created_at: '' },
-    { id: '3', match_id: match.eventId, event_type: 'corner', minute: 41, description: `${match.home} korner`, home_x: 88, home_y: 15, created_at: '' },
-    { id: '4', match_id: match.eventId, event_type: 'shot', minute: 52, description: `${match.away} şut`, home_x: 20, home_y: 40, created_at: '' },
-  ];
+  const events: MatchEvent[] = [];
+  const add = (type: string, side: 'home' | 'away', label: string, atMinute: number, x: number, y: number) =>
+    events.push({ id: `${events.length + 1}`, match_id: match.eventId, event_type: type, minute: atMinute, description: `${side === 'home' ? match.home : match.away} ${label}`, home_x: x, home_y: y, created_at: '' });
+  const at = () => Math.max(1, Math.round(rnd() * (minute - 1)) + 1);
+  if (match.league !== 'Basketbol') {
+    for (let i = 0; i < Math.min(homeGoals, 6); i++) add('goal', 'home', 'gol', at(), 80 + rnd() * 12, 35 + rnd() * 30);
+    for (let i = 0; i < Math.min(awayGoals, 6); i++) add('goal', 'away', 'gol', at(), 8 + rnd() * 12, 35 + rnd() * 30);
+    if (stats.home_corners > 0) add('corner', 'home', 'korner', at(), 92, rnd() > 0.5 ? 8 : 92);
+    if (stats.away_corners > 0) add('corner', 'away', 'korner', at(), 8, rnd() > 0.5 ? 8 : 92);
+    if (stats.away_cards > 0) add('yellow_card', 'away', 'sarı kart', at(), 25 + rnd() * 20, 20 + rnd() * 60);
+    add('shot', rnd() > 0.5 ? 'home' : 'away', 'şut', at(), 15 + rnd() * 70, 20 + rnd() * 60);
+  }
+  events.sort((a, b) => a.minute - b.minute);
+  return { stats, events };
+}
+
+export function MatchTracker({ match, onClose }: Props) {
+  const { stats: mockStats, events: mockEvents } = useMemo(() => buildDemoData(match), [match]);
+  const isSample = true;
 
   return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="modal-card match-tracker-modal" onMouseDown={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}><X size={18} /></button>
+    <ModalShell onClose={onClose} label="Maç Merkezi" className="match-tracker-modal">
         <span className="modal-kicker">MAÇ MERKEZİ</span>
+        {isSample && <span className="demo-pill sample-note">Demo istatistik</span>}
         <h2>{match.home} <span className="tracker-score">{match.score[0]} - {match.score[1]}</span> {match.away}</h2>
         <span className="tracker-minute"><span className="live-dot" /> {match.time}</span>
 
@@ -85,8 +110,7 @@ export function MatchTracker({ match, onClose }: Props) {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+    </ModalShell>
   );
 }
 

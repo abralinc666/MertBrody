@@ -1,11 +1,10 @@
 export type Sport = { name: string; count?: number; icon: string };
 export type Match = { league: string; time: string; home: string; away: string; score: string[]; odds: string[]; leagueName?: string };
 export type Profile = { id: string; display_name: string | null; vip_level: string; vip_points: number; total_staked: number; balance: number; odds_preference: string };
-export type Bet = { id: string; home_team: string; away_team: string; selection: string; odds: number; stake: number; status: string; placed_at: string };
-export type LiveScore = { id: string; home: string; away: string; homeScore: string; awayScore: string; time: string; status: string };
+export type LiveScore = { id: string; league?: string; home: string; away: string; homeScore: string; awayScore: string; time: string; status: string };
 export type HeroSlide = { kicker: string; value: string; title: string; description: string };
 
-export type ModalType = 'login' | 'register' | 'promotions' | 'account' | 'wallet' | 'responsible' | 'bonuses' | 'aml' | 'match-tracker';
+export type ModalType = 'login' | 'register' | 'recovery' | 'promotions' | 'account' | 'wallet' | 'responsible' | 'bonuses' | 'aml' | 'info';
 
 export type MarketType = 'match_result' | 'over_under' | 'btts' | 'handicap' | 'corners' | 'cards' | 'player_bet' | 'first_half' | 'double_chance';
 
@@ -15,11 +14,14 @@ export type SubMarket = {
   options: Array<{ label: string; odds: string }>;
 };
 
+export type MatchStatus = 'live' | 'ht' | 'ft';
+
 export type MatchWithMarkets = Match & {
   subMarkets: SubMarket[];
   eventId: string;
   suspended: boolean;
   leagueName: string;
+  status: MatchStatus;
 };
 
 export type BetSlipType = 'single' | 'combo' | 'system';
@@ -36,6 +38,9 @@ export type BetSlipRecord = {
   cashout_offer: number;
   placed_at: string;
   settled_at: string | null;
+  system_size: number | null;
+  unit_stake: number | null;
+  freebet_id: string | null;
 };
 
 export type BetSelectionRecord = {
@@ -74,6 +79,7 @@ export type Bonus = {
 export type Freebet = {
   id: string;
   amount: number;
+  source?: string;
   status: string;
   expires_at: string | null;
   created_at: string;
@@ -123,4 +129,11 @@ export type SelectedBet = {
   marketLabel: string;
   selectionLabel: string;
   odds: number;
+};
+
+export type RegisterValues = {
+  first_name: string; last_name: string; tc_identity: string; birth_date: string;
+  phone: string; email: string; city: string; district: string; address: string;
+  postal_code: string; country: string; displayName: string; email_confirm: string;
+  password: string; terms: boolean; kvkk: boolean;
 };

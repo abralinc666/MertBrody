@@ -1,0 +1,11 @@
+# live-scores herkese açık veri döner; yazma yapmaz.
+[functions.live-scores]
+verify_jwt = false
+entrypoint = "./functions/live-scores/index.ts"
+
+# bet-settlement para hareketi yapar. İstek, Authorization başlığında service_role anahtarı
+# taşımıyorsa fonksiyonun kendisi 401 döner (bkz. functions/bet-settlement/index.ts).
+# Dakikada bir çalışacak bir zamanlayıcı (pg_cron + pg_net veya Supabase Scheduled Functions) ile çağırın.
+[functions.bet-settlement]
+verify_jwt = false
+entrypoint = "./functions/bet-settlement/index.ts"

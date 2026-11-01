@@ -18,7 +18,7 @@ export function HeroCarousel({ slideIndex, onDotClick, onCtaClick }: Props) {
               <strong>{s.value}</strong>
               <p>{s.title}</p>
               <small className="hero-description">{s.description}</small>
-              <button className="cta-btn" onClick={onCtaClick} tabIndex={i === slideIndex ? 0 : -1}>
+              <button type="button" className="cta-btn" onClick={onCtaClick} tabIndex={i === slideIndex ? 0 : -1}>
                 Şimdi Faydalan <ArrowRight size={17} />
               </button>
             </div>
@@ -29,6 +29,7 @@ export function HeroCarousel({ slideIndex, onDotClick, onCtaClick }: Props) {
       <div className="hero-dots">
         {heroSlides.map((s, i) => (
           <button
+            type="button"
             aria-label={`${s.title} kampanyasına geç`}
             className={i === slideIndex ? 'selected' : ''}
             key={s.title}
