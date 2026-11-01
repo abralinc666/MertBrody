@@ -2,8 +2,8 @@
 // Lisans bilgisi yalnızca gerçek bir lisansın varsa .env ile verilmelidir;
 // boş bırakılırsa footer'da hiçbir lisans/doğrulama iddiası gösterilmez.
 export const SITE = {
-  name: 'BetFury',
-  nameParts: ['Bet', 'Fury'] as const,
+  name: 'RockstarBet',
+  nameParts: ['Rockstar', 'Bet'] as const,
   year: new Date().getFullYear(),
   helpline: '190',
   license: {

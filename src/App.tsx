@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ChevronRight, CircleHelp, Gift, Headphones, Menu, Moon, Search, Shield, Star, Sun, TriangleAlert,
-  UserRound, Volume2, VolumeX, Wallet, X, LogOut, Info,
+  ChevronRight, CircleHelp, Crown, Gift, Headphones, Info, LogOut, Menu, Moon, Search, Star, Sun, UserRound, Volume2, VolumeX, X,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import type { MatchWithMarkets, ModalType, SelectedBet, BetSlipType, OddsPreference, RegisterValues } from '@/types';
-import { sports, games, liveSportsCounts, navItems, winners } from '@/data/sports';
+import { liveSportsCounts, winners } from '@/data/sports';
 import { useAccount } from '@/hooks/useAccount';
 import { useLiveMatches } from '@/hooks/useLiveMatches';
 import { useSoundFx, playSound } from '@/hooks/useSoundFx';
@@ -19,6 +18,8 @@ import { MatchTracker } from '@/components/MatchTracker';
 import { LiveTicker } from '@/components/LiveTicker';
 import { SiteFooter } from '@/components/SiteFooter';
 import { Brand } from '@/components/Brand';
+import { NavLinks, SideNav } from '@/components/SideNav';
+import { CategoryTiles, PopularGames } from '@/components/HomeSections';
 import { heroSlides } from '@/data/sports';
 
 const LIVE_STRIP = ['Futbol', 'Basketbol', 'Tenis', 'Voleybol', 'Buz Hokeyi', 'Masa Tenisi', 'Diğer'];
@@ -49,7 +50,7 @@ function mapBetError(message: string | undefined): string {
 }
 
 function App() {
-  const [activeNav, setActiveNav] = useState('Spor Bahisleri');
+  const [activeNav, setActiveNav] = useState('Ana Sayfa');
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [selectedBets, setSelectedBets] = useState<SelectedBet[]>(loadSelectedBets);
   const [recoveryEmail, setRecoveryEmail] = useState('');
@@ -285,16 +286,18 @@ function App() {
   };
   const pickSport = (name: string) => { setActiveSport(name); goMatches(); };
 
+  const info = (title: string) => () => openModal('info', title);
+
   const handleNav = (item: string) => {
     setActiveNav(item);
     setNavOpen(false);
-    if (item === 'Promosyonlar') openModal('promotions');
+    if (item === 'Ana Sayfa') window.scrollTo({ top: 0, behavior: 'smooth' });
+    else if (item === 'Promosyonlar') openModal('promotions');
     else if (item === 'Spor Bahisleri' || item === 'Canlı Bahis') goMatches();
-    else if (['Casino', 'Canlı Casino', 'Slotlar'].includes(item)) goCasino();
+    else if (['Casino', 'Canlı Casino', 'Slot Oyunları'].includes(item)) goCasino();
     else openModal('info', item);
   };
 
-  const info = (title: string) => () => openModal('info', title);
   const themeLabel = isDark ? 'Açık temaya geç' : 'Koyu temaya geç';
 
   return (
@@ -307,182 +310,167 @@ function App() {
         </div>
       )}
 
-      <header className="topbar">
-        <Brand />
-        <nav className="primary-nav" aria-label="Ana menü">
-          {navItems.map((item) => (
-            <button type="button" key={item} className={activeNav === item ? 'nav-item active' : 'nav-item'} onClick={() => handleNav(item)}>{item}</button>
-          ))}
-        </nav>
+      <div className="site-frame">
+        <SideNav active={activeNav} onNavigate={handleNav} onPromo={() => openModal('promotions')} />
 
-        <div className="top-actions">
-          <label className="top-search">
-            <Search size={17} />
-            <input type="search" placeholder="Takım veya lig ara..." aria-label="Takım veya lig ara" value={matchQuery}
-              onChange={(e) => setMatchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') goMatches(); }} />
-          </label>
-          <button type="button" className="icon-btn only-small" aria-label="Maç ara" onClick={focusSearch}><Search size={18} /></button>
-          <button type="button" className="icon-btn hide-small" aria-label={soundOn ? 'Ses efektlerini kapat' : 'Ses efektlerini aç'} onClick={toggleSound} data-sound="1">{soundOn ? <Volume2 size={17} /> : <VolumeX size={17} />}</button>
-          <button type="button" className="icon-btn hide-small" aria-label={themeLabel} onClick={() => setIsDark(!isDark)}>{isDark ? <Sun size={17} /> : <Moon size={17} />}</button>
+        <div className="main-col">
+          <header className="topbar">
+            <Brand />
+            <label className="top-search">
+              <Search size={18} />
+              <input type="search" placeholder="Takım veya lig ara..." aria-label="Takım veya lig ara" value={matchQuery}
+                onChange={(e) => setMatchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') goMatches(); }} />
+            </label>
+            <nav className="top-links" aria-label="Hızlı bağlantılar">
+              <button type="button" className="top-link" onClick={() => openModal('promotions')}><Crown size={18} /> Güncel Bonuslar</button>
+              <button type="button" className="top-link" onClick={() => (sessionEmail ? openModal('account') : openModal('info', 'VIP Kulüp'))}><Star size={18} /> VIP Kulüp</button>
+              <button type="button" className="top-link" onClick={info('Etkinlikler')}><Gift size={18} /> Etkinlikler</button>
+            </nav>
 
-          {sessionEmail ? (
-            <>
-              {profile && <span className="balance-pill" title="Bakiye">{Number(profile.balance).toLocaleString('tr-TR', { maximumFractionDigits: 0 })} ₺</span>}
-              <button type="button" className="account-btn" onClick={() => openModal('account')} aria-label="Hesabım">
-                <UserRound size={15} /> <span className="account-name">{profile?.display_name || 'Hesabım'}</span>
+            <div className="top-actions">
+              <button type="button" className="icon-btn only-small" aria-label="Maç ara" onClick={focusSearch}><Search size={19} /></button>
+              <button type="button" className="icon-btn hide-small" aria-label={soundOn ? 'Ses efektlerini kapat' : 'Ses efektlerini aç'} onClick={toggleSound} data-sound="1">{soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}</button>
+              <button type="button" className="icon-btn hide-small" aria-label={themeLabel} onClick={() => setIsDark(!isDark)}>{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
+
+              {sessionEmail ? (
+                <>
+                  {profile && <span className="balance-pill" title="Bakiye">{Number(profile.balance).toLocaleString('tr-TR', { maximumFractionDigits: 0 })} ₺</span>}
+                  <button type="button" className="account-btn" onClick={() => openModal('account')} aria-label="Hesabım">
+                    <UserRound size={16} /> <span className="account-name">{profile?.display_name || 'Hesabım'}</span>
+                  </button>
+                  <button type="button" className="login-btn hide-small" onClick={() => void handleSignOut()}>Çıkış</button>
+                </>
+              ) : (
+                <>
+                  <button type="button" className="login-btn" onClick={() => openModal('login')}>Giriş<span className="hide-xs"> Yap</span></button>
+                  <button type="button" className="register-btn" onClick={() => openModal('register')}>Kayıt<span className="hide-xs"> Ol</span></button>
+                </>
+              )}
+              <button type="button" className="icon-btn mobile-menu" aria-label={navOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={navOpen} onClick={() => setNavOpen(!navOpen)}>
+                {navOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
-              <button type="button" className="login-btn hide-small" onClick={() => void handleSignOut()}>Çıkış</button>
-            </>
-          ) : (
+            </div>
+          </header>
+
+          {navOpen && (
             <>
-              <button type="button" className="login-btn" onClick={() => openModal('login')}>Giriş<span className="hide-xs"> Yap</span></button>
-              <button type="button" className="register-btn" onClick={() => openModal('register')}>Kayıt<span className="hide-xs"> Ol</span></button>
+              <div className="drawer-backdrop" onClick={() => setNavOpen(false)} />
+              <nav className="nav-drawer" aria-label="Menü">
+                <NavLinks active={activeNav} onNavigate={handleNav} />
+                <div className="drawer-tools">
+                  <button type="button" onClick={() => setIsDark(!isDark)}>{isDark ? <Sun size={18} /> : <Moon size={18} />} {isDark ? 'Açık tema' : 'Koyu tema'}</button>
+                  <button type="button" onClick={toggleSound} data-sound="1">{soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />} Ses {soundOn ? 'açık' : 'kapalı'}</button>
+                  {sessionEmail && <button type="button" onClick={() => void handleSignOut()}><LogOut size={18} /> Çıkış yap</button>}
+                </div>
+              </nav>
             </>
           )}
-          <button type="button" className="icon-btn mobile-menu" aria-label={navOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={navOpen} onClick={() => setNavOpen(!navOpen)}>
-            {navOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </header>
 
-      {navOpen && (
-        <>
-          <div className="drawer-backdrop" onClick={() => setNavOpen(false)} />
-          <nav className="nav-drawer" aria-label="Menü">
-            {navItems.map((item) => (
-              <button type="button" key={item} className={activeNav === item ? 'drawer-item active' : 'drawer-item'} onClick={() => handleNav(item)}>{item}</button>
-            ))}
-            <div className="drawer-tools">
-              <button type="button" onClick={() => setIsDark(!isDark)}>{isDark ? <Sun size={16} /> : <Moon size={16} />} {isDark ? 'Açık tema' : 'Koyu tema'}</button>
-              <button type="button" onClick={toggleSound} data-sound="1">{soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />} Ses {soundOn ? 'açık' : 'kapalı'}</button>
-              {sessionEmail && <button type="button" onClick={() => void handleSignOut()}><LogOut size={16} /> Çıkış yap</button>}
-            </div>
-          </nav>
-        </>
-      )}
+          <div className="layout">
+            <main className="content">
+              <HeroCarousel
+                slideIndex={heroSlideIndex}
+                ctaLabel={sessionEmail ? 'Bonuslarım' : 'Hemen Üye Ol'}
+                onDotClick={setHeroSlideIndex}
+                onCtaClick={() => (sessionEmail ? openModal('bonuses') : openModal('register'))}
+              />
 
-      <div className="layout">
-        <aside className="sidebar" aria-label="Sporlar">
-          <button type="button" className="side-link favorites" onClick={goMatches}><Star size={17} fill="currentColor" /> <span>Favorilerim</span></button>
-          <div className="sport-list">
-            {sports.map((sport) => (
-              <button type="button" key={sport.name} className={activeSport === sport.name ? 'side-link current' : 'side-link'} onClick={() => pickSport(sport.name)}>
-                <span className="sport-icon" aria-hidden>{sport.icon}</span><span className="side-name">{sport.name}</span>
-                {sport.count && <small>{sport.count}</small>}
-              </button>
-            ))}
-          </div>
-          <div className="sidebar-section">
-            <div className="section-title">Tüm Sporlar <ChevronRight size={16} /></div>
-            <button type="button" className="sub-link live" onClick={goMatches}><span className="live-dot" /> Canlı Bahis <b>LIVE</b><small>312</small></button>
-            <div className="section-title small-title">Spor Bahisleri</div>
-            {['Maç Sonuçları', 'Handikap', 'Toplam Gol', 'İlk Yarı / Maç Sonucu', 'Karşılıklı Gol'].map((item) => (
-              <button type="button" className="sub-link" key={item} onClick={goMatches}>{item}</button>
-            ))}
-          </div>
-          {sessionEmail && (
-            <div className="sidebar-section">
-              <div className="section-title">Hesabım</div>
-              <button type="button" className="sub-link with-icon" onClick={() => openModal('wallet')}><Wallet size={14} /> Cüzdan</button>
-              <button type="button" className="sub-link with-icon" onClick={() => openModal('bonuses')}><Gift size={14} /> Bonuslarım</button>
-              <button type="button" className="sub-link with-icon" onClick={() => openModal('responsible')}><Shield size={14} /> Sorumlu Oyun</button>
-            </div>
-          )}
-        </aside>
+              <CategoryTiles onSports={goMatches} onCasino={goCasino} onInfo={(t) => openModal('info', t)} />
+              <PopularGames onOpen={(name) => openModal('info', name)} />
 
-        <main className="content">
-          <HeroCarousel slideIndex={heroSlideIndex} onDotClick={setHeroSlideIndex} onCtaClick={() => (sessionEmail ? openModal('bonuses') : openModal('register'))} />
+              <section className="live-strip" aria-label="Canlı spor dalları">
+                <div className="strip-heading">
+                  <span><span className="live-dot" /> CANLI</span>
+                  <button type="button" onClick={() => pickSport('Tüm Maçlar')}>Tümü <ChevronRight size={15} /></button>
+                </div>
+                <div className="live-sports">
+                  {LIVE_STRIP.map((name, i) => (
+                    <button type="button" key={name} onClick={() => pickSport(name)}>
+                      <strong aria-hidden>{STRIP_ICONS[i]}</strong>
+                      <span>{name}</span>
+                      <small>{liveSportsCounts[i]}</small>
+                    </button>
+                  ))}
+                </div>
+              </section>
 
-          <section className="live-strip" aria-label="Canlı spor dalları">
-            <div className="strip-heading">
-              <span><span className="live-dot" /> CANLI</span>
-              <button type="button" onClick={() => pickSport('Tüm Maçlar')}>Tümü <ChevronRight size={15} /></button>
-            </div>
-            <div className="live-sports">
-              {LIVE_STRIP.map((name, i) => (
-                <button type="button" key={name} onClick={() => pickSport(name)}>
-                  <strong aria-hidden>{STRIP_ICONS[i]}</strong>
-                  <span>{name}</span>
-                  <small>{liveSportsCounts[i]}</small>
-                </button>
-              ))}
-            </div>
-          </section>
+              <LiveTicker matches={liveMatches} />
 
-          <LiveTicker matches={liveMatches} />
+              <MatchList
+                matches={liveMatches}
+                selectedBets={selectedBets}
+                onToggleBet={toggleBet}
+                onOpenTracker={(m) => setTrackerId(m.eventId)}
+                query={matchQuery}
+                onQueryChange={setMatchQuery}
+                sport={activeSport}
+                onSportChange={setActiveSport}
+              />
+            </main>
 
-          <MatchList
-            matches={liveMatches}
-            selectedBets={selectedBets}
-            onToggleBet={toggleBet}
-            onOpenTracker={(m) => setTrackerId(m.eventId)}
-            query={matchQuery}
-            onQueryChange={setMatchQuery}
-            sport={activeSport}
-            onSportChange={setActiveSport}
-          />
-        </main>
-
-        <aside className="right-column">
-          <div className="coupon-slot">
-            {isCouponOpen && <div className="coupon-backdrop" onClick={() => setIsCouponOpen(false)} />}
-            <BetSlip
-              selectedBets={selectedBets}
-              isCouponOpen={isCouponOpen}
-              freebets={freebets.filter((f) => f.status === 'available' && (!f.expires_at || new Date(f.expires_at) > new Date()))}
-              oddsPreference={(profile?.odds_preference as OddsPreference) || 'accept_any'}
-              placing={placing}
-              signedIn={Boolean(sessionEmail)}
-              onToggleCoupon={() => setIsCouponOpen(!isCouponOpen)}
-              onCloseCoupon={() => setIsCouponOpen(false)}
-              onRemoveBet={(index) => setSelectedBets((cur) => cur.filter((_, i) => i !== index))}
-              onPlaceBet={(type, stake, freebetId, size) => void placeSelectedBet(type, stake, freebetId, size)}
-              onRequestCashoutOffer={requestCashoutOffer}
-              onCashout={(id, offer) => void handleCashout(id, offer)}
-              activeSlips={activeSlips}
-              onOddsPrefChange={(p) => void handleOddsPrefChange(p)}
-              balance={Number(profile?.balance || 0)}
-            />
-          </div>
-          {betError && <p className="bet-error-banner" role="alert">{betError}</p>}
-          {betSuccess && <p className="bet-success-banner" role="status">{betSuccess}</p>}
-
-          <section className="games-card" id="casino">
-            <div className="right-heading">
-              <h2>Casino Oyunları</h2>
-              <button type="button" onClick={info('Casino Oyunları')}>Tümü <ChevronRight size={14} /></button>
-            </div>
-            <div className="game-grid">
-              {games.map((game) => (
-                <button type="button" className="game-tile" key={game.name} onClick={info(game.name)}>
-                  <div className="game-art" style={{ backgroundImage: game.gradient }}><span aria-hidden>{game.icon}</span></div>
-                  <small>{game.name}</small>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="winners-card">
-            <div className="right-heading">
-              <h2>Son Kazananlar</h2>
-              <span className="demo-pill">Örnek</span>
-            </div>
-            {winners.map(([name, game, amount, icon]) => (
-              <div className="winner" key={name}>
-                <span className="winner-icon" aria-hidden>{icon}</span>
-                <div><strong>{name}</strong><small>{game}</small></div>
-                <b>{amount}<small>2 dk önce</small></b>
+            <aside className="right-column">
+              <div className="coupon-slot">
+                {isCouponOpen && <div className="coupon-backdrop" onClick={() => setIsCouponOpen(false)} />}
+                <BetSlip
+                  selectedBets={selectedBets}
+                  isCouponOpen={isCouponOpen}
+                  freebets={freebets.filter((f) => f.status === 'available' && (!f.expires_at || new Date(f.expires_at) > new Date()))}
+                  oddsPreference={(profile?.odds_preference as OddsPreference) || 'accept_any'}
+                  placing={placing}
+                  signedIn={Boolean(sessionEmail)}
+                  onToggleCoupon={() => setIsCouponOpen(!isCouponOpen)}
+                  onCloseCoupon={() => setIsCouponOpen(false)}
+                  onRemoveBet={(index) => setSelectedBets((cur) => cur.filter((_, i) => i !== index))}
+                  onPlaceBet={(type, stake, freebetId, size) => void placeSelectedBet(type, stake, freebetId, size)}
+                  onRequestCashoutOffer={requestCashoutOffer}
+                  onCashout={(id, offer) => void handleCashout(id, offer)}
+                  activeSlips={activeSlips}
+                  onOddsPrefChange={(p) => void handleOddsPrefChange(p)}
+                  balance={Number(profile?.balance || 0)}
+                />
               </div>
-            ))}
-          </section>
+              {betError && <p className="bet-error-banner" role="alert">{betError}</p>}
+              {betSuccess && <p className="bet-success-banner" role="status">{betSuccess}</p>}
 
-          <button type="button" className="support-card" onClick={info('Canlı Destek')}>
-            <span className="support-icon"><Headphones size={20} /></span>
-            <span className="support-text"><strong>7/24 Canlı Destek</strong><small>Her zaman yanındayız!</small></span>
-            <CircleHelp size={19} />
-          </button>
-        </aside>
+              <section className="winners-card">
+                <div className="right-heading">
+                  <h2>Son Kazananlar</h2>
+                  <span className="demo-pill">Örnek</span>
+                </div>
+                {winners.map(([name, game, amount, icon]) => (
+                  <div className="winner" key={name}>
+                    <span className="winner-icon" aria-hidden>{icon}</span>
+                    <div><strong>{name}</strong><small>{game}</small></div>
+                    <b>{amount}<small>2 dk önce</small></b>
+                  </div>
+                ))}
+              </section>
+
+              <button type="button" className="support-card" onClick={info('Canlı Destek')}>
+                <span className="support-icon"><Headphones size={20} /></span>
+                <span className="support-text"><strong>7/24 Canlı Destek</strong><small>Her zaman yanındayız!</small></span>
+                <CircleHelp size={19} />
+              </button>
+            </aside>
+          </div>
+
+          <div className="trust-bar">
+            <div className="trust-items">
+              <span><Info size={17} /> 18+ Sorumlu Oyun</span>
+              <span><Headphones size={17} /> 7/24 Destek</span>
+              <span><Star size={17} /> Demo modu</span>
+            </div>
+            <span className="tb-note">Bahis eğlence amaçlıdır; kaybetmeyi göze alabileceğinden fazlasını oynama.</span>
+          </div>
+
+          <SiteFooter onOpen={openModal} onGoMatches={goMatches} onGoCasino={goCasino} />
+        </div>
       </div>
+
+      <button type="button" className="support-fab" onClick={info('Canlı Destek')} aria-label="Canlı destek">
+        <Headphones size={26} />
+        <span>Canlı Destek<br />7/24</span>
+      </button>
 
       <CouponFab count={selectedBets.length} onClick={() => setIsCouponOpen(true)} />
       <MobileDock
@@ -492,8 +480,6 @@ function App() {
         onAccount={() => (sessionEmail ? openModal('account') : openModal('login'))}
         onSupport={goFooter}
       />
-
-      <SiteFooter onOpen={openModal} onGoMatches={goMatches} onGoCasino={goCasino} />
 
       {modal && (
         <Modal

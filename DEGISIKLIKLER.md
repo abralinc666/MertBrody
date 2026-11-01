@@ -1,4 +1,4 @@
-# BetFury — Değişiklik Özeti
+# RockstarBet — Değişiklik Özeti
 
 ## Çalıştırma
 ```
@@ -6,6 +6,14 @@ npm install
 npm run dev
 ```
 Başka bir ayar gerekmez. (`.env` yalnızca isteğe bağlı lisans bilgisi içindir.)
+
+## Tema ve isim
+- Marka adı plan.md'deki gibi **RockstarBet** (tek yerden: `src/config/site.ts`).
+- Tema referans görsele göre pembe/mor: sol menü (CANLI rozeti, "Her yatırıma özel bonus" kartı), üst çubukta arama + Güncel Bonuslar / VIP Kulüp / Etkinlikler,
+  gün batımı şehir silüetli vitrin (oklar + noktalar), kategori kartları, Popüler Oyunlar, sağ altta Canlı Destek balonu.
+- Vitrindeki çizimler özgün vektör sanattır; referans görseldeki üçüncü taraf karakter/logo/oyun görselleri kullanılmadı.
+- Ödeme markası logoları ve "Güvenli ve Lisanslı" iddiası eklenmedi (gerçek ödeme/lisans yok).
+- `docs/plan.md`: canlı veri ve ürün planı (lisanslı sağlayıcı gerektirir; henüz uygulanmadı).
 
 ## Demo modu (Supabase kaldırıldı)
 - Tüm arka uç kuralları tarayıcıda çalışır: `src/services/api.ts` (veri: localStorage).

@@ -1,3 +1,4 @@
+import { SITE } from '@/config/site';
 import type { Sport, Match, HeroSlide, MatchWithMarkets, MarketType, SubMarket } from '@/types';
 
 export const sports: Sport[] = [
@@ -105,11 +106,11 @@ export const matches: MatchWithMarkets[] = rawMatches.map((m) => ({
 }));
 
 export const heroSlides: HeroSlide[] = [
-  { kicker: 'İLK ÜYELİK BONUSU', value: '%100', title: 'Hoş Geldin Bonusu', description: 'İlk yatırımına özel bonus fırsatını kaçırma.' },
-  { kicker: 'ANLIK KAYIP BONUSU', value: '%40', title: 'Kayıp Bonusu', description: 'Aktif bahislerinde kaybının %40\'ını geri al.' },
-  { kicker: 'YENİ ÜYE FIRSATI', value: '1.500 ₺', title: 'Deneme Bonusu', description: 'Risksiz oyun deneyimiyle hemen başla.' },
-  { kicker: 'KRİPTO YATIRIM', value: '%50', title: 'Kripto Bonusu', description: 'Kripto yatırımlarında ekstra avantaj kazan.' },
-  { kicker: 'TOPLULUK ETKİNLİĞİ', value: 'BONUS', title: 'Telegram Etkinlik Bonusu', description: 'Etkinliklere katıl, sürpriz bonusları yakala.' },
+  { kicker: `${SITE.name}'te`, value: '%100', title: 'Hoş Geldin Bonusu!', description: 'Yeni üyelerimize özel kaçırılmayacak fırsat!' },
+  { kicker: 'Anlık kayıp bonusu', value: '%40', title: 'Kayıp Bonusu!', description: 'Aktif bahislerinde kaybının %40\'ını geri al!' },
+  { kicker: 'Yeni üye fırsatı', value: '1.500 ₺', title: 'Deneme Bonusu!', description: 'Risksiz oyun deneyimiyle hemen başla!' },
+  { kicker: 'Kripto yatırım', value: '%50', title: 'Kripto Bonusu!', description: 'Kripto yatırımlarında ekstra avantaj kazan!' },
+  { kicker: 'Topluluk etkinliği', value: 'BONUS', title: 'Telegram Etkinliği!', description: 'Etkinliklere katıl, sürpriz bonusları yakala!' },
 ];
 
 export const games = [
