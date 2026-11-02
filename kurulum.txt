@@ -1,0 +1,8 @@
+1 : veritabani.sql myadmin içine atınız
+2 : baglan.php bağlantınızı yapınız
+3 : phpmyadmin bölümünden siteayar yerine link adresinizi giriniz sonunda / olması gerekli bilginiz olsun
+4 : eğer cpaneldeki .htaccess size atılanla aynı değilse onu size atılanla değiştiriniz
+
+Script çalışmazsa Php sürümü 5.6 veya 7.2 deneyiniz veya tekrardan .htaccess kontrol ediniz
+
+-- Bir dua ücret için yeterlidir --

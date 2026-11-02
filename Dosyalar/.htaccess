@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}.php -f 
+RewriteRule ^(.*)$ $1.php 
+RewriteRule ^([a-z]+)\/?$ $1.php [NC]  
+</IfModule>
+
+
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond $1 !^(css|js|images|inc|lang)
+
+//Sabit sayfalar için oluşturmamız gereken yapı aşağıdaki gibidir.(anasayfa yazdığımızda index.php sayfasını çağır)
+
+RewriteRule ^anasayfa/? index.php [NC,L]
+RewriteRule ^hakkimizda/? hakkimizda.php [NC,L]
+
+// Dinamik sayfalar için  0-9 ve a-z arasındaki karakterler için ([0-9a-zA-Z-_]+) bu yapıyı ve id=1 icin  0-9 arası rakamlardan oluşan karakterler seçilmeli ([0-9]+) bu şekilde oluşturup hizmetlerimiz.php?id= sayfasını çağırmalıyız.
+
+RewriteRule ^detay/([0-9a-zA-Z-_]+)/([0-9]+)? detay.php?id=$2 [L,QSA]
+
+RewriteRule ^sayfa/([0-9a-zA-Z-_]+)/([0-9]+)? sayfa.php?id=$2 [L,QSA]
+
+RewriteRule ^oku/([0-9a-zA-Z-_]+)/([0-9]+)? oku.php?id=$2 [L,QSA]
