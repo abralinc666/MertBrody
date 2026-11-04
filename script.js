@@ -1,189 +1,558 @@
-// ODA Studio — GSAP + ScrollTrigger + Three.js (progressive enhancement)
-(() => {
-  const $ = (s, c = document) => c.querySelector(s), $$ = (s, c = document) => [...c.querySelectorAll(s)];
-  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const header = $('.site-header'), menu = $('.menu-toggle'), pre = $('.preloader');
+// LovelyCam - Ana Sayfa JavaScript (V3 - with Custom Dropdown & No Distance)
 
-  menu?.addEventListener('click', () => {
-    const open = header.classList.toggle('nav-open');
-    menu.setAttribute('aria-expanded', String(open));
-  });
-  $$('.desktop-nav a').forEach(a => a.addEventListener('click', () => {
-    header.classList.remove('nav-open'); menu?.setAttribute('aria-expanded', 'false');
-  }));
+// DOM Elements
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+const photosGrid = document.getElementById('photos-grid');
+const gridViewBtn = document.getElementById('grid-view-btn');
+const listViewBtn = document.getElementById('list-view-btn');
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-button');
+const galleryTitle = document.getElementById('gallery-title');
+const resultsCount = document.getElementById('results-count');
+const emptyState = document.getElementById('empty-state');
+const resetFiltersBtn = document.getElementById('reset-filters-btn');
+const backToTop = document.getElementById('back-to-top');
+const notification = document.getElementById('notification');
+const notificationMessage = document.getElementById('notification-message');
+const exploreBtn = document.getElementById('explore-btn');
 
-  if (!window.gsap || !window.ScrollTrigger || RM) {
-    pre?.remove(); $$('.reveal').forEach(e => e.style.opacity = 1); return;
-  }
-  gsap.registerPlugin(ScrollTrigger);
+// Filter Elements
+const filterToggle = document.getElementById('filter-toggle');
+const filterPanel = document.getElementById('filter-panel');
+const genderTabs = document.querySelectorAll('.gender-tab');
+// distance filter elements removed
+const filterAgeMin = document.getElementById('filter-age-min');
+const filterAgeMax = document.getElementById('filter-age-max');
+const filterPriceMin = document.getElementById('filter-price-min');
+const filterPriceMax = document.getElementById('filter-price-max');
+const filterPremium = document.getElementById('filter-premium');
+const filterVerified = document.getElementById('filter-verified');
+const applyFiltersBtn = document.getElementById('apply-filters');
+const resetFiltersAdvBtn = document.getElementById('reset-filters');
 
-  // Kelime bazlı maskeli metin bölücü (em / br yapısını korur)
-  const split = el => {
-    const walk = n => [...n.childNodes].forEach(c => {
-      if (c.nodeType === 3) {
-        const f = document.createDocumentFragment();
-        c.textContent.split(/(\s+)/).forEach(t => {
-          if (!t.trim()) return f.append(t);
-          const o = document.createElement('span'), i = document.createElement('span');
-          o.className = 'w'; i.className = 'wi'; i.textContent = t; o.append(i); f.append(o);
-        });
-        c.replaceWith(f);
-      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
-    });
-    walk(el); el.dataset.split = 1; return $$('.wi', el);
-  };
+// Custom City Dropdown Elements
+const customCitySelect = document.getElementById('custom-city-select');
+const customSelectTrigger = customCitySelect.querySelector('.custom-select-trigger');
+const selectedCityText = document.getElementById('selected-city-text');
+const customOptions = customCitySelect.querySelector('.custom-options');
+const citySearchInput = document.getElementById('city-search-input');
+const cityOptionsList = document.getElementById('city-options-list');
 
-  // Three.js: shader tabanlı hero görseli (fare dalgası + kromatik kayma) + toz parçacıkları
-  const initGL = () => {
-    const wrap = $('.hero-image-wrap'), img = $('img', wrap), hero = $('.hero');
-    if (!window.THREE) return null;
-    try {
-      const r = new THREE.WebGLRenderer({alpha: true, antialias: true});
-      r.setPixelRatio(Math.min(devicePixelRatio, 1.6));
-      const cv = r.domElement; cv.className = 'hero-gl'; wrap.prepend(cv);
-      const scene = new THREE.Scene(), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10);
-      const U = {uTex: {value: null}, uTime: {value: 0}, uHover: {value: 0}, uShift: {value: 0}, uZoom: {value: 1.12},
-        uMouse: {value: new THREE.Vector2(.5, .5)}, uRes: {value: new THREE.Vector2(1, 1)}, uImg: {value: new THREE.Vector2(1, 1)}};
-      scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
-        uniforms: U, depthTest: false,
-        vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-        fragmentShader: `uniform sampler2D uTex;uniform float uTime,uHover,uZoom,uShift;uniform vec2 uMouse,uRes,uImg;varying vec2 vUv;
-        void main(){
-          float k=max(uRes.x/uImg.x,uRes.y/uImg.y);
-          vec2 uv=(vUv-.5)*uRes/(uImg*k)/uZoom+.5; uv.y+=uShift;
-          vec2 m=vUv-uMouse; m.x*=uRes.x/uRes.y;
-          float d=length(m), f=smoothstep(.4,0.,d)*uHover; vec2 dir=m/(d+1e-4);
-          uv+=dir*f*.022*sin(d*22.-uTime*2.5);
-          uv+=.003*vec2(sin(vUv.y*7.+uTime*.7),cos(vUv.x*6.+uTime*.6));
-          vec2 ca=dir*f*.006;
-          vec3 c=vec3(texture2D(uTex,uv+ca).r,texture2D(uTex,uv).g,texture2D(uTex,uv-ca).b);
-          c=mix(vec3(dot(c,vec3(.299,.587,.114))),c,.74);
-          gl_FragColor=vec4(c,1.);
-        }`})));
+// State
+let currentFilters = {
+    gender: 'all',
+    city: 'all',
+    ageMin: 18,
+    ageMax: 60,
+    priceMin: 0,
+    priceMax: 10000,
+    premiumOnly: false,
+    verifiedOnly: true
+};
 
-      const N = 140, pos = new Float32Array(N * 3), sp = [];
-      for (let i = 0; i < N; i++) { pos[i*3] = Math.random()*2-1; pos[i*3+1] = Math.random()*2-1; sp.push(.02 + Math.random()*.06, Math.random()*6.28); }
-      const sc = document.createElement('canvas'); sc.width = sc.height = 64;
-      const g = sc.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-      gr.addColorStop(0, 'rgba(255,244,220,1)'); gr.addColorStop(1, 'rgba(255,244,220,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
-      const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      const pts = new THREE.Points(pg, new THREE.PointsMaterial({map: new THREE.CanvasTexture(sc), size: 14, sizeAttenuation: false,
-        transparent: true, opacity: .55, depthTest: false, blending: THREE.AdditiveBlending}));
-      pts.frustumCulled = false; scene.add(pts);
+let isGridView = true;
+let isDarkTheme = false;
 
-      new THREE.TextureLoader().setCrossOrigin('anonymous').load(img.currentSrc || img.src, t => {
-        t.minFilter = THREE.LinearFilter; t.generateMipmaps = false;
-        U.uTex.value = t; U.uImg.value.set(t.image.width, t.image.height);
-        cv.classList.add('is-ready'); img.style.opacity = 0;
-      }, undefined, () => cv.remove());
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    initializeApp();
+});
 
-      const fit = () => { const w = wrap.clientWidth, h = wrap.clientHeight; r.setSize(w, h, false); U.uRes.value.set(w, h); };
-      new ResizeObserver(fit).observe(wrap); fit();
+function initializeApp() {
+    // Load saved theme preference
+    loadThemePreference();
+    
+    // Initialize Custom City Dropdown
+    initCustomDropdown();
+    
+    // Initial grid view
+    if (gridViewBtn) gridViewBtn.classList.add('active');
+    
+    // Display all profiles
+    applyFilters();
+    
+    // Welcome notification
+    setTimeout(() => {
+        showNotification(`${MOCK_USERS.length} profil yüklendi! 🔥`, 'success');
+    }, 500);
+    
+    // Setup event listeners
+    setupEventListeners();
+}
 
-      let tx = .5, ty = .5, th = 0, on = true;
-      hero.addEventListener('pointermove', e => {
-        const b = wrap.getBoundingClientRect(); tx = (e.clientX - b.left) / b.width; ty = 1 - (e.clientY - b.top) / b.height;
-        th = tx >= 0 && tx <= 1 && ty >= 0 && ty <= 1 ? 1 : 0;
-      });
-      hero.addEventListener('pointerleave', () => th = 0);
-      new IntersectionObserver(([e]) => on = e.isIntersecting).observe(hero);
-
-      gsap.ticker.add(t => {
-        if (!on || !U.uTex.value) return;
-        U.uTime.value = t;
-        U.uMouse.value.x += (tx - U.uMouse.value.x) * .08; U.uMouse.value.y += (ty - U.uMouse.value.y) * .08;
-        U.uHover.value += (th - U.uHover.value) * .06;
-        const a = pg.attributes.position.array;
-        for (let i = 0; i < N; i++) {
-          a[i*3+1] += sp[i*2] * .02; a[i*3] += Math.sin(t * .5 + sp[i*2+1]) * .0006;
-          if (a[i*3+1] > 1.05) a[i*3+1] = -1.05;
+// Theme Persistence
+function loadThemePreference() {
+    const savedTheme = localStorage.getItem('lovelycam_theme');
+    if (savedTheme === 'dark') {
+        isDarkTheme = true;
+        body.classList.add('dark-theme');
+        if (themeToggle) {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
-        pg.attributes.position.needsUpdate = true;
-        r.render(scene, cam);
-      });
-      gsap.to(U.uShift, {value: .045, ease: 'none', scrollTrigger: {trigger: hero, start: 'top top', end: 'bottom top', scrub: true}});
-      return U;
-    } catch (e) { console.info('3D efekt kullanılamıyor; statik görsel korunuyor.'); return null; }
-  };
-  const GL = initGL();
+    }
+}
 
-  // İlerleme çubuğu
-  const bar = document.createElement('div'); bar.className = 'progress'; document.body.append(bar);
-  gsap.to(bar, {scaleX: 1, ease: 'none', scrollTrigger: {start: 0, end: 'max', scrub: .2}});
+function saveThemePreference() {
+    localStorage.setItem('lovelycam_theme', isDarkTheme ? 'dark' : 'light');
+}
 
-  // Header: kaydırınca cam efekti, aşağı inerken gizlen
-  let hidden = false;
-  ScrollTrigger.create({start: 0, end: 'max', onUpdate: s => {
-    const y = s.scroll(); header.classList.toggle('is-scrolled', y > 80);
-    const h = s.direction === 1 && y > 700;
-    if (h !== hidden) { hidden = h; gsap.to(header, {yPercent: h ? -100 : 0, duration: .5, ease: 'power3.out'}); }
-  }});
-
-  // Açılış zaman çizelgesi
-  const heroWords = split($('.hero h1'));
-  const tl = gsap.timeline({paused: true, defaults: {ease: 'expo.out'}});
-  tl.to(pre, {yPercent: -100, duration: 1.2, ease: 'expo.inOut'})
-    .add(() => document.documentElement.style.overflow = '', .8)
-    .from('.hero-image-wrap', {clipPath: 'inset(10% 0 10% 100%)', duration: 1.8, ease: 'expo.inOut'}, .1)
-    .from(heroWords, {yPercent: 115, rotate: 5, duration: 1.4, stagger: .08}, .55)
-    .from('.hero-copy > :not(h1)', {y: 24, opacity: 0, duration: 1.1, stagger: .1}, .85)
-    .from(header, {y: -20, opacity: 0, duration: 1}, 1)
-    .from('.floating-note', {scale: 0, rotate: -90, duration: 1.4, ease: 'elastic.out(1,.6)'}, 1.3)
-    .from('.image-caption,.vertical-label,.hero-scroll', {opacity: 0, y: 10, stagger: .1}, 1.4);
-  if (GL) tl.from(GL.uZoom, {value: 1.6, duration: 2.4}, .1);
-  $$('.hero-meta strong').forEach(el => {
-    const n = parseInt(el.textContent), s = el.textContent.replace(/\d/g, ''), o = {v: 0};
-    el.textContent = '0' + s;
-    tl.to(o, {v: n, duration: 2, ease: 'power2.out', onUpdate: () => el.textContent = Math.round(o.v) + s}, 1.1);
-  });
-
-  // Preloader sayacı
-  document.documentElement.style.overflow = 'hidden';
-  const cnt = $('.pre-count'), pb = $('.pre-bar'), o = {v: 0};
-  gsap.to(pb, {scaleX: 1, duration: 1.6, ease: 'power2.inOut'});
-  gsap.to(o, {v: 100, duration: 1.6, ease: 'power2.inOut', onUpdate: () => cnt.textContent = Math.round(o.v), onComplete: () => tl.play()});
-
-  // Başlıklar ve genel reveal
-  $$('.intro h2,.section-heading h2,.services h2,.contact h2,.quote-inner p').forEach(el => {
-    gsap.from(split(el), {yPercent: 115, rotate: 4, duration: 1.3, stagger: .06, ease: 'expo.out',
-      scrollTrigger: {trigger: el, start: 'top 85%', once: true}});
-  });
-  $$('.reveal').forEach(el => {
-    if (el.closest('.hero') || el.dataset.split) return;
-    gsap.from(el, {y: 40, opacity: 0, duration: 1.1, ease: 'expo.out', scrollTrigger: {trigger: el, start: 'top 90%', once: true}});
-  });
-
-  // Proje görselleri: maske açılışı + parallax
-  $$('.project-image').forEach(el => {
-    gsap.from(el, {clipPath: 'inset(0 0 100% 0)', duration: 1.4, ease: 'expo.out', scrollTrigger: {trigger: el, start: 'top 88%', once: true}});
-    gsap.fromTo($('img', el), {yPercent: -7, scale: 1.2}, {yPercent: 7, ease: 'none',
-      scrollTrigger: {trigger: el, start: 'top bottom', end: 'bottom top', scrub: true}});
-  });
-
-  // Hero: kaydırırken metin yukarı süzülür, yüzen not havada salınır
-  gsap.to('.hero-copy', {yPercent: -10, ease: 'none', scrollTrigger: {trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true}});
-  gsap.to('.floating-note', {y: -13, duration: 2.4, repeat: -1, yoyo: true, ease: 'sine.inOut'});
-
-  // Yalnızca fare kullanılan cihazlar: özel imleç, manyetik butonlar, fare paralaksı
-  if (matchMedia('(hover:hover) and (pointer:fine)').matches) {
-    const c = document.createElement('div'); c.className = 'cursor'; c.innerHTML = '<span></span>'; document.body.append(c);
-    const cx = gsap.quickTo(c, 'x', {duration: .5, ease: 'power3'}), cy = gsap.quickTo(c, 'y', {duration: .5, ease: 'power3'});
-    addEventListener('pointermove', e => { cx(e.clientX); cy(e.clientY); });
-    const hov = (sel, cls) => $$(sel).forEach(el => {
-      el.addEventListener('pointerenter', () => c.classList.add(cls));
-      el.addEventListener('pointerleave', () => c.classList.remove(cls));
+function initCustomDropdown() {
+    // Populate options
+    const cities = getUniqueCities();
+    
+    // Add "All Cities" option first
+    // cityOptionsList already has it from HTML
+    
+    cities.forEach(city => {
+        const option = document.createElement('div');
+        option.className = 'option';
+        option.dataset.value = city;
+        option.textContent = city;
+        cityOptionsList.appendChild(option);
     });
-    hov('a,button', 'is-link'); hov('.project-image', 'is-view');
-
-    $$('.contact-circle,.button,.header-cta').forEach(el => {
-      const xt = gsap.quickTo(el, 'x', {duration: .6, ease: 'power3'}), yt = gsap.quickTo(el, 'y', {duration: .6, ease: 'power3'});
-      el.addEventListener('pointermove', e => { const b = el.getBoundingClientRect(); xt((e.clientX - b.left - b.width / 2) * .3); yt((e.clientY - b.top - b.height / 2) * .3); });
-      el.addEventListener('pointerleave', () => { xt(0); yt(0); });
+    
+    // Toggle dropdown
+    customSelectTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        customCitySelect.classList.toggle('open');
+        if (customCitySelect.classList.contains('open')) {
+            citySearchInput.focus();
+        }
     });
+    
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!customCitySelect.contains(e.target)) {
+            customCitySelect.classList.remove('open');
+        }
+    });
+    
+    // Search functionality
+    citySearchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const options = cityOptionsList.querySelectorAll('.option');
+        
+        options.forEach(option => {
+            const text = option.textContent.toLowerCase();
+            if (text.includes(query)) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    });
+    
+    // Option selection
+    cityOptionsList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('option')) {
+            const value = e.target.dataset.value;
+            const text = e.target.textContent;
+            
+            selectedCityText.textContent = text;
+            currentFilters.city = value;
+            
+            // Mark selected
+            cityOptionsList.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            e.target.classList.add('selected');
+            
+            customCitySelect.classList.remove('open');
+            citySearchInput.value = ''; // Reset search
+            
+            // Show all options again
+            cityOptionsList.querySelectorAll('.option').forEach(o => o.style.display = 'block');
+        }
+    });
+}
 
-    const nx = gsap.quickTo('.floating-note', 'x', {duration: 1.2, ease: 'power3'}), lx = gsap.quickTo('.vertical-label', 'x', {duration: 1.2, ease: 'power3'});
-    $('.hero').addEventListener('pointermove', e => { const k = e.clientX / innerWidth - .5; nx(k * -40); lx(k * 24); });
-  }
+function setupEventListeners() {
+    // Theme toggle
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            isDarkTheme = !isDarkTheme;
+            body.classList.toggle('dark-theme', isDarkTheme);
+            themeToggle.innerHTML = isDarkTheme ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            saveThemePreference();
+        });
+    }
+    
+    // Mobile menu
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+    
+    // View toggle
+    if (gridViewBtn) {
+        gridViewBtn.addEventListener('click', () => {
+            if (!isGridView) {
+                isGridView = true;
+                if (photosGrid) photosGrid.classList.remove('list-view');
+                gridViewBtn.classList.add('active');
+                if (listViewBtn) listViewBtn.classList.remove('active');
+            }
+        });
+    }
+    
+    if (listViewBtn) {
+        listViewBtn.addEventListener('click', () => {
+            if (isGridView) {
+                isGridView = false;
+                if (photosGrid) photosGrid.classList.add('list-view');
+                listViewBtn.classList.add('active');
+                if (gridViewBtn) gridViewBtn.classList.remove('active');
+            }
+        });
+    }
+    
+    // Reset filters
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', resetAllFilters);
+    }
+    
+    // Search
+    if (searchButton) {
+        searchButton.addEventListener('click', performSearch);
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+    }
+    
+    // Explore button
+    if (exploreBtn) {
+        exploreBtn.addEventListener('click', () => {
+            const filterSection = document.querySelector('.filter-section');
+            if (filterSection) {
+                filterSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+    
+    // Back to top
+    window.addEventListener('scroll', () => {
+        if (backToTop) {
+            backToTop.classList.toggle('visible', window.scrollY > 500);
+        }
+    });
+    
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    // Filter toggle
+    if (filterToggle) {
+        filterToggle.addEventListener('click', () => {
+            filterToggle.classList.toggle('active');
+            if (filterPanel) filterPanel.classList.toggle('open');
+        });
+    }
+    
+    // Gender tabs
+    genderTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            genderTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentFilters.gender = tab.dataset.gender;
+            applyFilters();
+        });
+    });
+    
+    // Apply filters button
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', () => {
+            // Collect all filter values 
+            // city is updated in option click handler
+            
+            currentFilters.ageMin = filterAgeMin ? parseInt(filterAgeMin.value) || 18 : 18;
+            currentFilters.ageMax = filterAgeMax ? parseInt(filterAgeMax.value) || 60 : 60;
+            currentFilters.priceMin = filterPriceMin ? parseInt(filterPriceMin.value) || 0 : 0;
+            currentFilters.priceMax = filterPriceMax ? parseInt(filterPriceMax.value) || 10000 : 10000;
+            currentFilters.premiumOnly = filterPremium ? filterPremium.checked : false;
+            currentFilters.verifiedOnly = filterVerified ? filterVerified.checked : true;
+            
+            applyFilters();
+            showNotification('Filtreler uygulandı! 🎯', 'success');
+        });
+    }
+    
+    // Reset filters button (advanced panel)
+    if (resetFiltersAdvBtn) {
+        resetFiltersAdvBtn.addEventListener('click', resetAllFilters);
+    }
+}
 
-  addEventListener('load', () => ScrollTrigger.refresh());
-})();
+function applyFilters() {
+    const results = filterUsers(currentFilters);
+    displayProfiles(results);
+    
+    // Update results count
+    if (resultsCount) {
+        resultsCount.textContent = `${results.length} profil bulundu`;
+    }
+    
+    // Update title based on gender
+    if (galleryTitle) {
+        if (currentFilters.gender === 'female') {
+            galleryTitle.textContent = '👩 Kadın Profilleri';
+        } else if (currentFilters.gender === 'male') {
+            galleryTitle.textContent = '👨 Erkek (Gigolo) Profilleri';
+        } else {
+            galleryTitle.textContent = '🔥 Tüm Profiller';
+        }
+    }
+    
+    // Show/hide empty state
+    if (results.length === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+        if (photosGrid) photosGrid.style.display = 'none';
+    } else {
+        if (emptyState) emptyState.style.display = 'none';
+        if (photosGrid) photosGrid.style.display = 'grid';
+    }
+}
+
+function resetAllFilters() {
+    currentFilters = {
+        gender: 'all',
+        city: 'all',
+        ageMin: 18,
+        ageMax: 60,
+        priceMin: 0,
+        priceMax: 10000,
+        premiumOnly: false,
+        verifiedOnly: true
+    };
+    
+    // Reset UI
+    genderTabs.forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.gender === 'all');
+    });
+    
+    // Reset dropdown
+    selectedCityText.textContent = 'Tüm Şehirler';
+    cityOptionsList.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    
+    if (filterAgeMin) filterAgeMin.value = 18;
+    if (filterAgeMax) filterAgeMax.value = 60;
+    if (filterPriceMin) filterPriceMin.value = 0;
+    if (filterPriceMax) filterPriceMax.value = 10000;
+    if (filterPremium) filterPremium.checked = false;
+    if (filterVerified) filterVerified.checked = true;
+    
+    if (searchInput) searchInput.value = '';
+    
+    applyFilters();
+    showNotification('Filtreler sıfırlandı.', 'info');
+}
+
+function performSearch() {
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
+    
+    if (searchTerm === '') {
+        showNotification('Lütfen bir arama terimi girin.', 'info');
+        return;
+    }
+    
+    const results = searchUsers(searchTerm);
+    
+    if (results.length === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+        if (photosGrid) photosGrid.style.display = 'none';
+        showNotification('Aramanıza uygun sonuç bulunamadı.', 'info');
+    } else {
+        if (emptyState) emptyState.style.display = 'none';
+        if (photosGrid) photosGrid.style.display = 'grid';
+        if (galleryTitle) galleryTitle.textContent = `"${searchTerm}" için Sonuçlar`;
+        if (resultsCount) resultsCount.textContent = `${results.length} profil bulundu`;
+        displayProfiles(results);
+        showNotification(`"${searchTerm}" için ${results.length} sonuç bulundu.`, 'success');
+    }
+}
+
+function displayProfiles(profiles) {
+    if (!photosGrid) return;
+    
+    photosGrid.innerHTML = '';
+    
+    profiles.forEach((profile, index) => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        
+        const ribbon = profile.isFeatured ? `<div class="card-ribbon">Premium</div>` : '';
+        const genderIcon = profile.gender === 'male' ? 'fa-mars' : 'fa-venus';
+        const genderClass = profile.gender === 'male' ? 'male' : 'female';
+        
+        // Check for pricing (V3 logic)
+        let priceTag = '';
+        if (profile.pricing && profile.pricing.hourly) {
+            priceTag = `<div class="card-price">${formatPrice(profile.pricing.hourly)}/saat</div>`;
+        }
+        
+        // Simulating distance logic if it was still needed from mock data (optional)
+        const distanceText = profile.distance ? `• ${profile.distance} km` : '';
+        
+        // Determine Avatar/Frame Style
+        let frameClass = 'basic';
+        // Logic: 
+        // - > 50 meetings OR Premium = Neon/Elite
+        // - > 100 meetings = Gold Elite
+        
+        if (profile.meetings > 100) {
+            frameClass = 'elite';
+        } else if (profile.isPremium || profile.meetings > 30) {
+            frameClass = 'neon';
+        }
+
+        card.innerHTML = `
+            <div class="card-gender ${genderClass}"><i class="fas ${genderIcon}"></i></div>
+            ${ribbon}
+            <div class="card-favorite" data-id="${profile.id}">
+                <i class="far fa-heart"></i>
+            </div>
+            
+            <div class="card-image-wrapper">
+                <img src="${profile.thumbnail}" alt="${profile.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x500/ff1a5c/ffffff?text=${encodeURIComponent(profile.name)}'">
+                <div class="card-blur"></div>
+            </div>
+            
+            <div class="card-tag ${frameClass === 'elite' ? 'gold-tag' : ''}">${profile.tags}</div>
+            ${priceTag}
+            
+            <div class="card-content">
+                <div class="card-header-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                     <!-- Mini Avatar for list view or emphasis -->
+                     <div class="avatar-frame ${frameClass}" style="width: 40px; height: 40px; margin: 0; padding: 2px;">
+                        <img src="${profile.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;">
+                     </div>
+                     <div>
+                        <h3 class="card-title" style="font-size: 1.1rem; margin: 0;">${profile.name}</h3>
+                        <div class="card-location" style="font-size: 0.8rem; margin: 0;">
+                            <i class="fas fa-map-marker-alt"></i> ${profile.city}
+                        </div>
+                     </div>
+                </div>
+
+                <p class="card-text">${profile.description.substring(0, 70)}...</p>
+                
+                <div class="card-footer">
+                    <div class="card-rating">
+                        <i class="fas fa-star" style="color: ${frameClass === 'elite' ? 'var(--gold-color)' : 'var(--primary-color)'}"></i>
+                        <span>${profile.rating.toFixed(1)}</span>
+                    </div>
+                    ${frameClass === 'elite' ? '<span style="font-size: 0.7rem; color: var(--gold-color); border: 1px solid var(--gold-color); padding: 2px 6px; border-radius: 10px;">ELITE</span>' : ''}
+                    <button class="card-btn" data-id="${profile.id}">Profili Gör</button>
+                </div>
+            </div>
+        `;
+        
+        photosGrid.appendChild(card);
+        
+        // Favorite button
+        const favoriteBtn = card.querySelector('.card-favorite');
+        favoriteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            favoriteBtn.classList.toggle('active');
+            const icon = favoriteBtn.querySelector('i');
+            
+            if (favoriteBtn.classList.contains('active')) {
+                icon.classList.replace('far', 'fas');
+                showNotification(`${profile.name} favorilere eklendi! 💕`, 'success');
+            } else {
+                icon.classList.replace('fas', 'far');
+                showNotification(`${profile.name} favorilerden çıkarıldı.`, 'info');
+            }
+        });
+        
+        // Profile button
+        const profileBtn = card.querySelector('.card-btn');
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.location.href = `profile-detail.html?id=${profile.id}`;
+        });
+        
+        // Card click
+        card.addEventListener('click', () => {
+            window.location.href = `profile-detail.html?id=${profile.id}`;
+        });
+        
+        // Animation
+        setTimeout(() => {
+            card.classList.add('visible');
+        }, index * 50);
+    });
+}
+
+// Notification function
+function showNotification(message, type = 'info') {
+    if (!notification || !notificationMessage) return;
+    
+    notificationMessage.textContent = message;
+    
+    const notificationIcon = notification.querySelector('i');
+    notificationIcon.className = '';
+    
+    switch (type) {
+        case 'success':
+            notificationIcon.className = 'fas fa-check-circle';
+            notification.style.borderLeftColor = '#ff1a5c';
+            break;
+        case 'error':
+            notificationIcon.className = 'fas fa-exclamation-circle';
+            notification.style.borderLeftColor = '#f44336';
+            break;
+        case 'warning':
+            notificationIcon.className = 'fas fa-exclamation-triangle';
+            notification.style.borderLeftColor = '#ff9800';
+            break;
+        default:
+            notificationIcon.className = 'fas fa-info-circle';
+            notification.style.borderLeftColor = '#6236ff';
+    }
+    
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+// Role Selection Logic (For Registration Modal)
+window.selectRole = function(role) {
+    const step1 = document.getElementById('register-step-1');
+    const registerForm = document.getElementById('register-form');
+    const publisherAlert = document.getElementById('publisher-alert');
+    
+    if (step1) step1.style.display = 'none';
+    
+    if (role === 'customer') {
+        if (registerForm) registerForm.style.display = 'block';
+        if (publisherAlert) publisherAlert.style.display = 'none';
+    } else if (role === 'publisher') {
+        if (registerForm) registerForm.style.display = 'none';
+        if (publisherAlert) publisherAlert.style.display = 'block';
+    }
+    
+    // Auto-focus username input for customer
+    if (role === 'customer') {
+        const usernameInput = document.getElementById('register-username');
+        if (usernameInput) setTimeout(() => usernameInput.focus(), 100);
+    }
+}
+
+window.showRoleSelection = function() {
+    const step1 = document.getElementById('register-step-1');
+    const registerForm = document.getElementById('register-form');
+    const publisherAlert = document.getElementById('publisher-alert');
+    
+    if (step1) step1.style.display = 'block';
+    if (registerForm) registerForm.style.display = 'none';
+    if (publisherAlert) publisherAlert.style.display = 'none';
+}
