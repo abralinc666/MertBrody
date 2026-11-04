@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin.html
-Disallow: /dashboard.html
-Sitemap: https://lovelycam.com/sitemap.xml
