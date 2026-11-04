@@ -413,6 +413,7 @@ function displayProfiles(profiles) {
 
         card.innerHTML = `
             <div class="card-gender ${genderClass}"><i class="fas ${genderIcon}"></i></div>
+            ${profile.isOnline ? `<div class="card-online-badge"><span class="pulse-dot"></span>Çevrimiçi</div>` : ""}
             ${ribbon}
             <div class="card-favorite" data-id="${profile.id}">
                 <i class="far fa-heart"></i>
@@ -455,19 +456,37 @@ function displayProfiles(profiles) {
         
         photosGrid.appendChild(card);
         
-        // Favorite button
+        // Favorite button (Persisted to localStorage user favorites)
         const favoriteBtn = card.querySelector('.card-favorite');
+        const loggedUser = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+        if (loggedUser && Array.isArray(loggedUser.favorites) && loggedUser.favorites.includes(profile.id)) {
+            favoriteBtn.classList.add('active');
+            favoriteBtn.querySelector('i').classList.replace('far', 'fas');
+        }
         favoriteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
             favoriteBtn.classList.toggle('active');
             const icon = favoriteBtn.querySelector('i');
+            const isFav = favoriteBtn.classList.contains('active');
             
-            if (favoriteBtn.classList.contains('active')) {
+            if (isFav) {
                 icon.classList.replace('far', 'fas');
                 showNotification(`${profile.name} favorilere eklendi! 💕`, 'success');
             } else {
                 icon.classList.replace('fas', 'far');
                 showNotification(`${profile.name} favorilerden çıkarıldı.`, 'info');
+            }
+
+            if (user) {
+                const allUsers = JSON.parse(localStorage.getItem('lovelycam_users') || '[]');
+                const uIdx = allUsers.findIndex(u => u.id === user.id);
+                if (uIdx !== -1) {
+                    const favs = new Set(allUsers[uIdx].favorites || []);
+                    if (isFav) favs.add(profile.id); else favs.delete(profile.id);
+                    allUsers[uIdx].favorites = Array.from(favs);
+                    localStorage.setItem('lovelycam_users', JSON.stringify(allUsers));
+                }
             }
         });
         
@@ -556,3 +575,21 @@ window.showRoleSelection = function() {
     if (registerForm) registerForm.style.display = 'none';
     if (publisherAlert) publisherAlert.style.display = 'none';
 }
+
+// V4.0 Upgrade: Sorting Select & Online Filter Binding
+document.addEventListener('DOMContentLoaded', () => {
+    const sortSelect = document.getElementById('sort-profiles-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            currentFilters.sortBy = e.target.value;
+            applyFilters();
+        });
+    }
+    const onlineCheckbox = document.getElementById('filter-online');
+    if (onlineCheckbox) {
+        onlineCheckbox.addEventListener('change', (e) => {
+            currentFilters.onlineOnly = e.target.checked;
+            applyFilters();
+        });
+    }
+});

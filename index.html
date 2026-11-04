@@ -19,6 +19,19 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "LovelyCam",
+      "url": "https://lovelycam.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://lovelycam.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -178,6 +191,11 @@
                         <span class="toggle-switch"></span>
                         <span>Sadece Onaylı</span>
                     </label>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="filter-online">
+                        <span class="toggle-switch"></span>
+                        <span>Sadece Çevrimiçi</span>
+                    </label>
                 </div>
             </div>
             
@@ -198,6 +216,7 @@
         <div class="content-header">
             <h2 id="gallery-title">🔥 Popüler Profiller</h2>
             <div class="results-count" id="results-count">0 profil bulundu</div>
+            <div class="sort-wrapper"><select id="sort-profiles-select" class="sort-select"><option value="recommended">Sırala: Önerilen</option><option value="rating">En Yüksek Puan</option><option value="price-asc">Ücret: Düşükten Yükseğe</option><option value="price-desc">Ücret: Yüksekten Düşüğe</option><option value="views">En Çok Görüntülenen</option></select></div>
             <div class="view-controls">
                 <button id="grid-view-btn" class="active"><i class="fas fa-th-large"></i></button>
                 <button id="list-view-btn"><i class="fas fa-list"></i></button>
@@ -397,6 +416,8 @@
     <script src="chat.js"></script>
     <script src="notifications.js"></script>
     <script src="script.js"></script>
+    <script src="payment.js"></script>
+    <script src="kvkk.js"></script>
     <script src="privacy.js"></script>
 </body>
 </html>

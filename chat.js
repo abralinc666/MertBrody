@@ -57,7 +57,7 @@ function appendChatMessage(msg) {
         <img src="${msg.avatar}" alt="${escapeHtml(msg.sender)}" class="avatar">
         <div class="bubble">
             <div class="sender">${escapeHtml(msg.sender)}</div>
-            <div class="text">${escapeHtml(msg.text)}</div>
+            <div class="text">${escapeHtml(msg.text)}${msg.photo ? `<img src="${msg.photo}" class="msg-photo-attachment" onclick="window.openLightboxImage && window.openLightboxImage(this.src)">` : ""}</div>
             <div class="time">${timeStr}</div>
         </div>
     `;
@@ -234,5 +234,75 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('beforeunload', () => {
     if (chatSimulationInterval) {
         clearInterval(chatSimulationInterval);
+    }
+});
+
+
+// V4.0 Upgrade: Photo Attachment & Multi-Tab Realtime BroadcastChannel for Global Chat
+const globalChatChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('lovelycam_realtime_chat') : null;
+if (globalChatChannel) {
+    globalChatChannel.onmessage = (event) => {
+        if (event.data && event.data.type === 'GLOBAL_MSG') {
+            appendChatMessage(event.data.payload);
+        }
+    };
+}
+
+window.sendChatPhoto = function(file) {
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    if (!user) {
+        if (typeof showNotification === 'function') showNotification('Fotoğraf göndermek için giriş yapın!', 'warning');
+        return;
+    }
+    if (!file || file.size > 1024 * 1024) {
+        if (typeof showNotification === 'function') showNotification('Fotoğraf boyutu maksimum 1MB olmalıdır.', 'error');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const msg = {
+            id: 'chat_' + Date.now(),
+            senderId: user.id,
+            sender: user.username,
+            avatar: user.avatar || 'user.png',
+            text: '📷 Fotoğraf gönderdi',
+            photo: e.target.result,
+            timestamp: new Date().toISOString()
+        };
+        const messages = getChatMessages();
+        messages.push(msg);
+        saveChatMessages(messages);
+        appendChatMessage(msg);
+        if (globalChatChannel) globalChatChannel.postMessage({ type: 'GLOBAL_MSG', payload: msg });
+    };
+    reader.readAsDataURL(file);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm && !document.getElementById('global-chat-photo-btn')) {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        fileInput.id = 'global-chat-photo-input';
+
+        const mediaBtn = document.createElement('button');
+        mediaBtn.type = 'button';
+        mediaBtn.id = 'global-chat-photo-btn';
+        mediaBtn.className = 'chat-media-btn';
+        mediaBtn.title = 'Fotoğraf Gönder';
+        mediaBtn.innerHTML = '<i class="fas fa-camera"></i>';
+        mediaBtn.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            if (e.target.files[0]) {
+                window.sendChatPhoto(e.target.files[0]);
+                fileInput.value = '';
+            }
+        };
+
+        chatForm.insertBefore(fileInput, chatForm.firstChild);
+        chatForm.insertBefore(mediaBtn, chatForm.firstChild);
     }
 });

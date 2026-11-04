@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Paneli (Admin) - LovelyCam V4.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-layout { max-width: 1360px; margin: 90px auto 50px; padding: 0 20px; display: grid; grid-template-columns: 260px 1fr; gap: 25px; }
+        .admin-sidebar { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 22px; height: fit-content; }
+        .admin-nav button { width: 100%; text-align: left; padding: 13px 16px; border: none; background: transparent; color: var(--text-color); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; margin-bottom: 6px; transition: var(--transition); }
+        .admin-nav button:hover, .admin-nav button.active { background: var(--gradient-hot); color: #fff; }
+        .admin-main { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 28px; }
+        .stats-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 28px; }
+        .stat-box { background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 16px; }
+        .stat-box i { font-size: 2rem; color: var(--primary-color); width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: rgba(255, 26, 92, 0.12); border-radius: 12px; }
+        .stat-box h3 { font-size: 1.65rem; margin: 0; }
+        .stat-box p { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .admin-table th, .admin-table td { padding: 13px 12px; border-bottom: 1px solid var(--glass-border); text-align: left; }
+        .admin-table th { color: var(--text-muted); font-weight: 600; background: var(--bg-secondary); }
+        .badge-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.73rem; font-weight: 600; }
+        .badge-success { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .admin-tab { display: none; }
+        .admin-tab.active { display: block; }
+        @media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo"><i class="fas fa-shield-halved"></i> LovelyCam Admin</a>
+        <div class="nav-links">
+            <a href="index.html" class="filter-btn secondary" style="text-decoration:none; padding: 8px 18px;"><i class="fas fa-home"></i> Siteye Dön</a>
+            <a href="dashboard.html" class="filter-btn primary" style="text-decoration:none; padding: 8px 18px;"><i class="fas fa-user"></i> Kullanıcı Paneli</a>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div style="text-align:center; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--glass-border);">
+                <div style="width:64px; height:64px; border-radius:50%; background:var(--gradient-hot); display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:1.6rem; color:#fff;"><i class="fas fa-user-shield"></i></div>
+                <h4 id="admin-name-display">Sistem Yöneticisi</h4>
+                <span class="badge-pill badge-success">Root Admin Yetkisi</span>
+            </div>
+            <nav class="admin-nav">
+                <button class="active" onclick="switchAdminTab('overview', this)"><i class="fas fa-chart-pie"></i> İstatistikler & Özet</button>
+                <button onclick="switchAdminTab('users', this)"><i class="fas fa-users-cog"></i> Kullanıcı Yönetimi</button>
+                <button onclick="switchAdminTab('profiles', this)"><i class="fas fa-id-badge"></i> Vitrin Profilleri</button>
+                <button onclick="switchAdminTab('moderation', this)"><i class="fas fa-gavel"></i> İçerik Moderasyonu</button>
+                <button onclick="switchAdminTab('kyc', this)"><i class="fas fa-id-card"></i> KYC Onayları</button>
+                <button onclick="switchAdminTab('logs', this)"><i class="fas fa-terminal"></i> Sistem & Hata Kayıtları</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <!-- Overview Tab -->
+            <div id="admin-tab-overview" class="admin-tab active">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-chart-line" style="color:var(--primary-color);"></i> Platform İstatistikleri</h2>
+                <div class="stats-cards">
+                    <div class="stat-box"><i class="fas fa-users"></i><div><h3 id="stat-total-users">0</h3><p>Kayıtlı Kullanıcı</p></div></div>
+                    <div class="stat-box"><i class="fas fa-crown"></i><div><h3 id="stat-vip-profiles">0</h3><p>Aktif Vitrin Profili</p></div></div>
+                    <div class="stat-box"><i class="fas fa-Turkish-lira-sign"></i><div><h3 id="stat-total-revenue">0 ₺</h3><p>Toplam Ciro</p></div></div>
+                    <div class="stat-box"><i class="fas fa-flag"></i><div><h3 id="stat-pending-reports">0</h3><p>Bekleyen Şikâyet</p></div></div>
+                </div>
+
+                <h3 style="margin: 25px 0 15px;">Son Finansal İşlemler</h3>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>İşlem No</th><th>Kullanıcı</th><th>Açıklama</th><th>Tutar</th><th>Tarih</th></tr></thead>
+                        <tbody id="admin-tx-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="admin-tab-users" class="admin-tab">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2><i class="fas fa-users-cog" style="color:var(--primary-color);"></i> Kullanıcı Yönetimi</h2>
+                    <input type="text" id="admin-user-search" placeholder="Kullanıcı adı veya e-posta ara..." style="padding:10px 15px; border-radius:10px; border:1px solid var(--glass-border); background:var(--bg-secondary); color:var(--text-color); width:260px;">
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Kullanıcı</th><th>E-posta</th><th>Rol</th><th>Bakiye</th><th>Durum</th><th>İşlemler</th></tr></thead>
+                        <tbody id="admin-users-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profiles Management Tab -->
+            <div id="admin-tab-profiles" class="admin-tab">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2><i class="fas fa-id-badge" style="color:var(--primary-color);"></i> Vitrin Profilleri Yönetimi</h2>
+                    <button class="filter-btn primary" onclick="openAddProfileModal()" style="padding:10px 20px;"><i class="fas fa-plus"></i> Yeni Profil Ekle</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Profil</th><th>Şehir / Yaş</th><th>Saatlik Ücret</th><th>Rozetler</th><th>Puan</th><th>İşlem</th></tr></thead>
+                        <tbody id="admin-profiles-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Moderation Tab -->
+            <div id="admin-tab-moderation" class="admin-tab">
+                <h2 style="margin-bottom:20px;"><i class="fas fa-gavel" style="color:var(--primary-color);"></i> Şikâyet ve İçerik Moderasyonu</h2>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Hedef Profil</th><th>Bildiren</th><th>Neden</th><th>Detay</th><th>Durum</th><th>Aksiyon</th></tr></thead>
+                        <tbody id="admin-reports-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- KYC Tab -->
+            <div id="admin-tab-kyc" class="admin-tab">
+                <h2 style="margin-bottom:20px;"><i class="fas fa-id-card" style="color:var(--primary-color);"></i> Kimlik Doğrulama (KYC) Talepleri</h2>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Kullanıcı</th><th>Ad Soyad / Belge</th><th>Tarih</th><th>Durum</th><th>İşlem</th></tr></thead>
+                        <tbody id="admin-kyc-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System & Error Logs Tab -->
+            <div id="admin-tab-logs" class="admin-tab">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2><i class="fas fa-terminal" style="color:var(--primary-color);"></i> Sistem ve Güvenlik Kayıtları (Audit Logs)</h2>
+                    <button class="filter-btn secondary" onclick="clearSystemLogs()" style="padding:8px 16px;"><i class="fas fa-trash"></i> Kayıtları Temizle</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Seviye</th><th>Mesaj</th><th>Sayfa</th><th>Zaman</th></tr></thead>
+                        <tbody id="admin-logs-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-message"></span>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="security.js"></script>
+    <script src="crypto.js"></script>
+    <script src="auth.js"></script>
+    <script src="payment.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

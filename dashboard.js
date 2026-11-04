@@ -187,6 +187,7 @@ function checkCooldown() {
     }
 
     if (now - lastUpdate < cooldownTime) {
+        const remainingDays = Math.max(1, Math.ceil((cooldownTime - (now - lastUpdate)) / (24 * 60 * 60 * 1000)));
         
         const timer = document.getElementById('cooldown-timer');
         if (timer) {
@@ -272,7 +273,7 @@ function loadFavorites() {
     
     favorites.forEach(favId => {
         // Find in MOCK_USERS (from data.js)
-        const profile = MOCK_USERS.find(u => u.id === favId);
+        const profile = (typeof getUserById === 'function' ? getUserById(favId) : MOCK_USERS.find(u => u.id === favId));
         if (profile) {
             const card = document.createElement('div');
             card.className = 'fav-card';
@@ -607,7 +608,7 @@ async function loadDashboardChatHistory(partnerId) {
         
         bubble.innerHTML = `
             ${msg.isEncrypted ? '<i class="fas fa-lock" style="font-size:0.7em; margin-right:5px;"></i>' : ''}
-            ${escapeHtml(msg.text)}
+            ${escapeHtml(msg.text)}${msg.photo ? `<img src="${msg.photo}" class="msg-photo-attachment">` : ''}
             <div style="font-size: 0.7em; opacity: 0.7; text-align: right; margin-top: 4px;">${timeStr}</div>
         `;
         
@@ -673,3 +674,188 @@ async function simulateDashboardReply(partnerId) {
         );
     }
 }
+
+
+// V4.0 Upgrade: Wallet, Subscriptions, KYC Submission, KVKK Controls & Encrypted Photo Messaging in Dashboard
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initDashboardV4Upgrades();
+    }, 220);
+});
+
+function initDashboardV4Upgrades() {
+    if (!currentUser) return;
+
+    // 1. Render Wallet Balance, Plans & Transactions
+    renderWalletAndPlans();
+
+    // 2. Add Photo Upload button to Dashboard Direct Message Modal
+    const dashMsgForm = document.getElementById('dash-msg-form');
+    if (dashMsgForm && !document.getElementById('dash-chat-photo-btn')) {
+        const photoInput = document.createElement('input');
+        photoInput.type = 'file';
+        photoInput.accept = 'image/*';
+        photoInput.style.display = 'none';
+
+        const photoBtn = document.createElement('button');
+        photoBtn.type = 'button';
+        photoBtn.id = 'dash-chat-photo-btn';
+        photoBtn.className = 'chat-media-btn';
+        photoBtn.title = 'Şifreli Fotoğraf Gönder';
+        photoBtn.innerHTML = '<i class="fas fa-image"></i>';
+        photoBtn.onclick = () => photoInput.click();
+
+        photoInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentChatPartner) return;
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                const res = await secureMessaging.sendEncryptedMessage(
+                    currentUser.id, currentUser.username, currentUser.avatar,
+                    currentChatPartner.id, '📷 [Şifreli Fotoğraf]', ev.target.result
+                );
+                if (res.success) {
+                    loadDashboardChatHistory(currentChatPartner.id);
+                    showNotification('🔒 Şifreli fotoğraf gönderildi!', 'success');
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        dashMsgForm.insertBefore(photoInput, dashMsgForm.firstChild);
+        dashMsgForm.insertBefore(photoBtn, dashMsgForm.firstChild);
+    }
+
+    // 3. Inject KVKK & Email Verification Actions into Settings Tab
+    const settingsTab = document.getElementById('settings-tab');
+    if (settingsTab && !document.getElementById('kvkk-settings-box')) {
+        const kvkkBox = document.createElement('div');
+        kvkkBox.id = 'kvkk-settings-box';
+        kvkkBox.style.cssText = 'margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--glass-border);';
+        kvkkBox.innerHTML = `
+            <h3 style="margin-bottom: 12px;"><i class="fas fa-scale-balanced" style="color: var(--primary-color);"></i> KVKK & Hesap Güvenliği İşlemleri</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                6698 sayılı KVKK kapsamında kişisel verilerinizi dışa aktarabilir, e-posta doğrulaması yapabilir veya hesabınızı kalıcı olarak silebilirsiniz.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <button type="button" class="filter-btn secondary" onclick="window.openEmailVerificationModal && window.openEmailVerificationModal(currentUser.email)">
+                    <i class="fas fa-envelope-circle-check"></i> E-posta Doğrula (OTP)
+                </button>
+                <button type="button" class="filter-btn secondary" onclick="KVKKManager.exportUserData()">
+                    <i class="fas fa-download"></i> Verilerimi İndir (JSON)
+                </button>
+                <button type="button" class="filter-btn secondary" style="border-color:#ef4444; color:#ef4444;" onclick="KVKKManager.deleteAccountPermanently()">
+                    <i class="fas fa-user-slash"></i> Hesabımı Kalıcı Sil (KVKK)
+                </button>
+            </div>
+        `;
+        settingsTab.appendChild(kvkkBox);
+    }
+
+    // 4. Bind KYC Submit Button
+    const kycTab = document.getElementById('kyc-tab');
+    if (kycTab) {
+        const kycBtn = kycTab.querySelector('.auth-submit');
+        if (kycBtn) {
+            kycBtn.onclick = () => {
+                const list = JSON.parse(localStorage.getItem('lovelycam_kyc_requests') || '[]');
+                list.unshift({
+                    id: 'kyc_' + Date.now(),
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    status: 'pending',
+                    submittedAt: new Date().toISOString()
+                });
+                localStorage.setItem('lovelycam_kyc_requests', JSON.stringify(list));
+                showNotification('Kimlik doğrulama belgeleriniz şifrelenerek yönetici onayına gönderildi! 🛡️', 'success');
+            };
+        }
+    }
+}
+
+function renderWalletAndPlans() {
+    const walletTab = document.getElementById('wallet-tab');
+    if (!walletTab || typeof PaymentSystem === 'undefined') return;
+
+    const freshUser = getCurrentUser() || currentUser;
+    const balance = Number(freshUser.balance || 0);
+    const sub = freshUser.subscription;
+    const txs = PaymentSystem.getTransactions(freshUser.id);
+
+    walletTab.innerHTML = `
+        <div class="content-header">
+            <h2><i class="fas fa-wallet" style="color: #4caf50;"></i> Cüzdanım & Premium Abonelik</h2>
+            ${sub && sub.status === 'active' ? `<span class="encryption-badge" style="font-size:0.8rem;"><i class="fas fa-crown"></i> Aktif Paket: ${escapeHtml(sub.planName)}</span>` : ''}
+        </div>
+
+        <div class="wallet-card" style="background: var(--gradient-hot); padding: 30px; border-radius: 20px; color: white; margin-bottom: 30px; text-align: center;">
+            <p style="font-size: 1.05rem; opacity: 0.9;">Kullanılabilir Cüzdan Bakiyesi</p>
+            <h1 style="font-size: 3.2rem; margin: 10px 0;">${balance.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</h1>
+            <div style="margin-top: 18px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                <button class="hero-btn" id="open-deposit-btn" style="padding: 10px 28px; font-size: 0.95rem;"><i class="fas fa-plus-circle"></i> Bakiye Yükle (3D Secure)</button>
+            </div>
+        </div>
+
+        <h3><i class="fas fa-crown" style="color: var(--gold-color);"></i> Premium Üyelik Paketleri</h3>
+        <div class="pricing-grid" style="margin-bottom: 35px;">
+            ${Object.values(PaymentSystem.PLANS).map(plan => `
+                <div class="plan-card ${plan.popular ? 'popular' : ''} ${plan.elite ? 'elite-plan' : ''}">
+                    ${plan.popular ? '<div class="plan-badge">EN POPÜLER</div>' : ''}
+                    <div>
+                        <h4>${escapeHtml(plan.name)}</h4>
+                        <div class="plan-price">${plan.price} ₺ <span>/ ${plan.period}</span></div>
+                        <ul class="plan-features">
+                            ${plan.features.map(f => `<li><i class="fas fa-check-circle"></i> ${escapeHtml(f)}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <button class="auth-submit" onclick="purchaseSubscription('${plan.id}')">
+                        ${sub && sub.planId === plan.id && sub.status === 'active' ? '<i class="fas fa-check"></i> Mevcut Paketiniz' : '<i class="fas fa-bolt"></i> Paketi Seç'}
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+
+        <h3>Son Finansal İşlemler</h3>
+        <div class="transaction-list" style="margin-top: 15px;">
+            ${txs.length === 0 ? `
+                <div class="messages-empty" style="padding: 30px;">
+                    <i class="fas fa-receipt"></i>
+                    <p>Henüz işlem geçmişiniz yok.</p>
+                </div>
+            ` : txs.map(t => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:var(--bg-secondary); border-radius:12px; margin-bottom:10px; border:1px solid var(--glass-border);">
+                    <div>
+                        <strong>${escapeHtml(t.title)}</strong>
+                        <div style="font-size:0.78rem; color:var(--text-muted);">${new Date(t.timestamp).toLocaleString('tr-TR')}</div>
+                    </div>
+                    <div style="font-weight:700; color:${t.amount >= 0 ? '#22c55e' : 'var(--primary-color)'};">
+                        ${t.amount >= 0 ? '+' : ''}${t.amount} ₺
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    const depBtn = document.getElementById('open-deposit-btn');
+    if (depBtn) {
+        depBtn.onclick = () => PaymentSystem.openDepositModal(() => renderWalletAndPlans());
+    }
+}
+
+window.purchaseSubscription = function(planId) {
+    const user = getCurrentUser();
+    if (!user) return;
+    const res = PaymentSystem.subscribePlan(user.id, planId, false);
+    if (!res.success) {
+        if (confirm(res.message + '\n\nDoğrudan Kredi Kartı ile satın almak ister misiniz?')) {
+            const cardRes = PaymentSystem.subscribePlan(user.id, planId, true);
+            if (cardRes.success) {
+                showNotification(`${cardRes.subscription.planName} aboneliğiniz aktif edildi! 👑`, 'success');
+                renderWalletAndPlans();
+            }
+        }
+    } else {
+        showNotification(`${res.subscription.planName} aboneliğiniz cüzdan bakiyenizle aktif edildi! 👑`, 'success');
+        renderWalletAndPlans();
+    }
+};

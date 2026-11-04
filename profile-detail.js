@@ -887,7 +887,8 @@ function showReportModal() {
     modal.querySelector('#report-form').addEventListener('submit', (e) => {
         e.preventDefault();
         modal.remove();
-        showNotification('Bildiriminiz alındı. Teşekkürler! 🙏', 'success');
+        const sel = modal.querySelector('select')?.value || 'Diğer'; const det = modal.querySelector('textarea')?.value || ''; const u = typeof getCurrentUser === 'function' ? getCurrentUser() : null; if (typeof Security !== 'undefined' && currentProfile) { Security.moderation.submitReport({ targetId: currentProfile.id, targetName: currentProfile.name, reporterId: u?.id, reporterName: u?.username, reason: sel, details: det }); }
+        showNotification('Bildiriminiz moderasyon ekibine iletildi. Teşekkürler! 🙏', 'success');
     });
 }
 
@@ -917,7 +918,7 @@ function showPremiumModal(type) {
     modal.querySelector('.cta-secondary').addEventListener('click', () => modal.remove());
     modal.querySelector('.cta-primary').addEventListener('click', () => {
         modal.remove();
-        showNotification('Premium sayfası yakında açılacak! 🚀', 'info');
+        window.location.href = 'dashboard.html?tab=wallet';
     });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
 }
@@ -991,3 +992,119 @@ function showNotification(message, type = 'info') {
         notification.classList.remove('show');
     }, 3000);
 }
+
+// V4.0 Upgrade: Fullscreen Lightbox Gallery, Block User Button, Real Report Saving & Encrypted Photo Chat
+let currentLightboxIndex = 0;
+
+window.openLightboxImage = function(src) {
+    let modal = document.getElementById('profile-lightbox-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'profile-lightbox-modal';
+        modal.className = 'lightbox-modal';
+        modal.innerHTML = `
+            <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+            <div class="lightbox-content">
+                <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)"><i class="fas fa-chevron-left"></i></button>
+                <img id="lightbox-img" src="" alt="Tam Ekran Fotoğraf">
+                <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        `;
+        document.body.appendChild(modal);
+    }
+    const photos = (currentProfile && currentProfile.photos) ? currentProfile.photos : [src];
+    const idx = photos.indexOf(src);
+    currentLightboxIndex = idx >= 0 ? idx : 0;
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = `${currentProfile ? currentProfile.name : ''} (${currentLightboxIndex + 1} / ${photos.length})`;
+    modal.classList.add('active');
+};
+
+window.closeLightbox = function() {
+    const modal = document.getElementById('profile-lightbox-modal');
+    if (modal) modal.classList.remove('active');
+};
+
+window.navigateLightbox = function(dir) {
+    if (!currentProfile || !currentProfile.photos) return;
+    const photos = currentProfile.photos;
+    currentLightboxIndex = (currentLightboxIndex + dir + photos.length) % photos.length;
+    document.getElementById('lightbox-img').src = photos[currentLightboxIndex];
+    document.getElementById('lightbox-caption').textContent = `${currentProfile.name} (${currentLightboxIndex + 1} / ${photos.length})`;
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Main photo click opens Lightbox
+    const mainPhoto = document.getElementById('main-photo');
+    if (mainPhoto) {
+        mainPhoto.style.cursor = 'zoom-in';
+        mainPhoto.addEventListener('click', () => window.openLightboxImage(mainPhoto.src));
+    }
+
+    // Add Block User Button next to Report Button
+    const actionBtns = document.querySelector('.action-buttons');
+    if (actionBtns && !document.getElementById('block-profile-btn')) {
+        const blockBtn = document.createElement('button');
+        blockBtn.id = 'block-profile-btn';
+        blockBtn.className = 'action-btn';
+        blockBtn.title = 'Kullanıcıyı Engelle';
+        blockBtn.innerHTML = '<i class="fas fa-ban"></i>';
+        blockBtn.onclick = () => {
+            if (!currentProfile) return;
+            if (confirm(`${currentProfile.name} adlı kullanıcıyı engellemek istiyor musunuz?`)) {
+                Security.moderation.blockUser(currentProfile.id, currentProfile.name);
+                showNotification(`${currentProfile.name} engellendi.`, 'info');
+                setTimeout(() => window.location.href = 'index.html', 1200);
+            }
+        };
+        actionBtns.appendChild(blockBtn);
+    }
+
+    // Add Photo Upload Button inside Private Message Modal Form
+    const msgForm = document.getElementById('message-form');
+    if (msgForm && !document.getElementById('profile-chat-photo-btn')) {
+        const photoInput = document.createElement('input');
+        photoInput.type = 'file';
+        photoInput.accept = 'image/*';
+        photoInput.style.display = 'none';
+
+        const photoBtn = document.createElement('button');
+        photoBtn.type = 'button';
+        photoBtn.id = 'profile-chat-photo-btn';
+        photoBtn.className = 'chat-media-btn';
+        photoBtn.title = 'Şifreli Fotoğraf Gönder';
+        photoBtn.innerHTML = '<i class="fas fa-camera"></i>';
+        photoBtn.onclick = () => photoInput.click();
+
+        photoInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentProfile) return;
+            const user = getCurrentUser();
+            if (!user) return;
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                const res = await secureMessaging.sendEncryptedMessage(
+                    user.id, user.username, user.avatar, currentProfile.id, '📷 [Şifreli Fotoğraf]', ev.target.result
+                );
+                if (res.success) {
+                    const historyContainer = document.getElementById('message-history');
+                    const bubble = document.createElement('div');
+                    bubble.className = 'message-bubble sent';
+                    bubble.innerHTML = `
+                        <div class="encrypted-badge"><i class="fas fa-lock"></i> AES-256-GCM</div>
+                        <img src="${ev.target.result}" class="msg-photo-attachment" onclick="window.openLightboxImage(this.src)">
+                        <div class="time">Şimdi</div>
+                    `;
+                    historyContainer.appendChild(bubble);
+                    historyContainer.scrollTop = historyContainer.scrollHeight;
+                    showNotification('🔒 Şifreli fotoğraf gönderildi!', 'success');
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        msgForm.insertBefore(photoInput, msgForm.firstChild);
+        msgForm.insertBefore(photoBtn, msgForm.firstChild);
+    }
+});

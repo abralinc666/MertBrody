@@ -480,3 +480,64 @@ document.addEventListener('DOMContentLoaded', () => {
     initAuth();
     setupAuthListeners();
 });
+
+
+// V4.0 Upgrade: Email Verification OTP Flow & Admin Menu Integration
+window.openEmailVerificationModal = function(email, onVerified) {
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    sessionStorage.setItem('lovelycam_otp_code', code);
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width:420px; padding:28px; text-align:center;">
+            <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <div style="font-size:3rem; color:var(--primary-color); margin-bottom:10px;"><i class="fas fa-envelope-circle-check"></i></div>
+            <h3>E-posta Doğrulama</h3>
+            <p style="font-size:0.86rem; color:var(--text-muted); margin:10px 0;">
+                <strong>${escapeHtml(email)}</strong> adresine 6 haneli doğrulama kodu gönderildi.<br>
+                <span style="color:#22c55e;">(Demo Doğrulama Kodunuz: <strong>${code}</strong>)</span>
+            </p>
+            <input type="text" id="otp-verify-input" maxlength="6" value="${code}" style="width:180px; text-align:center; font-size:1.5rem; letter-spacing:6px; padding:10px; border-radius:10px; border:2px solid var(--primary-color); background:var(--bg-secondary); color:var(--text-color); margin:15px auto; display:block;">
+            <button type="button" id="otp-verify-btn" class="auth-submit"><i class="fas fa-check-circle"></i> Doğrula ve Devam Et</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#otp-verify-btn').addEventListener('click', () => {
+        const val = document.getElementById('otp-verify-input').value.trim();
+        if (val === code) {
+            const users = getUsers();
+            const u = users.find(x => x.email.toLowerCase() === email.toLowerCase());
+            if (u) {
+                u.isEmailVerified = true;
+                saveUsers(users);
+            }
+            modal.remove();
+            if (typeof showNotification === 'function') showNotification('E-posta adresiniz başarıyla doğrulandı! ✅', 'success');
+            if (typeof onVerified === 'function') onVerified();
+        } else {
+            if (typeof showNotification === 'function') showNotification('Doğrulama kodu hatalı!', 'error');
+        }
+    });
+};
+
+// Inject Admin Panel Link into User Dropdown when logged in
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const userDropdown = document.getElementById('user-dropdown');
+        const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+        if (userDropdown && user && !userDropdown.querySelector('a[href="admin.html"]')) {
+            const adminLink = document.createElement('a');
+            adminLink.href = 'admin.html';
+            adminLink.innerHTML = '<i class="fas fa-shield-halved"></i> Yönetim Paneli (Admin)';
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                userDropdown.insertBefore(adminLink, logoutBtn);
+            } else {
+                userDropdown.appendChild(adminLink);
+            }
+        }
+    }, 250);
+});
