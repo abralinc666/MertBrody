@@ -18,7 +18,7 @@
   <header class="site-header">
     <a class="brand" href="#top" aria-label="ODA Studio ana sayfa"><span class="brand-mark">O</span><span>ODA<span class="brand-light">STUDIO</span></span></a>
     <nav class="desktop-nav">
-      <a href="#yaklasim">Yaklaşımımız</a><a href="#projeler">Projeler</a><a href="#hizmetler">Hizmetler</a><a href="#iletisim">İletişim</a>
+      <a href="#yaklasim">Yaklaşımımız</a><a href="#projeler">Projeler</a><a href="#oda">Oda</a><a href="#hizmetler">Hizmetler</a><a href="#iletisim">İletişim</a>
     </nav>
     <a class="header-cta" href="#iletisim">Projenizi konuşalım <span>↗</span></a>
     <button class="menu-toggle" aria-label="Menüyü aç" aria-expanded="false"><i></i><i></i></button>
@@ -65,6 +65,11 @@
       </div>
     </section>
 
+    <section class="room section-pad" id="oda">
+      <div class="section-heading reveal"><div><div class="section-kicker">İNTERAKTİF DENEYİM</div><h2>Kendi <em>odanı</em> tasarla.</h2></div><p class="room-note">Sürükleyerek döndürün · lambaya dokunun</p></div>
+      <div class="room-wrap"><div class="room-stage reveal"><canvas aria-label="Etkileşimli 3D oda"></canvas><div class="room-tip">↔ SÜRÜKLE · LAMBAYA DOKUN</div></div><div class="room-ui reveal"></div></div>
+    </section>
+
     <section class="quote-band">
       <div class="quote-inner reveal"><span class="quote-mark">“</span><p>Bir mekânı özel yapan, içinde<br>biriktirdiğiniz <em>anılardır.</em></p><span class="quote-by">ODA STUDIO MANİFESTOSU</span></div>
       <div class="quote-image"></div>
@@ -91,5 +96,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
   <script src="script.js"></script>
+  <script src="room.js"></script>
 </body>
 </html>

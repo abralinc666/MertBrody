@@ -26,3 +26,4 @@ Modern, responsive, single-page interior design studio landing page.
 - Proje görsellerinde maske açılışı + parallax, ilerleme çubuğu, cam efektli akıllı header
 - Özel imleç ve manyetik butonlar (yalnızca fare cihazlarında)
 - `prefers-reduced-motion` ve WebGL yoksa statik tasarıma otomatik geri dönüş
+- `room.js`: etkileşimli 3D oda — duvar/zemin/koltuk rengi, gündüz-gün batımı-gece ışığı, tıklanabilir lamba, sürükle-döndür

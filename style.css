@@ -25,3 +25,17 @@ a{color:inherit;text-decoration:none}.site-header{height:92px;padding:0 6.2%;dis
 .cursor.is-link span{width:56px;height:56px;margin:-28px 0 0 -28px}.cursor.is-view span{width:96px;height:96px;margin:-48px 0 0 -48px}
 .project-image img{transition:scale .9s cubic-bezier(.2,.7,.2,1),filter .6s}.project-image:hover img{transform:none;scale:1.06;filter:saturate(1)}
 .service-row{transition:padding .5s cubic-bezier(.2,.7,.2,1)}.service-row:hover{padding-left:14px}.service-row b{display:inline-block;transition:transform .4s}.service-row:hover b{transform:rotate(45deg)}
+/* ---- Etkileşimli oda ---- */
+.room{background:#eae8e0;padding-top:120px;padding-bottom:130px}.room-note{font-size:10px;letter-spacing:.06em;color:#79766d;margin:0}
+.room-wrap{display:grid;grid-template-columns:1.6fr .6fr;gap:5%;align-items:stretch}
+.room-stage{position:relative;height:580px;background:#d9d6cb;overflow:hidden;cursor:grab}.room-stage:active{cursor:grabbing}
+.room-stage canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+.room-tip{position:absolute;left:18px;bottom:16px;padding:8px 12px;border-radius:99px;background:rgba(32,32,28,.6);color:#f4f1e9;font-size:8px;letter-spacing:.16em;pointer-events:none;transition:opacity .6s}.room-tip.is-hidden{opacity:0}
+.room-fallback{position:absolute;inset:0;display:grid;place-items:center;margin:0;font-size:11px;color:#6f6d65}
+.room-ui{display:flex;flex-direction:column;gap:28px;padding-top:6px}
+.room-label{display:block;margin-bottom:13px;font-size:9px;letter-spacing:.17em;font-weight:600;color:#8c806d;text-transform:uppercase}.room-label b{font-weight:600;color:#20201c}
+.room-opts{display:flex;flex-wrap:wrap;gap:12px}
+.sw{width:30px;height:30px;border-radius:50%;border:1px solid rgba(32,32,28,.25);padding:0;cursor:pointer;transition:transform .3s}.sw:hover{transform:scale(1.12)}.sw.on{outline:1px solid #20201c;outline-offset:3px}
+.pill{font:inherit;font-size:10px;letter-spacing:.04em;padding:9px 14px;border:1px solid rgba(32,32,28,.3);border-radius:99px;background:transparent;color:inherit;cursor:pointer;transition:background .3s,color .3s}.pill:hover{background:rgba(32,32,28,.08)}.pill.on{background:#24251f;color:#eae8e0;border-color:#24251f}
+@media(max-width:900px){.room-wrap{grid-template-columns:1fr;gap:30px}.room-stage{height:460px}}
+@media(max-width:650px){.room{padding-top:85px;padding-bottom:90px}.room-stage{height:380px}}
