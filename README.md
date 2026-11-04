@@ -19,3 +19,10 @@ Modern, responsive, single-page interior design studio landing page.
 - Animasyonlar ve mobil menü: `script.js`
 - İletişim e-postası örnektir; yayına almadan önce kendi adresinizle değiştirin.
 - Fotoğraflar internetten yüklenir; isterseniz kendi görsellerinizle değiştirebilirsiniz.
+
+## v2 Yenilikleri
+- Preloader + sayaç, kelime bazlı maskeli başlık animasyonları, sayı sayacı
+- Three.js shader hero: fare ile dalga/kromatik kayma, scroll parallax, toz parçacıkları
+- Proje görsellerinde maske açılışı + parallax, ilerleme çubuğu, cam efektli akıllı header
+- Özel imleç ve manyetik butonlar (yalnızca fare cihazlarında)
+- `prefers-reduced-motion` ve WebGL yoksa statik tasarıma otomatik geri dönüş
