@@ -1,8 +1,0 @@
-{
-  "name": "epin-modern",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Sade e-pin vitrini: HTML + CSS + GSAP + three.js + Node.js (Vercel)",
-  "scripts": { "dev": "node server.js", "start": "node server.js" },
-  "engines": { "node": ">=18" }
-}

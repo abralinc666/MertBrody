@@ -1,47 +1,24 @@
-# EPIN — sade e-pin vitrini
+# LovelyTG Tanıtım Sitesi
 
-HTML + CSS + JavaScript, GSAP animasyonları, three.js 3D arka plan ve Node.js (Vercel serverless) API.
-Eski PHP/MySQL scriptinin vitrin tarafının yerine geçer; ürünler `veritabani.sql` dosyasından alındı (26 paket).
+Responsive, tek sayfalık ürün tanıtım ve lisans satış arayüzü. HTML + CSS + JavaScript + GSAP kullanır.
 
-## Yapı
-```
-public/index.html   tek sayfa
-public/style.css    tüm stiller
-public/app.js       menü, filtre, ürün penceresi, sepet (+ GSAP)
-public/hero3d.js    three.js hero arka planı (isteğe bağlı, hata olursa kendini kaldırır)
-api/products.js     GET  /api/products
-api/order.js        POST /api/order  (fiyatı sunucuda yeniden hesaplar)
-lib/catalog.js      katalog yükleyici
-data/products.json  oyunlar + ürünler
-server.js           yerel geliştirme sunucusu (bağımlılık yok)
-```
+## Çalıştırma
+- `index.html` dosyasını tarayıcıda açabilir veya klasörü bir statik hosting servisine yükleyebilirsiniz.
+- GSAP ve Google Fonts CDN üzerinden yüklenir; animasyon/fontlar için internet bağlantısı gerekir.
+- Diğer içerikler yerel dosyalardır.
 
-## Yerelde çalıştır
-```
-node server.js        # http://localhost:3000
-```
+## Yayına almadan önce
+1. `js/config.js` dosyasındaki örnek fiyatları gerçek fiyatlarla değiştirin.
+2. `bank.name` ve `bank.iban` alanlarını gerçek ödeme bilgilerinizle doldurun.
+3. `crypto.network` ve `crypto.wallet` alanlarını doğru ağ/cüzdanla doldurun.
+4. Paketlerin sunduğu özellikleri ürünün gerçek yeteneklerine göre düzenleyin.
+5. İletişim, gizlilik, mesafeli satış, iade/iptal ve lisans koşulları sayfalarını ekleyin.
+6. Gerçek sipariş, ödeme teyidi ve lisans aktivasyonu için güvenli backend geliştirin.
 
-## GitHub + Vercel
-```
-git init && git add . && git commit -m "ilk sürüm"
-git branch -M main
-git remote add origin https://github.com/KULLANICI/epin-modern.git
-git push -u origin main
-```
-Vercel → **Add New → Project** → repoyu seç → **Framework Preset: Other** → Deploy.
-Çıktı klasörü `vercel.json` içinde `public` olarak ayarlı, ayrıca ayar gerekmez.
-Her branch/PR için otomatik önizleme (preview) adresi oluşur.
-
-Ürün eklemek veya fiyat değiştirmek için `data/products.json` dosyasını düzenleyip push etmen yeterli.
-
-## Bu sürümde YOK (bilerek)
-- Ödeme (Shopier), üyelik/giriş, admin paneli, bakiye, kupon, destek, blog. `api/order.js` bir **demo**dur: sipariş saklamaz, ödeme almaz.
-- Ürün görselleri (zip'te yoktu): oyuna özel renklerle üretilen kartlar kullanılır. `public/` altına görsel koyup `app.js` içindeki `art()` fonksiyonunu değiştirerek gerçek görsele geçebilirsin.
-
-## Sıradaki adımlar
-1. Veritabanı: Neon/Supabase (Postgres) → siparişler, kullanıcılar.
-2. Ödeme: Shopier/iyzico/PayTR için ayrı bir `api/` fonksiyonu + webhook; teslimat (e-pin kodu) ödeme onayından sonra.
-3. Giriş: Auth.js veya Supabase Auth.
-
-## Önemli
-Eski PHP dosyalarını (`baglan.php`, `shopierAPI.php` vb.) GitHub'a yükleme: veritabanı/Shopier anahtarları içerebilir. Bu repo onlara ihtiyaç duymaz.
+## Önemli teknik notlar
+- Fiyatlar yalnızca örnek/demo değerlerdir.
+- IBAN ve kripto cüzdan adresleri placeholder'dır; gerçek ödeme almaz.
+- Sipariş formu sadece talep metni oluşturur ve kopyalar. Sunucuya veri göndermez.
+- Lisans kontrolü yalnızca ön yüzde yapılmamalıdır. Paket yetkileri API/backend tarafında doğrulanmalıdır.
+- Kripto ödemelerinde ağ, varlık ve adres bilgisi ödeme öncesinde doğrulanmalıdır.
+- Telegram'ın marka/ürün kimliğiyle resmi bağlantı veya onay izlenimi verilmemelidir.
