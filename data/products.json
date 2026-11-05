@@ -1,0 +1,275 @@
+{
+ "games": [
+  {
+   "slug": "valorant",
+   "name": "Valorant",
+   "unit": "VP",
+   "c1": "#ff4655",
+   "c2": "#2a0b12"
+  },
+  {
+   "slug": "league-of-legends",
+   "name": "League of Legends",
+   "unit": "RP",
+   "c1": "#c8aa6e",
+   "c2": "#0a323c"
+  },
+  {
+   "slug": "pubg-mobile",
+   "name": "PUBG Mobile",
+   "unit": "UC",
+   "c1": "#f2a900",
+   "c2": "#2a2417"
+  },
+  {
+   "slug": "wolfteam",
+   "name": "WolfTeam",
+   "unit": "Nakit",
+   "c1": "#e0382f",
+   "c2": "#1d1214"
+  },
+  {
+   "slug": "steam",
+   "name": "Steam",
+   "unit": "TL",
+   "c1": "#66c0f4",
+   "c2": "#10202e"
+  }
+ ],
+ "products": [
+  {
+   "id": 1,
+   "name": "Valorant 115 VP",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 13.94,
+   "game": "valorant",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 2,
+   "name": "Valorant 925 VP",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 57.94,
+   "game": "valorant",
+   "inStock": true,
+   "featured": true
+  },
+  {
+   "id": 3,
+   "name": "Valorant 1850 VP",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 106.94,
+   "game": "valorant",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 4,
+   "name": "Valorant 3400 VP",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 207.94,
+   "game": "valorant",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 5,
+   "name": "Valorant 5550 VP",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 373.99,
+   "game": "valorant",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 7,
+   "name": "PUBG Mobile 60 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 16.41,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 8,
+   "name": "PUBG Mobile 325 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 81.33,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 9,
+   "name": "PUBG Mobile 660 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 162.49,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 10,
+   "name": "PUBG Mobile 1.800 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 406.22,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 11,
+   "name": "PUBG Mobile 3.850 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 803.16,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 12,
+   "name": "PUBG Mobile 8.100 UC",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 1609.66,
+   "game": "pubg-mobile",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 13,
+   "name": "League of Legends 200 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 14.25,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 14,
+   "name": "League of Legends 850 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 58.5,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 15,
+   "name": "League of Legends 1.600 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 105.95,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 16,
+   "name": "League of Legends 3.150 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 203.94,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 17,
+   "name": "League of Legends 5.800 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 366.75,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 18,
+   "name": "League of Legends 9.200 RP",
+   "description": "Tüm League of Legends market alışverişlerinde kullan. League of Legends ucuz RP fiyatlarına sitemizden bakabilirsiniz",
+   "price": 585.0,
+   "game": "league-of-legends",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 20,
+   "name": "WolfTeam 1.000 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 3.15,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 21,
+   "name": "WolfTeam 1.875 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 5.7,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 22,
+   "name": "WolfTeam 3.850 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 11.4,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 23,
+   "name": "WolfTeam 5.000 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 14.5,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 24,
+   "name": "WolfTeam 8.000 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 22.7,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 25,
+   "name": "WolfTeam 12.250 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 34.0,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 26,
+   "name": "WolfTeam 21.250 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 56.7,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 27,
+   "name": "WolfTeam 35.000 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 90.94,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  },
+  {
+   "id": 28,
+   "name": "WolfTeam 45.000 Nakit",
+   "description": "Sadece Türkiye sunucusunda geçerlidir",
+   "price": 114.0,
+   "game": "wolfteam",
+   "inStock": true,
+   "featured": false
+  }
+ ]
+}
