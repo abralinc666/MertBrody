@@ -1,132 +1,81 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f4f3f8">
-<meta name="description" content="LovelyTG: birden fazla Telegram hesabını, otomasyonu ve gelen kutusunu tek panelden yönet. Gönderimden önce onayı sen verirsin.">
-<title>LovelyTG | Telegram yönetim paneli</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f6f2">
+<meta name="description" content="LovelyTG Manager — Telegram sohbetlerini, analizlerini ve zamanlanmış otomasyonlarını tek yerde yönet.">
+<title>LovelyTG Manager — BrodySOFT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<script defer src="js/config.js"></script><script defer src="js/app.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script defer src="js/config.js"></script><script defer src="js/app.js"></script><script defer src="js/motion.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">İçeriğe geç</a>
 <header class="bar">
-  <a class="logo" href="#top" aria-label="LovelyTG"><i></i>LovelyTG</a>
-  <button class="burger" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Menü"><span></span><span></span></button>
-  <nav id="nav"><a href="#platform">Platform</a><a href="#guvenlik">Güvenlik</a><a href="#yol">Yol haritası</a><a href="#lisans">Lisans</a><a href="#sss">SSS</a><a class="btn sm" href="#lisans">Lisans al</a></nav>
+ <a class="brand" href="#top"><img src="assets/brodysoft-logo.png" alt="BrodySOFT logo"><span>Brody<span>SOFT</span><small>INDEPENDENT SOFTWARE</small></span></a>
+ <button class="burger" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Menüyü aç"><span></span><span></span></button>
+ <nav id="nav"><a href="#platform">Ürün</a><a href="#arayuz">Arayüz</a><a href="#guvenlik">Güvenlik</a><a href="#lisans">Lisanslar</a><a href="#iletisim">İletişim</a><a class="nav-cta" href="#lisans">Paketi incele <span>↗</span></a></nav>
 </header>
-
 <main id="main">
 <section class="hero" id="top">
-  <div class="hero-text">
-    <h1>Telegram işlerin tek panelde. Göndermeden önce son söz sende.</h1>
-    <p>LovelyTG hesaplarını, zamanlanmış görevlerini ve gelen kutunu bir araya getirir. Yapay zekâ işi hazırlar, sen önizleyip onaylarsın.</p>
-    <div class="actions"><a class="btn" href="#lisans">Lisansları gör</a><a class="link" href="#platform">Paneli incele</a></div>
-    <p class="fine">Python ile kendi cihazında çalışır: Flask, Telethon ve SQLite. Oturumların sende kalır.</p>
-  </div>
-  <div class="console" id="console" aria-label="Yapay zekâ komut merkezi örneği">
-    <div class="c-bar"><b></b><b></b><b></b><span>AI merkezi</span></div>
-    <div class="c-body">
-      <p class="cmd"><span class="mono">sen</span><span id="typed"></span><u id="caret"></u></p>
-      <ul class="steps" id="steps">
-        <li>3 grup bulundu, gönderim izni var</li>
-        <li>Saat 09:00 için zamanlayıcı hazır</li>
-        <li>Mesaj taslağı yazıldı</li>
-      </ul>
-      <div class="draft" id="draft" hidden>
-        <p class="mono">Önizleme: 3 gruba, yarın 09:00</p>
-        <blockquote>Günaydın! Bugünkü duyurular için sabitlenen mesaja göz atmayı unutmayın.</blockquote>
-        <div class="draft-act"><button class="btn sm" id="approve">Onayla ve planla</button><button class="ghost sm" id="replay">Baştan oynat</button></div>
-        <p class="done" id="done" hidden>Planlandı. Yarın 09:00'da gönderilecek, işlem kaydına eklendi.</p>
-      </div>
-    </div>
-  </div>
+ <div class="hero-copy">
+  <div class="eyebrow"><i></i> LOVELYTG MANAGER <span>·</span> SÜRÜM 4.9</div>
+  <h1>Telegram yönetiminde <em>daha fazla kontrol.</em></h1>
+  <p class="lead">Sohbetlerini, grup analizlerini ve zamanlanmış görevlerini tek bir sade panelde topla. İş akışını düzenle; önemli adımlarda kontrol sende kalsın.</p>
+  <div class="hero-actions"><a class="primary" href="#platform">LovelyTG’yi keşfet <span>↗</span></a><a class="text-link" href="#arayuz">Arayüzü görüntüle <span>↓</span></a></div>
+  <div class="hero-note"><span class="note-mark">✳</span><span>Python tabanlı · Yerel çalışma · Hesap bazlı oturum yönetimi</span></div>
+ </div>
+ <div class="hero-visual">
+  <div class="visual-top"><span>PRODUCT OVERVIEW</span><span>01 / 04</span></div>
+  <img src="assets/dashboard.webp" alt="LovelyTG gerçek ürün arayüzü: ana panel" fetchpriority="high">
+  <div class="visual-caption"><span><b>01</b> / Ana panel</span><span>Örnek arayüz görünümü</span></div>
+ </div>
+ <div class="hero-bottom"><span>DESIGNED FOR CLARITY</span><span>SCROLL TO EXPLORE ↓</span></div>
 </section>
 
-<section class="shot" id="arayuz">
-  <div class="head"><h2>Panelin kendisi</h2><p>Koyu, sade ve tek elle gezilebilir. Soldaki menüden her alana bir dokunuşla geçersin.</p></div>
-  <figure><div class="frame"><img src="assets/dashboard.webp" width="1440" height="941" alt="LovelyTG ana paneli: sohbet sayıları, mesaj etkinliği grafiği ve son etkinlikler" fetchpriority="high"></div><figcaption>Örnek verilerle ana panel, v4.9 arayüzü.</figcaption></figure>
+<section class="intro" id="arayuz">
+ <div class="section-kicker">01 — ÜRÜNÜ TANI</div>
+ <div class="intro-grid"><h2>İhtiyacın olan araçlar.<br><em>Gereksiz karmaşa olmadan.</em></h2><p>LovelyTG, Telegram iş akışını tek noktadan takip edebilmen için tasarlandı. Sohbetlerden raporlara, otomasyonlardan güvenlik kontrollerine kadar temel araçlar bir arada.</p></div>
+ <div class="gallery">
+  <figure class="gallery-main"><img src="assets/dashboard.webp" alt="LovelyTG ana panel ekranı"><figcaption><b>01 / Genel bakış</b><span>Hesap ve mesaj hareketlerini tek ekranda gör.</span></figcaption></figure>
+  <figure><img src="assets/automation.webp" alt="LovelyTG otomasyon ekranı"><figcaption><b>02 / Otomasyonlar</b><span>Görevlerini zamanla ve yönet.</span></figcaption></figure>
+  <figure><img src="assets/messages.webp" alt="LovelyTG mesaj ekranı"><figcaption><b>03 / Mesajlar</b><span>Sohbetlerini incele, taslakları düzenle.</span></figcaption></figure>
+  <figure><img src="assets/analytics.webp" alt="LovelyTG analiz ekranı"><figcaption><b>04 / Analiz</b><span>Etkinliği ve grup verilerini değerlendir.</span></figcaption></figure>
+ </div>
 </section>
 
 <section class="platform" id="platform">
-  <div class="head"><h2>Tek panel, sekiz çalışma alanı</h2><p>Her alan kendi işini yapar. Soldan seç, ne yaptığını ve bugün hangi aşamada olduğunu gör.</p></div>
-  <div class="explorer">
-    <div class="tabs" role="tablist" aria-label="Çalışma alanları" id="tabs"></div>
-    <div class="pane" id="pane" role="tabpanel" aria-live="polite"></div>
-  </div>
+ <div class="section-kicker">02 — ÇALIŞMA ALANLARI</div>
+ <div class="section-heading"><h2>Tek panel.<br><em>Net bir çalışma akışı.</em></h2><p>Her modülün amacı belli. İhtiyacın olan alana geç, veriyi incele ve işini tamamla.</p></div>
+ <div class="explorer"><div class="tabs" role="tablist" aria-label="Çalışma alanları" id="tabs"></div><div class="pane" id="pane" role="tabpanel" aria-live="polite"></div></div>
 </section>
 
 <section class="safety" id="guvenlik">
-  <div class="head"><h2>Hız için değil, düzen için tasarlandı</h2><p>Toplu spam ve sahte etkileşim yok. LovelyTG izinli iletişimi ve hesabını koruyan sınırları esas alır.</p></div>
-  <div class="safety-grid">
-    <ul class="rules">
-      <li><b>Her hesabın kendi sınırı var.</b> Hesaplar ortak bir gönderim havuzuna dönüşmez.</li>
-      <li><b>FloodWait'e uyar.</b> Telegram'ın bekleme isteğinde durur, uzun beklemede kuralları kapatır.</li>
-      <li><b>Belirsiz gönderim tekrarlanmaz.</b> Sonucu net olmayan mesaj, sen karar verene kadar bekler.</li>
-      <li><b>Mesaj onaysız gitmez.</b> Cevap önerileri taslak olarak kalır.</li>
-    </ul>
-    <div class="kill" id="kill">
-      <div class="kill-head"><span class="mono">Otomasyonlar</span><button class="btn sm danger" id="killBtn">Tümünü duraklat</button></div>
-      <ul id="killList"><li><span>Sabah duyurusu</span><em>Çalışıyor</em></li><li><span>Haftalık rapor</span><em>Çalışıyor</em></li><li><span>Grup anketi</span><em>Çalışıyor</em></li></ul>
-      <p class="fine">Panelde tek tuşla hepsini durdurabilir, hazır olunca sürdürebilirsin.</p>
-    </div>
-  </div>
+ <div class="section-kicker">03 — KONTROL SENDE</div>
+ <div class="section-heading"><h2>Otomasyon güçlüdür.<br><em>Kontrol daha önemlidir.</em></h2><p>LovelyTG, kontrolsüz gönderim yerine görünürlük, kayıt ve gerektiğinde durdurabilme yaklaşımını benimser.</p></div>
+ <div class="safety-grid"><ul class="rules">
+  <li><b>Hesap bazlı sınırlar</b><span>Hesaplar ortak bir gönderim havuzuna dönüşmez.</span></li>
+  <li><b>FloodWait'e saygı</b><span>Telegram bekleme istediğinde sistem bekler.</span></li>
+  <li><b>Belirsiz işlem tekrarlanmaz</b><span>Sonucu net olmayan işlem kontrol için bekletilir.</span></li>
+  <li><b>Taslaklar senin onayında</b><span>Yanıt önerileri otomatik olarak gönderilmez.</span></li>
+ </ul><div class="kill" id="kill"><div class="kill-head"><span>OTOMASYON DURUMU</span><button class="outline sm danger" id="killBtn">Tümünü duraklat</button></div><ul id="killList"><li><span>Sabah duyurusu</span><em>Çalışıyor</em></li><li><span>Haftalık rapor</span><em>Çalışıyor</em></li><li><span>Grup anketi</span><em>Çalışıyor</em></li></ul><p>Örnek kontrol alanı · Tek tuşla duraklatma</p></div></div>
 </section>
 
-<section class="roadmap" id="yol">
-  <div class="head"><h2>Neresi hazır, neresi yolda</h2><p>Sürüm 4.9 ile kullanılanlar ve sıradaki işler. Özellik listesi bu tabloyla birlikte güncellenir.</p></div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Alan</th><th>Durum</th></tr></thead>
-    <tbody id="roadBody"></tbody>
-  </table></div>
-</section>
+<section class="roadmap" id="yol"><div class="section-kicker">04 — GELİŞİM DURUMU</div><div class="section-heading"><h2>Şeffaf ürün gelişimi.</h2><p>Kullanımda olan modüllerle geliştirme aşamasındaki alanları birbirinden ayırıyoruz.</p></div><div class="table-wrap"><table><thead><tr><th>Modül</th><th>Durum</th></tr></thead><tbody id="roadBody"></tbody></table></div></section>
 
-<section class="pricing" id="lisans">
-  <div class="head"><h2>Lisans seç</h2><p>Süreyi seç, paketleri karşılaştır. Her paket aynı panelle gelir; fark hesap sayısı, otomasyon ve geçmiş süresindedir.</p></div>
-  <div class="switch" role="group" aria-label="Lisans süresi"><button data-period="weekly">Haftalık</button><button class="active" data-period="monthly">Aylık</button><button data-period="yearly">Yıllık</button></div>
-  <div class="plans" id="plans"></div>
+<section class="pricing" id="lisans"><div class="section-kicker">05 — LİSANSLAR</div><div class="section-heading"><h2>Sana uygun planı seç.</h2><p>İhtiyacına göre lisans süresini belirle. Fiyatlar ve ödeme bilgileri yayına almadan önce yapılandırılmalıdır.</p></div>
+ <div class="switch" role="group" aria-label="Lisans süresi"><button data-period="weekly">Haftalık</button><button class="active" data-period="monthly">Aylık</button><button data-period="yearly">Yıllık</button></div><div class="plans" id="plans"></div>
 </section>
+<section class="order" id="siparis"><div class="order-copy"><div class="section-kicker">06 — SATIN ALMA</div><h2>Ödeme ve lisans talebi.</h2><p>Paketi seç, talep metnini hazırla ve ödeme bilgilerini kullan. Ödeme kontrolü ve lisans tanımlama manuel yürütülür.</p><div class="pay-tabs" role="group" aria-label="Ödeme yöntemi"><button class="active" data-method="iban">Havale / EFT</button><button data-method="crypto">Kripto</button></div><div id="ibanPanel"><dl><dt>Hesap sahibi</dt><dd id="bankName"></dd><dt>IBAN</dt><dd class="copy"><code id="ibanValue"></code><button class="outline sm" data-copy="iban">Kopyala</button></dd></dl></div><div id="cryptoPanel" hidden><dl><dt>Ağ</dt><dd id="cryptoNetwork"></dd><dt>Cüzdan adresi</dt><dd class="copy"><code id="walletValue"></code><button class="outline sm" data-copy="wallet">Kopyala</button></dd></dl><p class="warn">Transferden önce ağ ve adresi mutlaka doğrula.</p></div></div>
+ <form id="orderForm" class="form"><label>Adın veya kullanıcı adın<input name="customer" required autocomplete="name"></label><label>E-posta veya Telegram<input name="contact" required></label><label>Paket<select name="plan" id="orderPlan" required></select></label><label>Ödeme yöntemi<select name="method"><option>IBAN / EFT</option><option>USDT - TRC20</option><option>Bitcoin</option></select></label><label class="wide">Not<textarea name="note" rows="3" placeholder="Eklemek istediklerin"></textarea></label><button class="primary wide" type="submit">Talep metnini hazırla ↗</button><p class="fine wide">Bu form sunucuya veri göndermez; talep metnini oluşturup kopyalar.</p><pre class="result wide" id="formResult" aria-live="polite" hidden></pre></form>
+</section>
+<section class="faq" id="sss"><div class="section-kicker">07 — SIK SORULANLAR</div><h2>Merak edilenler.</h2><div class="faq-list"><details><summary>Lisans nasıl etkinleşir?</summary><p>Ödeme ve dekont kontrol edildikten sonra lisans anahtarı oluşturulup iletilir. Süreç şu an manuel yürür.</p></details><details><summary>AI özellikleri için ne gerekir?</summary><p>Kendi AI sağlayıcı API anahtarın gerekir. AI destekli çıktılar taslak ve öneri niteliğindedir.</p></details><details><summary>Sınırsız gönderim yapabilir miyim?</summary><p>Hayır. Telegram kuralları ve hesap limitleri geçerlidir.</p></details><details><summary>Verilerim nerede saklanır?</summary><p>Oturumlar ve veritabanı, panelin çalıştığı cihazda tutulur. Yedeklerini ayrıca saklamalısın.</p></details></div></section>
 
-<section class="order" id="siparis">
-  <div class="order-pay">
-    <h2>Ödeme ve talep</h2>
-    <p>Paketi seç, talebi oluştur, ödemeyi yap. Açıklamaya talep metnindeki bilgileri ekle; ödeme kontrol edildikten sonra lisansın tanımlanır.</p>
-    <div class="pay-tabs" role="group" aria-label="Ödeme yöntemi"><button class="active" data-method="iban">Havale / EFT</button><button data-method="crypto">Kripto</button></div>
-    <div id="ibanPanel"><dl><dt>Hesap sahibi</dt><dd id="bankName"></dd><dt>IBAN</dt><dd class="copy"><code id="ibanValue"></code><button class="ghost sm" data-copy="iban">Kopyala</button></dd></dl></div>
-    <div id="cryptoPanel" hidden><dl><dt>Ağ</dt><dd id="cryptoNetwork"></dd><dt>Cüzdan adresi</dt><dd class="copy"><code id="walletValue"></code><button class="ghost sm" data-copy="wallet">Kopyala</button></dd></dl><p class="warn">Yalnızca yukarıdaki ağdan gönder. Yanlış ağdaki transferler geri alınamayabilir.</p></div>
-  </div>
-  <form id="orderForm" class="form">
-    <label>Adın veya kullanıcı adın<input name="customer" required autocomplete="name"></label>
-    <label>E-posta veya Telegram<input name="contact" required autocomplete="email"></label>
-    <label>Paket<select name="plan" id="orderPlan" required></select></label>
-    <label>Ödeme yöntemi<select name="method"><option>IBAN / EFT</option><option>USDT - TRC20</option><option>Bitcoin</option></select></label>
-    <label class="wide">Not<textarea name="note" rows="3" placeholder="İşlem numarası gibi eklemek istediklerin"></textarea></label>
-    <button class="btn wide" type="submit">Talep metnini hazırla</button>
-    <p class="fine wide">Form veri göndermez. Talep metnini oluşturup kopyalar; sen iletirsin.</p>
-    <pre class="result wide" id="formResult" aria-live="polite" hidden></pre>
-  </form>
-</section>
-
-<section class="faq" id="sss">
-  <div class="head"><h2>Sık sorulanlar</h2></div>
-  <div class="faq-list">
-    <details><summary>Lisans nasıl etkinleşir?</summary><p>Ödeme ve dekont kontrol edildikten sonra lisans anahtarı oluşturulup sana iletilir. Süreç şu an manuel yürür.</p></details>
-    <details><summary>Paketler arasındaki fark nedir?</summary><p>Hesap sayısı, aktif otomasyon sayısı, işlem geçmişi süresi ve AI erişimi. Panelin kendisi her pakette aynıdır.</p></details>
-    <details><summary>Yapay zekâ özellikleri için ne gerekir?</summary><p>Kendi AI sağlayıcı API anahtarın. Yapay zekâ yalnızca taslak ve öneri üretir, gönderimi sen onaylarsın.</p></details>
-    <details><summary>Sınırsız gönderim yapabilir miyim?</summary><p>Hayır. Telegram kuralları ve hesap limitleri geçerlidir. LovelyTG bu sınırlara uyar ve aşmanı kolaylaştırmaz.</p></details>
-    <details><summary>Verilerim nerede duruyor?</summary><p>Oturumlar ve veritabanı, panelin çalıştığı cihazda hesap başına ayrı klasörde tutulur. Yedeklerini panelden alıp geri yükleyebilirsin.</p></details>
-    <details><summary>Deneme sürümü var mı?</summary><p>Haftalık lisans, paneli kısa süreli denemenin en düşük maliyetli yoludur.</p></details>
-  </div>
-</section>
+<section class="contact" id="iletisim"><div class="section-kicker">08 — İLETİŞİM & GELİŞTİRİCİ</div><div class="contact-grid"><div><h2>Bir fikrin mi var?<br><em>Konuşalım.</em></h2><p>LovelyTG ve diğer yazılım projeleri hakkında iletişime geçebilirsin.</p><div class="profile"><img src="assets/brodysoft-logo.png" alt="BrodySOFT profil logosu"><div><b>MertBrody</b><span>BrodySOFT · Developer</span></div></div></div>
+ <div class="contact-links"><a href="https://t.me/MertBrody" target="_blank" rel="noopener"><span class="contact-icon">↗</span><span><b>Telegram</b><small>@MertBrody</small></span><span class="arrow">↗</span></a><a href="https://signal.me/#eu/MertBrody.38" target="_blank" rel="noopener"><span class="contact-icon">↗</span><span><b>Signal</b><small>MertBrody.38</small></span><span class="arrow">↗</span></a><button type="button" class="copy-contact" data-copy-text="MertBrody"><span class="contact-icon">⌘</span><span><b>Kullanıcı adını kopyala</b><small>MertBrody</small></span><span class="arrow">＋</span></button></div></div></section>
 </main>
-
-<footer>
-  <a class="logo" href="#top"><i></i>LovelyTG</a>
-  <p>© <span id="year"></span> LovelyTG. Bağımsız bir yazılımdır; Telegram ile bağlantılı değildir ve onaylanmamıştır.</p>
-</footer>
+<footer><a class="brand footer-brand" href="#top"><img src="assets/brodysoft-logo.png" alt=""><span>Brody<span>SOFT</span><small>SOFTWARE & AUTOMATION</small></span></a><p>© <span id="year"></span> BrodySOFT · LovelyTG bağımsız bir yazılımdır; Telegram ile bağlantılı değildir.</p><a href="#top">Başa dön ↑</a></footer>
 <div class="toast" id="toast" role="status"></div>
-</body>
-</html>
+</body></html>
