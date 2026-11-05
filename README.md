@@ -1,21 +1,24 @@
-# LovelyTG Manager Tanıtım Sitesi
+# LovelyTG Tanıtım Sitesi
 
-Bu sürüm, kullanıcının sağladığı `LovelyTG_v4_9pre.zip` içindeki `static/index.html` arayüzü incelenerek hazırlanmıştır.
-
-## Gerçek projeden alınan arayüz detayları
-- Koyu siyah arka plan ve `#d7ff1f` lime vurgu paleti (v4.7+ CSS)
-- Plus Jakarta Sans fontu
-- Sol navigasyon ve gerçek menü başlıkları
-- Ana Panel, Otomasyon Merkezi, Grup/Kanal Analizi ve Mesaj ekranlarının kaynak koddaki yapıları
-- Projede bulunan gerçek özellik adları ve sınırları
-
-`assets/*.png` ekran görselleri, aynı tasarım sistemi ve kaynakta tanımlı ekran alanlarıyla hazırlanmış temsilî örnek ekranlardır. Sayısal içerikler örnektir; canlı veriler değildir.
+Responsive, tek sayfalık ürün tanıtım ve lisans satış arayüzü. HTML, CSS ve düz JavaScript kullanır (harici kütüphane yok, yalnızca Google Fonts).
 
 ## Çalıştırma
-`index.html` dosyasını tarayıcıda açın veya statik hosting'e yükleyin. Google Fonts ve GSAP CDN için internet gerekir.
+- `index.html` dosyasını tarayıcıda açabilir veya klasörü bir statik hosting servisine yükleyebilirsiniz.
+- Yazı tipleri Google Fonts üzerinden yüklenir; çevrimdışıyken sistem yazı tipine düşer.
+- Diğer içerikler yerel dosyalardır.
 
-## Yayın öncesi
-- `js/config.js` içindeki fiyat, IBAN ve cüzdan alanlarını düzenleyin.
-- Paket yetkilerini ürünün gerçek lisans altyapısıyla eşleştirin.
-- Bu statik form ödeme almaz ve lisans etkinleştirmez. Gerçek ödeme doğrulaması ve lisans üretimi için backend gerekir.
-- Gizlilik, satış, iade ve lisans koşullarını ekleyin.
+## Yayına almadan önce
+1. `js/config.js` dosyasındaki örnek fiyatları gerçek fiyatlarla değiştirin.
+2. `bank.name` ve `bank.iban` alanlarını gerçek ödeme bilgilerinizle doldurun.
+3. `crypto.network` ve `crypto.wallet` alanlarını doğru ağ/cüzdanla doldurun.
+4. Paketlerin sunduğu özellikleri ürünün gerçek yeteneklerine göre düzenleyin.
+5. İletişim, gizlilik, mesafeli satış, iade/iptal ve lisans koşulları sayfalarını ekleyin.
+6. Gerçek sipariş, ödeme teyidi ve lisans aktivasyonu için güvenli backend geliştirin.
+
+## Önemli teknik notlar
+- Fiyatlar yalnızca örnek/demo değerlerdir.
+- IBAN ve kripto cüzdan adresleri placeholder'dır; gerçek ödeme almaz.
+- Sipariş formu sadece talep metni oluşturur ve kopyalar. Sunucuya veri göndermez.
+- Lisans kontrolü yalnızca ön yüzde yapılmamalıdır. Paket yetkileri API/backend tarafında doğrulanmalıdır.
+- Kripto ödemelerinde ağ, varlık ve adres bilgisi ödeme öncesinde doğrulanmalıdır.
+- Telegram'ın marka/ürün kimliğiyle resmi bağlantı veya onay izlenimi verilmemelidir.
