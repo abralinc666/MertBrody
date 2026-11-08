@@ -1,69 +1,63 @@
-/* ===== AYARLAR — burayı kendinize göre düzenleyin ===== */
-const WHATSAPP_NO = "905XXXXXXXXX";   // Ülke kodu ile, başında + ve boşluk olmadan (örn: 905321234567)
-const MAP_URL = "https://www.google.com/maps/search/?api=1&query=BC+Nails"; // Google Maps dükkan linkinizi buraya yapıştırın
-const SERVICES = ["Protez Tırnak","Kalıcı Oje","NailArt Tasarım","Manikür & Pedikür","Spa Bakım"];
+/* ===== AYARLAR ===== */
+const WHATSAPP_NO = "905375264464";
+const MAP_URL = "https://maps.app.goo.gl/pefyjLuXcUvEDgaU8";
+const SERVICES = {"Protez Tırnak":900,"Kalıcı Oje":400,"NailArt Tasarım":50,"Manikür":350,"Pedikür":450,"Spa Bakım":600,"Söküm":200};
 const TIMES = ["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"];
-/* ======================================================= */
-const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-const modal = $("#modal"), chips = $("#chips"), times = $("#times"), err = $("#err");
-let time = "";
-
-$("#fabMap").href = MAP_URL;
-$$(".js-wa").forEach(a => a.href = `https://wa.me/${WHATSAPP_NO}`);
-
-SERVICES.forEach(s => { const b = document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=s; b.onclick=()=>b.classList.toggle("on"); chips.appendChild(b); });
-TIMES.forEach(t => { const b = document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=t; b.onclick=()=>{ time=t; $$("#times .chip").forEach(c=>c.classList.toggle("on",c===b)); }; times.appendChild(b); });
-
-const d = $("#date"); d.min = new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
-
-function openModal(service){
-  if(service) $$("#chips .chip").forEach(c=>{ if(c.textContent===service) c.classList.add("on"); });
-  modal.classList.add("open"); modal.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden";
-  gsap.fromTo(".sheet",{y:40,opacity:0,scale:.96},{y:0,opacity:1,scale:1,duration:.45,ease:"back.out(1.4)"});
+/* =================== */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const modal=$("#modal"),chips=$("#chips"),err=$("#err"),pick=$("#pick"),total=$("#total"),dateEl=$("#date");
+let time="",design=null;
+$("#fabMap").href=$("#mapLink").href=MAP_URL;
+$$(".js-wa").forEach(a=>a.href=`https://wa.me/${WHATSAPP_NO}`);
+const mk=(p,t,fn,cls="chip")=>{const b=document.createElement("button");b.type="button";b.className=cls;b.textContent=t;b.onclick=()=>fn(b);p.appendChild(b);return b};
+Object.entries(SERVICES).forEach(([n,p])=>{const b=mk(chips,`${n} · ${p} ₺`,b=>{b.classList.toggle("on");calc()});b.dataset.n=n});
+TIMES.forEach(t=>mk($("#times"),t,b=>{time=t;$$("#times .chip").forEach(c=>c.classList.toggle("on",c===b))}));
+dateEl.min=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function calc(){const s=$$("#chips .chip.on").map(c=>c.dataset.n);const t=s.reduce((a,n)=>a+SERVICES[n],0)+(design?design.p:0);
+  total.textContent=(s.length||design)?`Tahmini başlangıç tutarı: ${t.toLocaleString("tr-TR")} ₺`:""}
+function openModal(service,d){
+  design=d||null;pick.classList.toggle("on",!!d);pick.textContent=d?`✨ Seçilen tasarım: ${d.n} (${d.p} ₺'den)`:"";
+  if(service)$$("#chips .chip").forEach(c=>{if(c.dataset.n===service)c.classList.add("on")});
+  calc();modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
+  if(window.gsap)gsap.fromTo(".sheet",{y:30,opacity:0},{y:0,opacity:1,duration:.35,ease:"power2.out"});
 }
-function closeModal(){ modal.classList.remove("open"); modal.setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
-$$(".js-book").forEach(b => b.addEventListener("click", e => { e.preventDefault(); openModal(); }));
-$$(".svc").forEach(b => b.addEventListener("click", () => openModal(b.dataset.s)));
-$("#close").onclick = closeModal;
-modal.addEventListener("click", e => { if(e.target===modal) closeModal(); });
-addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
-
-$("#send").onclick = () => {
-  const sel = $$("#chips .chip.on").map(c=>c.textContent);
-  if(!sel.length) return err.textContent = "Lütfen en az bir hizmet seçin.";
-  if(!d.value) return err.textContent = "Lütfen bir tarih seçin.";
-  if(!time) return err.textContent = "Lütfen bir saat seçin.";
-  err.textContent = "";
-  const tarih = new Date(d.value+"T00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric",weekday:"long"});
-  const name = $("#name").value.trim(), note = $("#note").value.trim();
-  const msg = `Merhaba, BC Nails'ten randevu almak istiyorum.\n\n` +
-    (name?`👤 Ad: ${name}\n`:"") + `💅 Hizmet: ${sel.join(", ")}\n📅 Tarih: ${tarih}\n⏰ Saat: ${time}\n` +
-    (note?`📝 Not: ${note}\n`:"") + `\nUygunsa onaylar mısınız? Teşekkürler 🌸`;
-  window.open(`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(msg)}`, "_blank");
-  closeModal();
+const closeModal=()=>{modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.style.overflow=""};
+$$(".js-book").forEach(b=>b.onclick=e=>{e.preventDefault();openModal()});
+$$(".svc").forEach(b=>b.onclick=()=>openModal(b.dataset.s));
+$$(".grid figure").forEach(f=>f.onclick=()=>openModal(null,{n:f.dataset.d,p:+f.dataset.p}));
+$("#close").onclick=closeModal;modal.onclick=e=>{if(e.target===modal)closeModal()};
+addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+$("#send").onclick=()=>{
+  const sel=$$("#chips .chip.on").map(c=>c.dataset.n);
+  if(!sel.length&&!design)return err.textContent="Lütfen en az bir hizmet seçin.";
+  if(!dateEl.value)return err.textContent="Lütfen bir tarih seçin.";
+  if(!time)return err.textContent="Lütfen bir saat seçin.";
+  err.textContent="";
+  const tarih=new Date(dateEl.value+"T00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric",weekday:"long"});
+  const name=$("#name").value.trim(),note=$("#note").value.trim();
+  const msg=`Merhaba, BC Nails'ten randevu almak istiyorum.\n\n`+(name?`👤 Ad: ${name}\n`:"")+
+   (sel.length?`💅 Hizmet: ${sel.join(", ")}\n`:"")+(design?`✨ Tasarım: ${design.n}\n`:"")+
+   `📅 Tarih: ${tarih}\n⏰ Saat: ${time}\n`+(total.textContent?`💰 ${total.textContent}\n`:"")+(note?`📝 Not: ${note}\n`:"")+`\nUygunsa onaylar mısınız? Teşekkürler 🌸`;
+  const url=`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(msg)}`;
+  if(!window.open(url,"_blank"))location.href=url;closeModal();
 };
+$("#burger").onclick=()=>$("#links").classList.toggle("open");
+$$("#links a").forEach(a=>a.onclick=()=>$("#links").classList.remove("open"));
+let tk=0;addEventListener("scroll",()=>{if(tk)return;tk=requestAnimationFrame(()=>{$("#nav").classList.toggle("solid",scrollY>60);tk=0})},{passive:true});
+/* hafif animasyonlar: IntersectionObserver + GSAP sadece açılışta */
+$$(".svc,.grid figure,.how li,.plist>div,.card,details,.contact>div,.g-head").forEach(e=>e.classList.add("rv"));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=[...e.target.parentNode.children].indexOf(e.target);e.target.style.transitionDelay=Math.min(i,5)*70+"ms";e.target.classList.add("in");io.unobserve(e.target)}}),{rootMargin:"0px 0px -8% 0px"});
+$$(".rv").forEach(e=>io.observe(e));
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)$$(".links a").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id))}),{threshold:.35});
+$$("section[id]").forEach(s=>so.observe(s));
+addEventListener("load",()=>{if(!window.gsap)return;gsap.from([".eyebrow","h1",".lead",".cta",".stats"],{y:30,opacity:0,duration:.7,stagger:.12,ease:"power3.out"});gsap.from(".nav",{y:-50,opacity:0,duration:.6})});
 
-/* menü */
-$("#burger").onclick = () => $("#links").classList.toggle("open");
-$$("#links a").forEach(a => a.onclick = () => $("#links").classList.remove("open"));
-addEventListener("scroll", () => $("#nav").classList.toggle("solid", scrollY>60), {passive:true});
-
-/* GSAP animasyonları */
-gsap.registerPlugin(ScrollTrigger);
-const tl = gsap.timeline({defaults:{ease:"power3.out"}});
-tl.from(".nav",{y:-60,opacity:0,duration:.7})
-  .from(".hero-img",{scale:1.12,duration:1.8,ease:"power2.out"},0)
-  .from(".eyebrow",{x:-30,opacity:0,duration:.6},.3)
-  .from(".hero h1",{y:50,opacity:0,duration:.9},.45)
-  .from(".lead",{y:30,opacity:0,duration:.7},.8)
-  .from(".cta .btn",{y:30,opacity:0,stagger:.12,duration:.6},1)
-  .from(".neon",{scale:0,rotate:-30,opacity:0,duration:.8,ease:"back.out(2)"},1.1);
-gsap.to(".neon",{scale:1.08,repeat:-1,yoyo:true,duration:1.2,ease:"sine.inOut"});
-gsap.to(".hero-img",{yPercent:12,ease:"none",scrollTrigger:{trigger:".hero",scrub:true,start:"top top",end:"bottom top"}});
-gsap.from(".services",{y:60,opacity:0,duration:.9,scrollTrigger:{trigger:".services",start:"top 90%"}});
-gsap.from(".svc",{y:30,opacity:0,stagger:.1,duration:.6,scrollTrigger:{trigger:".services",start:"top 85%"}});
-gsap.from(".g-head",{y:30,opacity:0,duration:.7,scrollTrigger:{trigger:".gallery",start:"top 85%"}});
-gsap.from(".grid img",{y:60,opacity:0,scale:.92,stagger:.12,duration:.8,ease:"power3.out",scrollTrigger:{trigger:".grid",start:"top 85%"}});
-gsap.from(".card",{y:50,opacity:0,stagger:.2,duration:.8,scrollTrigger:{trigger:".cards",start:"top 85%"}});
-gsap.from("footer > *",{y:20,opacity:0,stagger:.1,duration:.6,scrollTrigger:{trigger:"footer",start:"top 95%"}});
-$$(".nav .links a").forEach(a=>{const t=$(a.getAttribute("href"));ScrollTrigger.create({trigger:t,start:"top 50%",end:"bottom 50%",onToggle:s=>s.isActive&&($$(".links a").forEach(x=>x.classList.remove("active")),a.classList.add("active"))});});
+/* Carousel */
+(()=>{const sl=$$(".slide"),dots=$("#dots"),cap=$("#cap");let i=0,t;
+ sl.forEach((_,k)=>{const d=document.createElement("i");d.onclick=()=>{go(k);auto()};dots.appendChild(d)});
+ function go(n){sl[i].classList.remove("on");i=(n+sl.length)%sl.length;const s=sl[i];if(s.loading==="lazy")s.loading="eager";s.classList.add("on");cap.textContent=s.dataset.c;[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i))}
+ function auto(){clearInterval(t);if(!matchMedia("(prefers-reduced-motion:reduce)").matches)t=setInterval(()=>go(i+1),5500)}
+ $("#next").onclick=()=>{go(i+1);auto()};$("#prev").onclick=()=>{go(i-1);auto()};
+ document.addEventListener("visibilitychange",()=>document.hidden?clearInterval(t):auto());
+ addEventListener("load",()=>sl.forEach(s=>s.loading="eager"));
+ go(0);auto()})();
