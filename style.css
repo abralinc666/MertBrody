@@ -53,7 +53,7 @@ em{font-style:italic;color:var(--rose)}
 .grid figure:hover img{transform:scale(1.07)}
 .grid figcaption{position:absolute;inset:auto 0 0;padding:34px 12px 12px;color:#fff;background:linear-gradient(transparent,#120c0bee);display:flex;flex-direction:column;gap:2px;font-size:13px}
 .grid figcaption span{color:var(--pink);font-weight:500}
-.grid figure::after{content:"Randevuya ekle +";position:absolute;top:10px;right:10px;background:var(--pink);color:#2a0f1a;font-size:11px;padding:5px 10px;border-radius:20px;opacity:0;transition:.3s}
+.grid figure::after{content:"Büyüt +";position:absolute;top:10px;right:10px;background:var(--pink);color:#2a0f1a;font-size:11px;padding:5px 10px;border-radius:20px;opacity:0;transition:.3s}
 .grid figure:hover::after{opacity:1}
 /* cards */
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:30px 2vw 50px}
@@ -106,7 +106,6 @@ input:focus{outline:0;border-color:var(--rose)}
 }
 @media(max-width:560px){.grid{grid-template-columns:repeat(2,1fr)}.services{grid-template-columns:repeat(2,1fr)}.hero::before{background:linear-gradient(#120c0bcc,#120c0b99)}.row{grid-template-columns:1fr}.hero-txt{padding-bottom:140px}}
 
-section{content-visibility:auto;contain-intrinsic-size:auto 500px}.hero,.services{content-visibility:visible}
 .rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}.rv.in{opacity:1;transform:none}
 .stats{list-style:none;display:flex;gap:30px;margin-top:34px;flex-wrap:wrap}.stats li{font-size:12px;color:#ddd}.stats b{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--pink);font-weight:500}
 .how{text-align:center;padding:50px 4vw 20px}.how h2,.faq h2{font-size:clamp(26px,3vw,36px);margin-bottom:24px}
@@ -186,3 +185,43 @@ input[type=date]::-webkit-date-and-time-value{text-align:left;min-height:1.2em}
 @media(max-width:360px){.svc-grid,.grid{grid-template-columns:1fr}.svc:last-child,.grid figure:last-child{aspect-ratio:3/4}.times{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:1500px){.hero-txt{padding-left:calc((100vw - 1440px)/2 + 4vw)}}
 @media(min-width:561px) and (max-width:980px){.svc-grid{grid-template-columns:repeat(6,1fr)}.svc{grid-column:span 2}.svc:nth-child(n+4){grid-column:span 3;aspect-ratio:3/2}}
+
+/* ===== Menü / kaydırma düzeltmeleri ===== */
+html{scroll-padding-top:76px}
+body.lock{overflow:hidden}
+.logo,.burger{position:relative;z-index:3}
+.menu-cta{display:none}
+@media(max-width:980px){
+ .links{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100vh;height:100dvh;inset:auto;top:0;left:0;z-index:2;overflow:auto;gap:8px;visibility:hidden;transition:transform .4s,visibility 0s .4s}
+ .links.open{visibility:visible;transition:transform .4s}
+ .links a{width:100%;max-width:320px;text-align:center;padding:14px 16px;font-size:20px}
+ .menu-cta{display:inline-flex;justify-content:center;margin-top:14px}
+}
+.nav{z-index:70}
+@media(max-width:980px){.links{background:#17110f}}
+
+.promo{display:inline-block;margin-bottom:16px;background:#ffb3cb22;border:1px solid var(--pink);color:var(--pink);padding:7px 16px;border-radius:30px;font-size:13px;transition:.25s}.promo:hover{background:var(--pink);color:#2a0f1a}.promo[hidden]{display:none}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.grid figure.off{display:none}
+.lb{position:fixed;inset:0;z-index:110;background:#0c0808f2;display:none;align-items:center;justify-content:center;gap:10px;padding:16px;color:#fff}.lb.open{display:flex}
+.lbc{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(520px,88vw)}.lbc img{max-width:100%;max-height:72vh;max-height:72dvh;border-radius:16px;object-fit:contain}.lbc p{font-size:15px}
+.lbn{width:46px;height:46px;flex:none;border-radius:50%;border:1.5px solid #fff8;font-size:26px}.lbn:hover{background:var(--pink);color:#2a0f1a}.lb .x{color:#fff;z-index:2}
+@media(max-width:560px){.lbn{position:absolute;bottom:18px;background:#0008}#lbP{left:16px}#lbN{right:16px}.lbc img{max-height:68dvh}}
+.reviews,.ba{padding:40px 2vw;max-width:1440px;margin:0 auto}.reviews h2,.ba h2{font-size:clamp(26px,3vw,36px);margin-bottom:20px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.rc{background:#fff;border-radius:18px;padding:22px;box-shadow:0 4px 14px #8f1d4a14;font-size:14px;line-height:1.6}.rc .st{color:#f5a623;letter-spacing:2px;margin-bottom:6px}.rc b{display:block;margin-top:10px;color:var(--wine)}
+.bas{position:relative;max-width:560px;aspect-ratio:4/3;border-radius:20px;overflow:hidden;margin:auto;--p:50%;touch-action:pan-y}.bas img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.bas .af{clip-path:inset(0 0 0 var(--p))}
+.bas input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}.bas i{position:absolute;top:0;bottom:0;left:var(--p);width:3px;background:#fff;transform:translateX(-50%);pointer-events:none}.bas em{position:absolute;top:10px;font-size:12px;background:#000a;color:#fff;padding:4px 10px;border-radius:20px;font-style:normal}
+.bas em:first-of-type{left:10px}.bas em:last-of-type{right:10px}
+.socs{display:flex;gap:10px;justify-content:center;margin-top:14px}.socs a{padding:8px 16px;border:1px solid var(--wine);border-radius:30px;font-size:13px;color:var(--wine)}
+.contact iframe{width:100%;max-width:720px;height:280px;border:0;border-radius:20px;margin-top:18px}
+/* ===== Düzeltme: filtre seçili rengi, neon kalp çakışması ===== */
+/* Filtre butonları: normal = beyaz zemin/koyu yazı, seçili = bordo zemin/beyaz yazı (özgüllük yüksek, sıradan etkilenmez) */
+.filters .chip{background:#fff;color:var(--ink)}
+.filters .chip.on{background:var(--wine);border-color:var(--wine);color:#fff}
+.neon{pointer-events:none;z-index:1}
+@media(max-width:980px){.neon{display:none}}
+@media(max-width:560px){.fab-btn{width:46px;height:46px}.fab-btn svg{width:24px;height:24px}.fab{gap:10px}}
+
+/* Çok kısa ekranlarda (ör. 320x568) sayfa en üstteyken sabit butonlar CTA/istatistik üstüne binmesin */
+.fab{transition:opacity .25s}
+@media(max-height:660px){.fab.low{opacity:0;pointer-events:none}}

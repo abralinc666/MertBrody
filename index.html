@@ -6,6 +6,8 @@
 <title>BC Nails | Tırnak Sanatında Yeni Trendler</title>
 <meta name="description" content="BC Nails – protez tırnak, kalıcı oje, nailart tasarım, manikür & pedikür. Fiyatlar ve WhatsApp ile hızlı randevu.">
 <meta name="theme-color" content="#17110f">
+<meta property="og:type" content="website"><meta property="og:title" content="BC Nails | Tırnak Sanatında Yeni Trendler"><meta property="og:description" content="Protez tırnak, kalıcı oje, nailart, manikür & pedikür. WhatsApp ile hızlı randevu."><meta property="og:image" content="https://mertbrody.vercel.app/img/n2.webp"><meta property="og:locale" content="tr_TR">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BeautySalon","name":"BC Nails","telephone":"+905375264464","image":"https://mertbrody.vercel.app/img/n2.webp","hasMap":"https://maps.app.goo.gl/pefyjLuXcUvEDgaU8","openingHours":"Mo-Su 10:00-20:00","priceRange":"₺₺","sameAs":[]}</script>
 <link rel="preload" as="image" href="img/n2.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,500&family=Poppins:wght@400;500&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -16,6 +18,7 @@
   <a href="#home" class="logo"><svg viewBox="0 0 48 40" width="40" height="34" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M24 4c5 6 6 14 0 24-6-10-5-18 0-24zM24 30C14 28 8 20 4 14c8 0 14 4 20 16zm0 0c10-2 16-10 20-16-8 0-14 4-20 16zM24 34c-8 0-14-4-18-8 7-1 13 1 18 8zm0 0c8 0 14-4 18-8-7-1-13 1-18 8z"/></svg><span>BC <em>Nails</em></span></a>
   <nav class="links" id="links">
     <a href="#home" class="active">Anasayfa</a><a href="#hizmetler">Hizmetler</a><a href="#galeri">Galeri</a><a href="#fiyatlar">Fiyatlar</a><a href="#sss">SSS</a><a href="#iletisim">İletişim</a>
+    <button class="btn pink big js-book menu-cta">Randevu Al →</button>
   </nav>
   <button class="btn pink js-book">Randevu Al →</button>
   <button class="burger" id="burger" aria-label="Menü"><i></i><i></i></button>
@@ -31,6 +34,7 @@
   </div>
   <div class="hero-ctl"><button id="prev" aria-label="Önceki">‹</button><span id="cap"></span><button id="next" aria-label="Sonraki">›</button><div class="dots" id="dots"></div></div>
   <div class="hero-txt">
+    <a class="promo" id="promo" hidden></a>
     <p class="eyebrow">✦ GÜZELLİĞİN EN DETAYINDA...</p>
     <h1>Tırnak Sanatında<br><em>Yeni Trendler</em></h1>
     <p class="lead">Profesyonel nailart hizmetlerimizle<br>elleriniz her zaman daha özel, daha şık!</p>
@@ -46,13 +50,14 @@
 </section>
 
 <section class="gallery" id="galeri">
-  <div class="g-head"><div><i class="bar inline"></i><h2>Uygulama Galerimiz</h2><p>Beğendiğiniz tasarıma dokunun, randevuya ekleyelim ♡</p></div></div>
+  <div class="g-head"><div><i class="bar inline"></i><h2>Uygulama Galerimiz</h2><p>Büyütmek için dokunun, beğendiğinizi randevuya ekleyin ♡</p></div></div>
+  <div class="filters" id="filters"></div>
   <div class="grid">
-    <figure data-d="Bordo Mermer & Taş" data-p="850"><img src="img/n1.webp" alt="Bordo mermer tırnak tasarımı" loading="lazy" width="520" height="780"><figcaption><b>Bordo Mermer &amp; Taş</b><span>850 ₺'den</span></figcaption></figure>
-    <figure data-d="Fiyonk Detaylı Bordo" data-p="800"><img src="img/n2.webp" alt="Fiyonk detaylı bordo tırnak" loading="lazy" width="520" height="780"><figcaption><b>Fiyonk Detaylı Bordo</b><span>800 ₺'den</span></figcaption></figure>
-    <figure data-d="Yıldızlı Fransız" data-p="700"><img src="img/n3.webp" alt="Yıldız detaylı fransız tırnak" loading="lazy" width="520" height="780"><figcaption><b>Yıldızlı Fransız</b><span>700 ₺'den</span></figcaption></figure>
-    <figure data-d="Degrade Bordo" data-p="900"><img src="img/n4.webp" alt="Degrade bordo tırnak" loading="lazy" width="520" height="780"><figcaption><b>Degrade Bordo</b><span>900 ₺'den</span></figcaption></figure>
-    <figure data-d="Yıldız & Puan Desen" data-p="950"><img src="img/n5.webp" alt="Yıldız ve puan desenli tırnak" loading="lazy" width="520" height="620"><figcaption><b>Yıldız &amp; Puan Desen</b><span>950 ₺'den</span></figcaption></figure>
+    <figure data-t="bordo mermer" data-full="img/lb-n1.webp" data-d="Bordo Mermer & Taş" data-p="850"><img src="img/n1.webp" alt="Bordo mermer tırnak tasarımı" loading="lazy" width="520" height="780"><figcaption><b>Bordo Mermer &amp; Taş</b><span>850 ₺'den</span></figcaption></figure>
+    <figure data-t="bordo" data-full="img/lb-n2.webp" data-d="Fiyonk Detaylı Bordo" data-p="800"><img src="img/n2.webp" alt="Fiyonk detaylı bordo tırnak" loading="lazy" width="520" height="780"><figcaption><b>Fiyonk Detaylı Bordo</b><span>800 ₺'den</span></figcaption></figure>
+    <figure data-t="fransiz yildiz" data-full="img/lb-n3.webp" data-d="Yıldızlı Fransız" data-p="700"><img src="img/n3.webp" alt="Yıldız detaylı fransız tırnak" loading="lazy" width="520" height="780"><figcaption><b>Yıldızlı Fransız</b><span>700 ₺'den</span></figcaption></figure>
+    <figure data-t="bordo" data-full="img/lb-n4.webp" data-d="Degrade Bordo" data-p="900"><img src="img/n4.webp" alt="Degrade bordo tırnak" loading="lazy" width="520" height="780"><figcaption><b>Degrade Bordo</b><span>900 ₺'den</span></figcaption></figure>
+    <figure data-t="yildiz" data-full="img/lb-n5.webp" data-d="Yıldız & Puan Desen" data-p="950"><img src="img/n5.webp" alt="Yıldız ve puan desenli tırnak" loading="lazy" width="520" height="620"><figcaption><b>Yıldız &amp; Puan Desen</b><span>950 ₺'den</span></figcaption></figure>
   </div>
 </section>
 
@@ -99,6 +104,7 @@
   <a class="fab-btn wa js-wa" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.7 1.2 1.5 1.900 1 .9 1.9 1.2 2.2 1.300.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.900.9c.3.1.5.2.5.3.1.1.1.6-.1 1.200z"/></svg></a>
 </div>
 
+<div class="lb" id="lb" aria-hidden="true"><button class="x" id="lbX" aria-label="Kapat">×</button><button class="lbn" id="lbP" aria-label="Önceki">‹</button><div class="lbc"><img id="lbImg" alt=""><p id="lbCap"></p><button class="btn pink" id="lbBook">Bu tasarımla randevu al →</button></div><button class="lbn" id="lbN" aria-label="Sonraki">›</button></div>
 <div class="modal" id="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-labelledby="mt">
     <button class="x" id="close" aria-label="Kapat">×</button>
