@@ -35,14 +35,14 @@ $("#send").onclick=()=>{
   err.textContent="";
   const tarih=new Date(dateEl.value+"T00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric",weekday:"long"});
   const name=$("#name").value.trim(),note=$("#note").value.trim();
-  const msg=`Merhaba, BC Nails'ten randevu almak istiyorum.\n\n`+(name?`👤 Ad: ${name}\n`:"")+
-   (sel.length?`💅 Hizmet: ${sel.join(", ")}\n`:"")+(design?`✨ Tasarım: ${design.n}\n`:"")+
-   `📅 Tarih: ${tarih}\n⏰ Saat: ${time}\n`+(total.textContent?`💰 ${total.textContent}\n`:"")+(note?`📝 Not: ${note}\n`:"")+`\nUygunsa onaylar mısınız? Teşekkürler 🌸`;
-  const url=`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(msg)}`;
+  const msg=`Merhaba, BC Nails'ten randevu almak istiyorum.\n\n`+(name?`*Ad:* ${name}\n`:"")+
+   (sel.length?`*Hizmet:* ${sel.join(", ")}\n`:"")+(design?`*Tasarım:* ${design.n}\n`:"")+
+   `*Tarih:* ${tarih}\n*Saat:* ${time}\n`+(total.textContent?`*${total.textContent.split(":")[0]}:*${total.textContent.split(":")[1]}\n`:"")+(note?`*Not:* ${note}\n`:"")+`\nUygunsa onaylar mısınız? Teşekkürler.`;
+  const url=`https://api.whatsapp.com/send?phone=${WHATSAPP_NO}&text=${encodeURIComponent(msg)}`;
   if(!window.open(url,"_blank"))location.href=url;closeModal();
 };
-$("#burger").onclick=()=>$("#links").classList.toggle("open");
-$$("#links a").forEach(a=>a.onclick=()=>$("#links").classList.remove("open"));
+$("#burger").onclick=()=>{$("#links").classList.toggle("open");$("#burger").classList.toggle("open")};
+$$("#links a").forEach(a=>a.onclick=()=>{$("#links").classList.remove("open");$("#burger").classList.remove("open")});
 let tk=0;addEventListener("scroll",()=>{if(tk)return;tk=requestAnimationFrame(()=>{$("#nav").classList.toggle("solid",scrollY>60);tk=0})},{passive:true});
 /* hafif animasyonlar: IntersectionObserver + GSAP sadece açılışta */
 $$(".svc,.grid figure,.how li,.plist>div,.card,details,.contact>div,.g-head").forEach(e=>e.classList.add("rv"));
