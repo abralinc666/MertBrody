@@ -1,16 +1,16 @@
 /* ===== AYARLAR ===== */
-const WHATSAPP_NO = {{js:WHATSAPP_NUMBER}};
-const MAP_URL = {{js:MAP_URL}};
+const WHATSAPP_NO = "05313313152";
+const MAP_URL = "https://maps.app.goo.gl/Google";
 const SERVICES = {"Protez Tırnak":900,"Kalıcı Oje":400,"NailArt Tasarım":50,"Manikür":350,"Pedikür":450,"Spa Bakım":600,"Söküm":200};
 const MIN={"Protez Tırnak":120,"Kalıcı Oje":45,"NailArt Tasarım":30,"Manikür":45,"Pedikür":60,"Spa Bakım":60,"Söküm":20}; /* tahmini süreler (dk) – düzenleyebilirsiniz */
 const CLOSE=20*60;
 const TIMES = ["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"];
 /* Kampanya şeridi: boş bırakırsanız gizlenir */
-const CAMPAIGN = {{js:CAMPAIGN}};
+const CAMPAIGN = "Yeni sezon tasarımlar geldi — randevunuzu şimdi oluşturun →";
 /* Sosyal medya linkleri: boş olanlar gösterilmez */
-const SOCIAL = {Instagram:{{js:INSTAGRAM}}, TikTok:{{js:TIKTOK}}, YouTube:{{js:YOUTUBE}}};
+const SOCIAL = {Instagram:"", TikTok:"", YouTube:""};
 /* Google Maps > Paylaş > Harita yerleştir > iframe içindeki src adresini yapıştırın (boşsa gösterilmez) */
-const MAP_EMBED = {{js:MAP_EMBED}};
+const MAP_EMBED = "";
 /* Gerçek müşteri yorumları: {n:"Ad S.", t:"Yorum metni", s:5} (boşsa bölüm gösterilmez) */
 const REVIEWS = [];
 /* Önce/Sonra: img klasörüne iki fotoğraf koyup yollarını yazın (boşsa gösterilmez) */
