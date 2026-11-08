@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BC Nails | Tırnak Sanatında Yeni Trendler</title>
-<meta name="description" content="BC Nails – protez tırnak, kalıcı oje, nailart tasarım, manikür & pedikür. Fiyatlar ve WhatsApp ile hızlı randevu.">
+<title>BC Nails | Protez Tırnak, Kalıcı Oje &amp; Nail Art</title>
+<meta name="description" content="BC Nails – protez tırnak, kalıcı oje, nail art tasarım, manikür &amp; pedikür. Güncel fiyatlar ve WhatsApp ile hızlı randevu.">
 <meta name="theme-color" content="#17110f">
-<meta property="og:type" content="website"><meta property="og:title" content="BC Nails | Tırnak Sanatında Yeni Trendler"><meta property="og:description" content="Protez tırnak, kalıcı oje, nailart, manikür & pedikür. WhatsApp ile hızlı randevu."><meta property="og:image" content="https://mertbrody.vercel.app/img/n2.webp"><meta property="og:locale" content="tr_TR">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BeautySalon","name":"BC Nails","telephone":"+905375264464","image":"https://mertbrody.vercel.app/img/n2.webp","hasMap":"https://maps.app.goo.gl/pefyjLuXcUvEDgaU8","openingHours":"Mo-Su 10:00-20:00","priceRange":"₺₺","sameAs":[]}</script>
+{{raw:HEAD_SEO}}
 <link rel="preload" as="image" href="img/n2.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,500&family=Poppins:wght@400;500&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -17,12 +16,13 @@
 <header class="nav" id="nav">
   <a href="#home" class="logo"><svg viewBox="0 0 48 40" width="40" height="34" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M24 4c5 6 6 14 0 24-6-10-5-18 0-24zM24 30C14 28 8 20 4 14c8 0 14 4 20 16zm0 0c10-2 16-10 20-16-8 0-14 4-20 16zM24 34c-8 0-14-4-18-8 7-1 13 1 18 8zm0 0c8 0 14-4 18-8-7-1-13 1-18 8z"/></svg><span>BC <em>Nails</em></span></a>
   <nav class="links" id="links">
-    <a href="#home" class="active">Anasayfa</a><a href="#hizmetler">Hizmetler</a><a href="#galeri">Galeri</a><a href="#fiyatlar">Fiyatlar</a><a href="#sss">SSS</a><a href="#iletisim">İletişim</a>
+    <a href="#home" class="active">Anasayfa</a><a href="#hizmetler">Hizmetler</a><a href="#galeri">Galeri</a><a href="#tasarim">Tasarla</a><a href="#fiyatlar">Fiyatlar</a><a href="#sss">SSS</a><a href="#iletisim">İletişim</a>
     <button class="btn pink big js-book menu-cta">Randevu Al →</button>
   </nav>
   <button class="btn pink js-book">Randevu Al →</button>
   <button class="burger" id="burger" aria-label="Menü"><i></i><i></i></button>
 </header>
+<main>
 
 <section class="hero" id="home">
   <div class="slides" id="slides" aria-hidden="true">
@@ -61,6 +61,11 @@
   </div>
 </section>
 
+<section class="builder" id="tasarim">
+  <div class="g-head"><div><i class="bar inline"></i><h2>Kendi Tasarımını Oluştur</h2><p>Şekil, renk ve efekt seç; tahmini fiyatı gör, randevuna ekle ♡</p></div></div>
+  <div class="bd"><div class="bpv"><svg id="bsvg" viewBox="0 0 300 190" role="img" aria-label="Tırnak önizleme"></svg><p class="bsum" id="bsum"></p><button class="btn pink" id="bbook">Bu tasarımla randevu al →</button></div><div class="bctl" id="bctl"></div></div>
+</section>
+
 <section class="how">
   <h2>Randevu <em>3 adımda</em></h2>
   <ol><li><b>1</b>Hizmet, tarih ve saati seçin</li><li><b>2</b>WhatsApp mesajınız otomatik hazırlanır</li><li><b>3</b>Sadece "Gönder"e basın, onayı biz iletelim</li></ol>
@@ -80,6 +85,8 @@
   <div class="card rose"><h3>Hemen Randevu Alın</h3><p>Güzelliğinize zaman kaybetmeyin, WhatsApp'tan yazın.</p><button class="btn wine js-book">Randevu Oluştur →</button><div class="drop"></div></div>
 </section>
 
+<section class="gift" id="hediye"><h2>Hediye <em>Kartı</em></h2><p>Sevdiklerinize BC Nails'te bir güzellik molası hediye edin.</p><div class="chips" id="gAmt"></div><input id="gName" type="text" maxlength="60" placeholder="Kime? (isteğe bağlı)"><button class="btn wine big" id="gSend">WhatsApp'tan Hediye Kartı İste →</button><small>Kart kodu salon tarafından WhatsApp'ta iletilir.</small></section>
+
 <section class="faq" id="sss">
   <h2>Sıkça Sorulan <em>Sorular</em></h2>
   <details><summary>Randevu nasıl alırım?</summary><p>"Randevu Al" butonuna basın, hizmet-tarih-saat seçin. WhatsApp mesajınız hazır gelir, sadece göndermeniz yeterli.</p></details>
@@ -89,9 +96,10 @@
 </section>
 
 <section class="contact" id="iletisim">
-  <div><h3>İletişim</h3><p>📞 <a href="tel:+905375264464">0537 526 44 64</a></p><p>💬 <a class="js-wa" target="_blank" rel="noopener">WhatsApp ile yazın</a></p><p>🕙 Her gün 10:00 – 20:00</p><a id="mapLink" class="btn outline" target="_blank" rel="noopener">📍 Konumu Aç</a></div>
+  <div><h3>İletişim</h3><p>📞 <a href="tel:+{{PHONE_NUMBER}}">{{PHONE_DISPLAY}}</a></p><p>💬 <a class="js-wa" href="https://wa.me/{{WHATSAPP_NUMBER}}" target="_blank" rel="noopener noreferrer">WhatsApp ile yazın</a></p><p>🕙 Her gün 10:00 – 20:00</p><a id="mapLink" class="btn outline" href="{{MAP_URL}}" target="_blank" rel="noopener noreferrer">📍 Konumu Aç</a></div>
 </section>
 
+</main>
 <footer>
   <a class="logo" href="#home"><span>BC <em>Nails</em></span></a>
   <nav><a href="#hizmetler">Hizmetler</a><a href="#fiyatlar">Fiyatlar</a><a href="#iletisim">İletişim</a></nav>
@@ -100,8 +108,8 @@
 </footer>
 
 <div class="fab">
-  <a id="fabMap" class="fab-btn map" target="_blank" rel="noopener" aria-label="Dükkan konumu"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></a>
-  <a class="fab-btn wa js-wa" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.7 1.2 1.5 1.900 1 .9 1.9 1.2 2.2 1.300.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.900.9c.3.1.5.2.5.3.1.1.1.6-.1 1.200z"/></svg></a>
+  <a id="fabMap" class="fab-btn map" href="{{MAP_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Dükkan konumu"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></a>
+  <a class="fab-btn wa js-wa" href="https://wa.me/{{WHATSAPP_NUMBER}}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.7 1.2 1.5 1.900 1 .9 1.9 1.2 2.2 1.300.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.900.9c.3.1.5.2.5.3.1.1.1.6-.1 1.200z"/></svg></a>
 </div>
 
 <div class="lb" id="lb" aria-hidden="true"><button class="x" id="lbX" aria-label="Kapat">×</button><button class="lbn" id="lbP" aria-label="Önceki">‹</button><div class="lbc"><img id="lbImg" alt=""><p id="lbCap"></p><button class="btn pink" id="lbBook">Bu tasarımla randevu al →</button></div><button class="lbn" id="lbN" aria-label="Sonraki">›</button></div>
@@ -113,14 +121,13 @@
     <p class="pick" id="pick"></p>
     <label>Hizmet (birden fazla seçebilirsiniz)</label>
     <div class="chips" id="chips"></div>
-    <div class="row"><div><label for="date">Tarih</label><input type="date" id="date"></div><div><label for="name">Adınız</label><input type="text" id="name" placeholder="Ad Soyad" autocomplete="name"></div></div>
+    <div class="row"><div><label for="date">Tarih</label><input type="date" id="date"></div><div><label for="name">Adınız</label><input type="text" id="name" maxlength="60" placeholder="Ad Soyad" autocomplete="name"></div></div>
     <label>Saat</label><div class="chips times" id="times"></div>
-    <label for="note">Not (isteğe bağlı)</label><input type="text" id="note" placeholder="Örn: Bordo renk, uzun form...">
-    <p class="total" id="total"></p><p class="err" id="err"></p>
+    <label for="note">Not (isteğe bağlı)</label><input type="text" id="note" maxlength="200" placeholder="Örn: Bordo renk, uzun form...">
+    <p class="total" id="total"></p><p class="dur" id="dur"></p><p class="err" id="err"></p>
     <button class="btn wa-send" id="send">WhatsApp ile Gönder →</button>
   </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="script.js" defer></script>
 </body>
 </html>
