@@ -1,21 +1,16 @@
-# LovelyTG Manager Tanıtım Sitesi
+# LovelyTG Tanıtım Sitesi
 
-Bu sürüm, kullanıcının sağladığı `LovelyTG_v4_9pre.zip` içindeki `static/index.html` arayüzü incelenerek hazırlanmıştır.
-
-## Gerçek projeden alınan arayüz detayları
-- Koyu siyah arka plan ve `#d7ff1f` lime vurgu paleti (v4.7+ CSS)
-- Plus Jakarta Sans fontu
-- Sol navigasyon ve gerçek menü başlıkları
-- Ana Panel, Otomasyon Merkezi, Grup/Kanal Analizi ve Mesaj ekranlarının kaynak koddaki yapıları
-- Projede bulunan gerçek özellik adları ve sınırları
-
-`assets/*.png` ekran görselleri, aynı tasarım sistemi ve kaynakta tanımlı ekran alanlarıyla hazırlanmış temsilî örnek ekranlardır. Sayısal içerikler örnektir; canlı veriler değildir.
+BrodySOFT için hazırlanmış, koyu zeminli ve limon-yeşili temalı tanıtım sitesi. Font: Plus Jakarta Sans (Google Fonts).
 
 ## Çalıştırma
-`index.html` dosyasını tarayıcıda açın veya statik hosting'e yükleyin. Google Fonts ve GSAP CDN için internet gerekir.
+`index.html` dosyasını tarayıcıda aç veya klasörü statik bir hosting servisine yükle.
 
-## Yayın öncesi
-- `js/config.js` içindeki fiyat, IBAN ve cüzdan alanlarını düzenleyin.
-- Paket yetkilerini ürünün gerçek lisans altyapısıyla eşleştirin.
-- Bu statik form ödeme almaz ve lisans etkinleştirmez. Gerçek ödeme doğrulaması ve lisans üretimi için backend gerekir.
-- Gizlilik, satış, iade ve lisans koşullarını ekleyin.
+## Düzenleme
+- Lisans fiyatları: `js/app.js` içindeki `L` dizisi (ad, ay sayısı, toplam fiyat). Aylık fiyat ve tasarruf yüzdesi otomatik hesaplanır.
+- Özellik modülleri: `js/app.js` içindeki `D` dizisi.
+- Renkler: `css/style.css` başındaki `:root` değişkenleri.
+- İletişim bağlantıları (Telegram `t.me/MertBrody`, e-posta, Signal): `index.html`.
+- Görseller: `assets/` klasörü.
+
+## Not
+Satın Al butonları, seçilen lisansı yazılı olarak Telegram sohbetine hazır mesaj halinde açar. Ödeme alma ve lisans aktivasyonu için ayrıca bir backend gerekir.
