@@ -1,29 +1,38 @@
-# Market — Node.js storefront demo
+# Market — React static storefront
 
-Independent storefront interface built with Node.js, Express, HTML, CSS and browser JavaScript. The page uses the product photographs and catalog data supplied in the source archive, while presenting them in a separate demo storefront identity.
+Bu proje Node.js/Express sunucusu çalıştırmaz. Arayüz React ile oluşturulmuştur; Vite yalnızca geliştirme ve derleme aracıdır. Vercel'e `dist/` klasörü statik site olarak dağıtılır.
 
-## Requirements
-- Node.js 20+
+## Termux'ta yerel geliştirme
 
-## Run locally
+Node.js yalnızca Vite geliştirme/derleme araçlarını çalıştırmak için gerekir; yayındaki sitede Node.js backend veya Express sunucusu yoktur.
+
 ```bash
 npm install
-npm start
+npm run dev -- --host 0.0.0.0
 ```
-Open `http://127.0.0.1:3000`.
 
-## Included
-- Express REST endpoint: `GET /api/products` with `q`, `category` and `sort` filters.
-- 48 catalog records and locally stored product photographs.
-- Responsive landing page, category navigation, search, sorting and cart drawer.
-- LocalStorage cart persistence.
-- GSAP product entrance animations (loaded from CDN).
-- Helmet security headers and API rate limiting.
+## Vercel dağıtımı
 
-## Safety and scope
-- This is an independent demo storefront, not an official A101 website and not affiliated with A101.
-- The demo does not collect login credentials, payment card data, CVV, bank credentials or one-time verification codes.
-- The checkout button is intentionally non-transactional. For a legitimate production store, integrate a licensed payment provider using its hosted checkout flow; do not store CVV or OTP values.
+1. ZIP'i açıp proje içeriğini GitHub deposunun kök dizinine yükleyin.
+2. Vercel'de GitHub deposunu import edin.
+3. Framework Preset: **Vite**
+4. Build Command: `npm run build`
+5. Output Directory: `dist`
+6. Install Command: `npm install`
 
-## Validation
-Run `node --check server.js` and `node --check public/app.js` for syntax checks. A live server test additionally requires installing dependencies with `npm install`.
+`vercel.json` SPA yönlendirmesini yapılandırır. Ürün verileri `src/products.json` dosyasından derleme sırasında pakete alınır; çalışma zamanında `/api/products` isteği yoktur. Ürün fotoğrafları `public/assets/products/` altındadır ve `/assets/products/...` yoluyla sunulur. Dosya adlarının büyük/küçük harfleri korunmalıdır (Vercel Linux üzerinde büyük/küçük harfe duyarlıdır).
+
+## İçerik
+
+- React 18 + Vite
+- Mevcut arayüzün HTML/CSS yerleşimi korunarak React bileşenlerine taşınmış sayfa
+- 48 ürünlük yerel JSON katalog
+- 84 yerel ürün görseli
+- GSAP ürün kartı animasyonları
+- Arama, kategori filtresi, fiyat sıralama
+- LocalStorage sepeti
+- Mobil uyumlu düzen
+
+## Güvenlik kapsamı
+
+Bu bağımsız demo mağaza arayüzüdür; A101 ile bağlantılı veya resmî değildir. Giriş parolası, kart numarası, CVV, banka bilgisi ya da tek kullanımlık doğrulama kodu toplamaz. Ödeme düğmesi gerçek işlem yapmaz.
