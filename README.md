@@ -1,32 +1,21 @@
-# LovelyTG Tanıtım Sitesi — V2 / BrodySOFT
+# LovelyTG Manager Tanıtım Sitesi
 
-Daha sade, editoryal bir tasarım diliyle yenilenmiş responsive ürün tanıtım sitesi.
+Bu sürüm, kullanıcının sağladığı `LovelyTG_v4_9pre.zip` içindeki `static/index.html` arayüzü incelenerek hazırlanmıştır.
 
-## İçerik
-- LovelyTG ürün ekranları: ana panel, otomasyon, mesajlar ve analiz
-- Ürün modülleri ve gelişim durumu
-- Haftalık / aylık / yıllık lisans kartları
-- IBAN ve kripto ödeme bilgi alanları
-- Talep metni oluşturma formu (yalnızca tarayıcıda hazırlanır; sunucuya göndermez)
-- BrodySOFT geliştirici profili ve Telegram / Signal iletişim alanları
-- GSAP + ScrollTrigger ile hafif giriş ve kaydırma animasyonları
-- Mobil menü ve responsive düzen
+## Gerçek projeden alınan arayüz detayları
+- Koyu siyah arka plan ve `#d7ff1f` lime vurgu paleti (v4.7+ CSS)
+- Plus Jakarta Sans fontu
+- Sol navigasyon ve gerçek menü başlıkları
+- Ana Panel, Otomasyon Merkezi, Grup/Kanal Analizi ve Mesaj ekranlarının kaynak koddaki yapıları
+- Projede bulunan gerçek özellik adları ve sınırları
+
+`assets/*.png` ekran görselleri, aynı tasarım sistemi ve kaynakta tanımlı ekran alanlarıyla hazırlanmış temsilî örnek ekranlardır. Sayısal içerikler örnektir; canlı veriler değildir.
 
 ## Çalıştırma
-`index.html` dosyasını tarayıcıda aç veya klasörü statik hosting servisine yükle. GSAP ve Google Fonts CDN üzerinden yüklenir; animasyonlar yüklenemezse içerik kullanılabilir kalır.
+`index.html` dosyasını tarayıcıda açın veya statik hosting'e yükleyin. Google Fonts ve GSAP CDN için internet gerekir.
 
-## Yayına almadan önce
-1. `js/config.js` içindeki örnek fiyatları gerçek fiyatlarla değiştir.
-2. IBAN ve kripto cüzdan placeholder alanlarını gerçek bilgilerle güncelle.
-3. Paket özelliklerini gerçek lisans limitleriyle eşleştir.
-4. Signal kullanıcı adı bağlantısını cihazında test et.
-5. Gizlilik, lisans, iade ve satış koşullarını ekle.
-6. Gerçek ödeme teyidi ve lisans aktivasyonu için güvenli backend geliştir.
-
-## İletişim
-- Telegram: https://t.me/MertBrody
-- Signal kullanıcı adı: MertBrody.38
-- BrodySOFT profil adı: MertBrody
-
-## Önemli
-Fiyatlar demo değerleridir. Ödeme bilgileri placeholder'dır. Sipariş formu ödeme almaz, lisans oluşturmaz ve herhangi bir sunucuya veri göndermez. Telegram ile resmi bağlantı veya onay ilişkisi yoktur.
+## Yayın öncesi
+- `js/config.js` içindeki fiyat, IBAN ve cüzdan alanlarını düzenleyin.
+- Paket yetkilerini ürünün gerçek lisans altyapısıyla eşleştirin.
+- Bu statik form ödeme almaz ve lisans etkinleştirmez. Gerçek ödeme doğrulaması ve lisans üretimi için backend gerekir.
+- Gizlilik, satış, iade ve lisans koşullarını ekleyin.
