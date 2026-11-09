@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://mertbrody.vercel.app/sitemap.xml
