@@ -1,38 +1,30 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f7f2">
-  <meta name="description" content="Modern, örnek çevrim içi market mağazası.">
-  <title>Sepetim — Günlük Market</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-  <script defer src="/app.js"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff"><title>Online Mağaza</title>
+<link rel="stylesheet" href="/assets/css/original-storefront.css">
+<link rel="stylesheet" href="/styles.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="/app.js"></script>
 </head>
-<body>
-  <div class="announcement">Günlük ihtiyaçların için sade ve hızlı alışveriş deneyimi <span>✦</span></div>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="Sepetim ana sayfa"><span class="brand-mark">s.</span><span>sepetim<span class="brand-dot">.</span></span></a>
-    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Ürün veya kategori ara..." autocomplete="off"><kbd>⌘ K</kbd></label>
-    <button class="cart-button" id="openCart" aria-label="Sepeti aç"><span>Sepetim</span><b id="cartCount">0</b><span class="cart-icon">↗</span></button>
-  </header>
-  <main>
-    <section class="hero">
-      <div class="hero-copy"><span class="eyebrow"><i></i> HAFTANIN SEÇKİSİ</span><h1>İyi yaşam,<br><em>iyi seçimlerle.</em></h1><p>Günlük ihtiyaçların, özenle seçilmiş ürünler ve zahmetsiz bir alışveriş deneyimi.</p><a class="primary-link" href="#products">Ürünleri keşfet <span>↘</span></a><div class="hero-note"><span>✳</span> Bu arayüz örnek/demo mağazadır.</div></div>
-      <div class="hero-art" aria-label="Alışveriş çantası illüstrasyonu"><div class="sun"></div><div class="art-card card-back">FRESH<br>EVERY DAY</div><div class="bag"><div class="bag-handle"></div><div class="bag-face"><span>good<br>things<br>inside<span class="bag-star">✳</span></span></div></div><div class="floating fruit fruit-one">🍊</div><div class="floating fruit fruit-two">🥑</div><div class="art-caption">KÜÇÜK MUTLULUKLAR, HER GÜN.</div></div>
-    </section>
-    <section class="benefits"><div><span>✦</span><p><b>Özenle seçildi</b><small>Kaliteli ürün seçkisi</small></p></div><div><span>◷</span><p><b>Kolay alışveriş</b><small>Hızlı ve anlaşılır akış</small></p></div><div><span>♡</span><p><b>Şeffaf deneyim</b><small>Açık fiyatlandırma</small></p></div></section>
-    <section class="products-section" id="products"><div class="section-heading"><div><span class="eyebrow">ALIŞVERİŞE BAŞLA</span><h2>Bugünün favorileri<span>.</span></h2></div><div class="filters" id="filters"><button class="filter active" data-category="Tümü">Tümü</button><button class="filter" data-category="Meyve & Sebze">Meyve & Sebze</button><button class="filter" data-category="Süt & Kahvaltı">Kahvaltı</button><button class="filter" data-category="İçecek">İçecek</button></div></div><div class="product-grid" id="productGrid"><div class="loading">Ürünler yükleniyor...</div></div></section>
-    <section class="bottom-banner"><div><span class="eyebrow">SEPETİNİ HAZIRLA</span><h2>İhtiyacın olan<br>her şey, tek yerde.</h2></div><a href="#products">Alışverişe dön ↗</a><div class="banner-shape">✳</div></section>
-  </main>
-  <footer><a class="brand" href="/"><span class="brand-mark">s.</span><span>sepetim<span class="brand-dot">.</span></span></a><p>Bağımsız demo arayüzü. Herhangi bir markayla bağlantısı yoktur.</p><span>© 2026 Sepetim Demo</span></footer>
-  <div class="overlay" id="overlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="Alışveriş sepeti" aria-hidden="true"><div class="drawer-head"><div><span class="eyebrow">ALIŞVERİŞİN</span><h2>Sepetin<span>.</span></h2></div><button id="closeCart" class="icon-button" aria-label="Sepeti kapat">×</button></div><div class="cart-items" id="cartItems"></div><div class="drawer-bottom"><div class="total-line"><span>Ara toplam</span><strong id="cartTotal">₺0,00</strong></div><p class="shipping-note">Kargo ve teslimat detayları ödeme sağlayıcısında gösterilir.</p><button class="checkout-button" id="checkoutButton">Devam et <span>↗</span></button><small class="safe-note">Demo ödeme: Kart veya doğrulama bilgisi istenmez.</small></div></aside>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-box"><button class="icon-button modal-close" id="closeModal" aria-label="Kapat">×</button><div class="modal-symbol">✓</div><span class="eyebrow">DEMO BİLGİLENDİRMESİ</span><h2 id="modalTitle">Ödeme entegrasyonu gerekli.</h2><p>Bu proje güvenli demo mağazasıdır. Gerçek ödeme için lisanslı sağlayıcının kendi barındırılan ödeme sayfası kullanılmalıdır. Bu ekranda kart numarası, CVV veya SMS kodu alınmaz.</p><button class="checkout-button" id="modalOk">Anladım</button></div></div>
-</body>
-</html>
+<body class="page-inner">
+<div class="promo-strip">Seçili ürünlerde fırsatları keşfedin <span>•</span> Hızlı ve güvenli alışveriş</div>
+<header class="store-header">
+  <div class="header-topline"><div class="shell"><span>Hafta içi 09.00–18.00 müşteri desteği</span><nav><a href="#hakkimizda">Hakkımızda</a><a href="#yardim">Yardım</a><a href="#iletisim">İletişim</a></nav></div></div>
+  <div class="shell header-main">
+    <a class="brand" href="/" aria-label="Online mağaza ana sayfa"><span class="brand-mark">M</span><span>MARKET<span class="brand-dot">.</span></span></a>
+    <form class="search" id="searchForm"><input id="searchInput" type="search" placeholder="Ürün, kategori veya marka arayın..." aria-label="Ürün ara"><button type="submit" aria-label="Ara">⌕</button></form>
+    <div class="header-actions"><a class="account-link" href="#hesap"><span class="action-icon">♙</span><span><b>Hesabım</b><small>Giriş / Üyelik</small></span></a><button class="cart-button" id="cartToggle"><span class="action-icon">🛒</span><span><b>Sepetim</b><small><i id="cartCount">0</i> ürün</small></span></button></div>
+  </div>
+  <div class="category-nav"><div class="shell"><a class="active" href="#urunler">Online Alışveriş</a><a href="#urunler">Kampanyalar</a><a href="#urunler">Elektronik</a><a href="#urunler">Ev & Yaşam</a><a href="#urunler">Giyim & Aksesuar</a><a href="#urunler">Anne & Bebek</a><a href="#urunler">Outdoor</a></div></div>
+</header>
+<main class="shell page-list" id="urunler">
+  <div class="breadcrumbs">Ana Sayfa <span>›</span> Online Alışveriş <span>›</span> Yeni Gelen Ürünler</div>
+  <section class="list-header"><div><h1>Yeni Gelen Ürünler</h1><p><strong id="resultCount">12</strong> adet ürün bulundu</p></div><div class="list-tools"><label class="mobile-filter-label" for="categorySelect">Kategori</label><select id="categorySelect"><option value="Tümü">Tüm kategoriler</option><option>Elektronik</option><option>Ev & Yaşam</option><option>Giyim & Aksesuar</option><option>Anne & Bebek</option><option>Outdoor</option></select><label for="sortSelect">Sırala</label><select id="sortSelect"><option value="recommended">Önerilen</option><option value="price-asc">Fiyat düşükten yükseğe</option><option value="price-desc">Fiyat yüksekten düşüğe</option></select></div></section>
+  <div class="catalog-layout"><aside class="sidebar"><section class="filter-box"><div class="filter-heading">Kategoriler <button id="clearCategory">Temizle</button></div><ul><li><button data-category="Elektronik">Elektronik</button></li><li><button data-category="Ev & Yaşam">Ev & Yaşam</button></li><li><button data-category="Giyim & Aksesuar">Giyim & Aksesuar</button></li><li><button data-category="Anne & Bebek">Anne & Bebek</button></li><li><button data-category="Outdoor">Outdoor</button></li></ul></section><section class="filter-box info-box"><b>Alışverişin kolay yolu</b><p>Ürünleri karşılaştırın, sepetinizi oluşturun.</p></section></aside>
+  <section class="product-area"><div class="product-grid" id="productGrid" aria-live="polite"></div><div class="empty-state" id="emptyState" hidden>Aramanızla eşleşen ürün bulunamadı.</div></section></div>
+</main>
+<footer class="site-footer"><div class="shell footer-inner"><div><a class="brand footer-brand" href="/"><span class="brand-mark">M</span><span>MARKET<span class="brand-dot">.</span></span></a><p>Bağımsız mağaza arayüzü demosu.</p></div><div><b>Kurumsal</b><a href="#hakkimizda">Hakkımızda</a><a href="#iletisim">İletişim</a></div><div><b>Destek</b><a href="#yardim">Yardım merkezi</a><a href="#teslimat">Teslimat bilgileri</a></div><div class="footer-note">Demo mağazadır. Gerçek ödeme veya kart bilgisi alınmaz.</div></div></footer>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-head"><h2>Sepetim</h2><button id="cartClose" aria-label="Sepeti kapat">×</button></div><div id="cartItems" class="cart-items"><p class="cart-empty">Sepetiniz henüz boş.</p></div><div class="drawer-total"><span>Toplam</span><strong id="cartTotal">₺0,00</strong><button id="demoCheckout" disabled>Alışverişe devam et</button><small>Bu demo sürümünde ödeme alınmaz.</small></div></aside><div class="drawer-backdrop" id="backdrop"></div>
+</body></html>

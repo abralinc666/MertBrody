@@ -1,39 +1,19 @@
-# Sepetim — Node.js demo mağaza
+# Online Mağaza — Node.js yeniden tasarım
 
-Bu paket, gönderilen PHP tabanlı arşivden bağımsız olarak hazırlanmış, genel amaçlı ve markasız bir e-ticaret arayüzü örneğidir. Node.js + Express, HTML, CSS, vanilla JavaScript ve GSAP kullanır.
+Bu sürüm, önceki bağımsız tasarımdan farklı olarak kaynak projedeki mağaza listeleme düzenini esas alır: üst bilgilendirme şeridi, geniş arama alanı, hesap/sepet aksiyonları, yatay kategori menüsü, sol kategori filtresi, sıralama alanı ve üç sütunlu ürün kartları. Mobilde aynı hiyerarşi korunur.
 
-## Gereksinimler
-- Node.js 20 veya üzeri
-- npm
+## Kurulum
+- Node.js 20+
+- `npm install`
+- `npm start`
+- `http://127.0.0.1:3000`
 
-## Çalıştırma
-```bash
-npm install
-npm start
-```
-Tarayıcıda `http://127.0.0.1:3000` adresini açın.
+## Teknoloji
+Node.js, Express, HTML, CSS, JavaScript, GSAP, Helmet ve express-rate-limit.
 
-Geliştirme modunda:
-```bash
-npm run dev
-```
-
-## İçerik
-- Responsive ürün kataloğu, arama ve kategori filtreleri
-- localStorage tabanlı demo sepeti
-- Ürün/adet doğrulaması yapan Express API
-- GSAP giriş animasyonları (hareket azaltma tercihi desteklenir)
-- Helmet güvenlik başlıkları ve checkout rate limit
-- `/health` sağlık kontrolü
-
-## Önemli güvenlik sınırı
-Bu demo kart numarası, son kullanma tarihi, CVV, banka şifresi veya SMS/OTP kodu istemez, işlemez ya da saklamaz. Checkout endpoint'i bilerek `501 payment_provider_required` döndürür. Gerçek ödeme için işletmenin kendi hesabıyla lisanslı ödeme sağlayıcısının barındırılan ödeme sayfası veya sağlayıcının onaylı tokenizasyon çözümü kullanılmalıdır. Kart verisini uygulama sunucusuna almayın.
-
-## Üretime almadan önce
-- Kendi marka kimliğinizi ve lisanslı ürün görsellerinizi ekleyin.
-- Gerçek ürün/veritabanı ve sipariş yönetimini tasarlayın.
-- Yetkilendirme, CSRF (cookie tabanlı oturum eklenirse), log maskeleme, yedekleme ve izleme ekleyin.
-- Ödeme sağlayıcısı webhook imzasını sunucu tarafında doğrulayın.
-- HTTPS, güvenli secret yönetimi ve bağımlılık taraması yapılandırın.
-
-Bu paket, gönderilen arşivdeki marka varlıklarını, yönetim panelini, kart/OTP toplama akışlarını veya mevcut veritabanını taşımamaktadır.
+## Kapsam ve güvenlik
+- PHP kaldırıldı; ürün listeleme API'si Express ile sunulur.
+- Arama, kategori filtresi, sıralama, sepet ve LocalStorage çalışır.
+- Kaynak projedeki ürün fotoğraflarından demo görseller kullanılır.
+- Kaynak projedeki A101 marka işaretleri ve ödeme/kimlik doğrulama toplama akışları taşınmamıştır. Bu proje bağımsız demo mağazadır; kart numarası, CVV veya OTP toplamaz ve ödeme işlemez.
+- Gerçek ödeme için lisanslı sağlayıcının barındırılan ödeme sayfası veya tokenizasyon SDK'sı ayrıca entegre edilmelidir.

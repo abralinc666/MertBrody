@@ -1,9 +1,10 @@
 {
-  "name": "marketplace-demo-node",
-  "version": "1.0.0",
+  "name": "marketplace-storefront-rebuild",
+  "version": "2.0.0",
   "private": true,
-  "description": "Generic demo storefront built with Node.js, Express, HTML, CSS, JavaScript and GSAP.",
-  "engines": { "node": ">=20" },
-  "scripts": { "start": "node server.js", "dev": "node --watch server.js" },
-  "dependencies": { "express": "^5.1.0", "helmet": "^8.1.0", "express-rate-limit": "^7.5.0" }
+  "description": "Node.js storefront rebuilt around the supplied catalog layout",
+  "main": "server.js",
+  "scripts": {"start": "node server.js", "dev": "node --watch server.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"express": "^4.21.2", "helmet": "^8.0.0", "express-rate-limit": "^7.5.0"}
 }
