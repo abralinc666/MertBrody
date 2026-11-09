@@ -25,18 +25,6 @@ const n=k=="ArrowDown"||k=="ArrowRight"?(i+1)%t.length:k=="ArrowUp"||k=="ArrowLe
 const ROAD=[["Altyapı sağlamlaştırma","app.py modüllere ayrılıyor: otomasyon, Telegram katmanı, AI, güvenlik.","dev"],["Dashboard ve mobil arayüz","PWA olarak telefondan kullanılıyor, yeni tasarım hazırlanıyor.","dev"],["Çoklu hesap merkezi","Kayıtlı hesaplar, ayrı oturumlar ve hızlı geçiş.","live"],["Görsel otomasyon stüdyosu","Kod yazmadan akış kurma.","plan"],["AI komuta merkezi","Sohbet, analiz ve taslak uçları var; komuta arayüzü geliştiriliyor.","dev"],["Akıllı gelen kutusu","Özel sohbet gelen kutusu ve cevap önerileri.","live"],["Analitik laboratuvarı","7, 30, 90 günlük analiz ve CSV raporlar.","live"],["Eklenti sistemi","Modülleri açıp kapatma ve entegrasyonlar.","plan"]];
 $("#roadBody").innerHTML=ROAD.map(r=>`<tr><td>${r[0]}<small>${r[1]}</small></td><td><span class="tag ${ST[r[2]][1]}">${ST[r[2]][0]}</span></td></tr>`).join("");
 
-/* Komut merkezi gösterimi */
-const cmdText="Yarın 09.00'da seçtiğim üç gruba günaydın mesajı planla.",typed=$("#typed"),caret=$("#caret"),steps=$$("#steps li"),draft=$("#draft"),done=$("#done");let run=0;
-const wait=ms=>new Promise(r=>setTimeout(r,ms));
-async function play(){const id=++run;typed.textContent="";steps.forEach(s=>s.classList.remove("on"));draft.hidden=true;done.hidden=true;$("#approve").hidden=false;
-if(reduce){typed.textContent=cmdText;steps.forEach(s=>s.classList.add("on"));draft.hidden=false;caret.hidden=true;return}
-caret.hidden=false;for(const c of cmdText){if(id!=run)return;typed.textContent+=c;await wait(26)}
-await wait(300);for(const s of steps){if(id!=run)return;s.classList.add("on");await wait(420)}
-if(id==run)draft.hidden=false}
-$("#approve").onclick=e=>{e.target.hidden=true;done.hidden=false};
-$("#replay").onclick=play;
-new IntersectionObserver((en,o)=>{if(en[0].isIntersecting){o.disconnect();play()}}).observe($("#console"));
-
 /* Duraklatma örneği */
 const kill=$("#kill"),kb=$("#killBtn");let off=false;
 kb.onclick=()=>{off=!off;kill.classList.toggle("off",off);kb.textContent=off?"Hepsini sürdür":"Tümünü duraklat";$$("#killList em").forEach(x=>x.textContent=off?"Duraklatıldı":"Çalışıyor")};
@@ -60,3 +48,9 @@ $("#year").textContent=new Date().getFullYear();
 const mt=$("#menuToggle"),nav=$("#nav");mt.onclick=()=>mt.setAttribute("aria-expanded",nav.classList.toggle("open"));
 $$("#nav a").forEach(a=>a.onclick=()=>{nav.classList.remove("open");mt.setAttribute("aria-expanded","false")});
 })();
+
+// BrodySOFT iletişim kopyalama
+document.querySelectorAll("[data-copy-text]").forEach(button=>button.addEventListener("click",async()=>{
+ try{await navigator.clipboard.writeText(button.dataset.copyText);const t=document.querySelector("#toast");t.textContent="Kullanıcı adı kopyalandı.";t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+ catch{const t=document.querySelector("#toast");t.textContent="Kopyalama desteklenmiyor.";t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+}));
