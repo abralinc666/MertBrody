@@ -1,19 +1,17 @@
-# Online Mağaza — Node.js yeniden tasarım
+# Node.js storefront conversion
 
-Bu sürüm, önceki bağımsız tasarımdan farklı olarak kaynak projedeki mağaza listeleme düzenini esas alır: üst bilgilendirme şeridi, geniş arama alanı, hesap/sepet aksiyonları, yatay kategori menüsü, sol kategori filtresi, sıralama alanı ve üç sütunlu ürün kartları. Mobilde aynı hiyerarşi korunur.
-
-## Kurulum
+## Run
 - Node.js 20+
 - `npm install`
 - `npm start`
-- `http://127.0.0.1:3000`
+- Open http://127.0.0.1:3000
 
-## Teknoloji
-Node.js, Express, HTML, CSS, JavaScript, GSAP, Helmet ve express-rate-limit.
+## Included
+- Express API and local JSON catalog derived from the supplied SQL product records.
+- Original product photographs copied from the supplied project into `public/assets/products/` (no remote image dependency).
+- Original webfont files included locally.
+- Search, category filtering, sorting and localStorage cart.
+- GSAP entrance animation (CDN).
 
-## Kapsam ve güvenlik
-- PHP kaldırıldı; ürün listeleme API'si Express ile sunulur.
-- Arama, kategori filtresi, sıralama, sepet ve LocalStorage çalışır.
-- Kaynak projedeki ürün fotoğraflarından demo görseller kullanılır.
-- Kaynak projedeki A101 marka işaretleri ve ödeme/kimlik doğrulama toplama akışları taşınmamıştır. Bu proje bağımsız demo mağazadır; kart numarası, CVV veya OTP toplamaz ve ödeme işlemez.
-- Gerçek ödeme için lisanslı sağlayıcının barındırılan ödeme sayfası veya tokenizasyon SDK'sı ayrıca entegre edilmelidir.
+## Safety boundary
+This is an independent storefront demo. It does not reproduce the original branded payment/OTP collection flow and does not collect card numbers, CVV, bank credentials or one-time codes. A production checkout must redirect to a legitimate payment provider's hosted checkout.
