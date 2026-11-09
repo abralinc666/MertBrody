@@ -1,16 +1,39 @@
-# LovelyTG Tanıtım Sitesi
+# Sepetim — Node.js demo mağaza
 
-BrodySOFT için hazırlanmış, koyu zeminli ve limon-yeşili temalı statik tanıtım sitesi (v6.3.1 özellikleriyle güncel). Font: Plus Jakarta Sans (Google Fonts).
+Bu paket, gönderilen PHP tabanlı arşivden bağımsız olarak hazırlanmış, genel amaçlı ve markasız bir e-ticaret arayüzü örneğidir. Node.js + Express, HTML, CSS, vanilla JavaScript ve GSAP kullanır.
+
+## Gereksinimler
+- Node.js 20 veya üzeri
+- npm
 
 ## Çalıştırma
-`index.html` dosyasını tarayıcıda aç veya klasörü statik bir hosting servisine yükle. Derleme adımı yoktur.
+```bash
+npm install
+npm start
+```
+Tarayıcıda `http://127.0.0.1:3000` adresini açın.
 
-## Düzenleme
-- Lisans fiyatları: `js/app.js` içindeki `L` dizisi (ad, ay sayısı, toplam fiyat). Aylık fiyat, tasarruf yüzdesi ve yıllık rozet otomatik hesaplanır.
-- Özellik modülleri: `js/app.js` içindeki `D` dizisi (`isNew: true` “YENİ” rozeti ekler). “Yenilikler” kartları `NEWS` dizisindedir; son sayı, açılacak modülün sırasıdır.
-- Arayüz ekran görüntüleri: `SH` dizisi ve `assets/ui-*.webp` (örnek verilerle hazırlanmıştır).
-- Renkler: `css/style.css` başındaki `:root` değişkenleri.
-- İletişim bağlantıları (Telegram `t.me/MertBrody`, e-posta, Signal): `index.html`.
+Geliştirme modunda:
+```bash
+npm run dev
+```
 
-## Not
-Satın Al butonları, seçilen lisansı yazılı olarak Telegram sohbetine hazır mesaj halinde açar. Site statiktir; ödeme alma ve lisans aktivasyonu için ayrıca bir backend gerekir ve şu an sohbet üzerinden yapılır.
+## İçerik
+- Responsive ürün kataloğu, arama ve kategori filtreleri
+- localStorage tabanlı demo sepeti
+- Ürün/adet doğrulaması yapan Express API
+- GSAP giriş animasyonları (hareket azaltma tercihi desteklenir)
+- Helmet güvenlik başlıkları ve checkout rate limit
+- `/health` sağlık kontrolü
+
+## Önemli güvenlik sınırı
+Bu demo kart numarası, son kullanma tarihi, CVV, banka şifresi veya SMS/OTP kodu istemez, işlemez ya da saklamaz. Checkout endpoint'i bilerek `501 payment_provider_required` döndürür. Gerçek ödeme için işletmenin kendi hesabıyla lisanslı ödeme sağlayıcısının barındırılan ödeme sayfası veya sağlayıcının onaylı tokenizasyon çözümü kullanılmalıdır. Kart verisini uygulama sunucusuna almayın.
+
+## Üretime almadan önce
+- Kendi marka kimliğinizi ve lisanslı ürün görsellerinizi ekleyin.
+- Gerçek ürün/veritabanı ve sipariş yönetimini tasarlayın.
+- Yetkilendirme, CSRF (cookie tabanlı oturum eklenirse), log maskeleme, yedekleme ve izleme ekleyin.
+- Ödeme sağlayıcısı webhook imzasını sunucu tarafında doğrulayın.
+- HTTPS, güvenli secret yönetimi ve bağımlılık taraması yapılandırın.
+
+Bu paket, gönderilen arşivdeki marka varlıklarını, yönetim panelini, kart/OTP toplama akışlarını veya mevcut veritabanını taşımamaktadır.

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f2">
+  <meta name="description" content="Modern, örnek çevrim içi market mağazası.">
+  <title>Sepetim — Günlük Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="announcement">Günlük ihtiyaçların için sade ve hızlı alışveriş deneyimi <span>✦</span></div>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Sepetim ana sayfa"><span class="brand-mark">s.</span><span>sepetim<span class="brand-dot">.</span></span></a>
+    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Ürün veya kategori ara..." autocomplete="off"><kbd>⌘ K</kbd></label>
+    <button class="cart-button" id="openCart" aria-label="Sepeti aç"><span>Sepetim</span><b id="cartCount">0</b><span class="cart-icon">↗</span></button>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy"><span class="eyebrow"><i></i> HAFTANIN SEÇKİSİ</span><h1>İyi yaşam,<br><em>iyi seçimlerle.</em></h1><p>Günlük ihtiyaçların, özenle seçilmiş ürünler ve zahmetsiz bir alışveriş deneyimi.</p><a class="primary-link" href="#products">Ürünleri keşfet <span>↘</span></a><div class="hero-note"><span>✳</span> Bu arayüz örnek/demo mağazadır.</div></div>
+      <div class="hero-art" aria-label="Alışveriş çantası illüstrasyonu"><div class="sun"></div><div class="art-card card-back">FRESH<br>EVERY DAY</div><div class="bag"><div class="bag-handle"></div><div class="bag-face"><span>good<br>things<br>inside<span class="bag-star">✳</span></span></div></div><div class="floating fruit fruit-one">🍊</div><div class="floating fruit fruit-two">🥑</div><div class="art-caption">KÜÇÜK MUTLULUKLAR, HER GÜN.</div></div>
+    </section>
+    <section class="benefits"><div><span>✦</span><p><b>Özenle seçildi</b><small>Kaliteli ürün seçkisi</small></p></div><div><span>◷</span><p><b>Kolay alışveriş</b><small>Hızlı ve anlaşılır akış</small></p></div><div><span>♡</span><p><b>Şeffaf deneyim</b><small>Açık fiyatlandırma</small></p></div></section>
+    <section class="products-section" id="products"><div class="section-heading"><div><span class="eyebrow">ALIŞVERİŞE BAŞLA</span><h2>Bugünün favorileri<span>.</span></h2></div><div class="filters" id="filters"><button class="filter active" data-category="Tümü">Tümü</button><button class="filter" data-category="Meyve & Sebze">Meyve & Sebze</button><button class="filter" data-category="Süt & Kahvaltı">Kahvaltı</button><button class="filter" data-category="İçecek">İçecek</button></div></div><div class="product-grid" id="productGrid"><div class="loading">Ürünler yükleniyor...</div></div></section>
+    <section class="bottom-banner"><div><span class="eyebrow">SEPETİNİ HAZIRLA</span><h2>İhtiyacın olan<br>her şey, tek yerde.</h2></div><a href="#products">Alışverişe dön ↗</a><div class="banner-shape">✳</div></section>
+  </main>
+  <footer><a class="brand" href="/"><span class="brand-mark">s.</span><span>sepetim<span class="brand-dot">.</span></span></a><p>Bağımsız demo arayüzü. Herhangi bir markayla bağlantısı yoktur.</p><span>© 2026 Sepetim Demo</span></footer>
+  <div class="overlay" id="overlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Alışveriş sepeti" aria-hidden="true"><div class="drawer-head"><div><span class="eyebrow">ALIŞVERİŞİN</span><h2>Sepetin<span>.</span></h2></div><button id="closeCart" class="icon-button" aria-label="Sepeti kapat">×</button></div><div class="cart-items" id="cartItems"></div><div class="drawer-bottom"><div class="total-line"><span>Ara toplam</span><strong id="cartTotal">₺0,00</strong></div><p class="shipping-note">Kargo ve teslimat detayları ödeme sağlayıcısında gösterilir.</p><button class="checkout-button" id="checkoutButton">Devam et <span>↗</span></button><small class="safe-note">Demo ödeme: Kart veya doğrulama bilgisi istenmez.</small></div></aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-box"><button class="icon-button modal-close" id="closeModal" aria-label="Kapat">×</button><div class="modal-symbol">✓</div><span class="eyebrow">DEMO BİLGİLENDİRMESİ</span><h2 id="modalTitle">Ödeme entegrasyonu gerekli.</h2><p>Bu proje güvenli demo mağazasıdır. Gerçek ödeme için lisanslı sağlayıcının kendi barındırılan ödeme sayfası kullanılmalıdır. Bu ekranda kart numarası, CVV veya SMS kodu alınmaz.</p><button class="checkout-button" id="modalOk">Anladım</button></div></div>
+</body>
+</html>
