@@ -1,93 +1,109 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LovelyTG – Telegram için Profesyonel Otomasyon</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LovelyCam – Canlı Yayın, Sohbet ve Hediye</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><div class="w nav">
-<a class="brand" href="#top"><img src="assets/logo-small.png" alt="LovelyTG logosu">Lovely<b>TG</b></a>
-<nav id="menu" aria-label="Ana menü"><ul><li><a href="#top">Ana Sayfa</a></li><li><a href="#ozellikler">Özellikler</a></li><li><a href="#lisans">Lisans</a></li><li><a href="#iletisim">İletişim</a></li></ul></nav>
-<a class="btn fill sm hd-cta" href="https://t.me/MertBrody">🛒 Satın Al</a>
-<button class="burger" aria-label="Menüyü aç" aria-expanded="false" onclick="var m=document.getElementById('menu');var o=m.classList.toggle('open');this.setAttribute('aria-expanded',o)">☰</button>
-</div></header>
+<div class="glow g1"></div><div class="glow g2"></div>
 
-<main id="top">
-<div class="w">
-<div class="hero">
-<div>
-<span class="pill">⚡ En güçlü Telegram otomasyon çözümü</span>
-<h1>Telegram için <span>Profesyonel</span> Otomasyon</h1>
-<p class="lead">LovelyTG ile Telegram gruplarınızı ve kanallarınızı kolayca yönetin, otomatik mesajlar gönderin, kullanıcılarınızı analiz edin ve çok daha fazlasını yapın.</p>
-<div class="cta"><a class="btn fill" href="#lisans">🛒 Lisans Satın Al</a><a class="btn ghost" href="#panel">▶ Arayüzü Gör</a></div>
-</div>
-<div class="vis">
-<img src="assets/logo-mark.png" alt="LovelyTG kağıt uçak ve çark logosu">
-<div class="chip c1"><i>👥</i>Otomatik<br>Mesajlar</div>
-<div class="chip c2"><i>📊</i>Detaylı<br>Analiz</div>
-<div class="chip c3"><i>⚙</i>Kolay<br>Yönetim</div>
-</div>
-</div>
+<header class="top">
+  <a class="logo" href="#"><i class="fa-solid fa-heart"></i> LovelyCam</a>
+  <input id="search" type="search" placeholder="Yayıncı ara…" aria-label="Yayıncı ara">
+  <div class="top-right">
+    <button class="coin-pill" id="open-shop" aria-label="Jeton yükle"><i class="fa-solid fa-coins"></i> <b id="balance">0</b> <span class="plus">+</span></button>
+    <button class="btn ghost" id="login-btn"><i class="fa-solid fa-user"></i> Giriş</button>
+  </div>
+</header>
 
-<div class="feat" id="ozellikler">
-<div class="card"><i>⚡</i><h3>Otomatik Mesajlar</h3><p>Belirlediğiniz saatlerde veya koşullara göre otomatik mesajlar gönderin.</p></div>
-<div class="card"><i>👥</i><h3>Akıllı Yönetim</h3><p>Gruplarınızı ve kanallarınızı tek panelden yönetin.</p></div>
-<div class="card"><i>📊</i><h3>Detaylı Analiz</h3><p>Kullanıcı istatistikleri ve etkileşim raporları alın.</p></div>
-<div class="card"><i>🛡</i><h3>Güvenli ve Stabil</h3><p>Modern altyapı ile kesintisiz hizmet.</p></div>
-</div>
-</div>
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Canlı yayında tanış.<br>Hediye gönder, sohbet et.</h1>
+      <p>Yayıncılarla birebir sohbet et, jetonla hediye gönder, özel içeriklerin kilidini aç.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#streamers">Yayınları keşfet</a>
+        <button class="btn ghost" id="hero-shop">Jeton yükle</button>
+      </div>
+      <ul class="perks">
+        <li><i class="fa-solid fa-gift"></i> Canlı hediyeler</li>
+        <li><i class="fa-solid fa-comments"></i> Gerçek zamanlı sohbet</li>
+        <li><i class="fa-solid fa-lock-open"></i> Özel içerik</li>
+      </ul>
+    </div>
+    <div class="hero-card" id="hero-card">
+      <span class="live-tag"><i></i> CANLI</span>
+      <div class="hero-avatar" style="--h:320">E</div>
+      <p class="hc-name">Elif · İstanbul</p>
+      <p class="hc-meta"><i class="fa-solid fa-eye"></i> <span id="hero-viewers">1.284</span> izliyor</p>
+      <div class="float-gifts" id="float-gifts"></div>
+    </div>
+  </section>
 
-<section id="tum-ozellikler"><div class="w">
-<div class="head"><span class="pill">Tüm Özellikler</span><h2>Sıradan bir panel değil,<br>komple bir yönetim merkezi</h2><p class="mut" style="max-width:640px;margin:0 auto">LovelyTG; güvenilirlik, kullanım kolaylığı ve yapay zekâ ile Telegram’ı baştan sona yönetmeniz için 10 bağımsız modülden oluşur.</p></div>
-<div class="fx"><div class="tabs" id="tabs" role="tablist" aria-label="Özellik modülleri"></div><div class="card fpanel" id="fpanel" role="tabpanel" aria-live="polite"></div></div>
-</div></section>
+  <section id="streamers" class="block">
+    <div class="block-head">
+      <h2 id="grid-title">Şu an canlı</h2>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <p>Bu filtrede yayıncı yok.</p>
+      <button class="btn primary" id="reset">Filtreleri sıfırla</button>
+    </div>
+  </section>
 
-<section id="panel"><div class="w why">
-<div class="shot"><img src="assets/brodysoft-profil.webp" alt="LovelyTG ana panel ekranı"></div>
-<div>
-<span class="pill">Neden LovelyTG?</span>
-<h2>Otomasyonun En Akıllı Hali</h2>
-<p class="mut">LovelyTG, Telegram platformunda ihtiyacınız olan tüm otomasyon araçlarını tek bir yazılımda birleştirir. Kullanımı kolay arayüzü ve güçlü özellikleriyle işinizi bir üst seviyeye taşıyın.</p>
-<ul class="ticks"><li>Kolay kurulum ve kullanım</li><li>Sürekli güncellemeler</li><li>7/24 teknik destek</li></ul>
-<a class="btn fill" href="#lisans">Daha Fazla Bilgi →</a>
-</div></div></section>
-
-<section id="lisans"><div class="w">
-<div class="head"><span class="pill">Lisans Paketleri</span><h2>Süreni seç, hepsi dahil</h2><p class="mut" style="max-width:560px;margin:0 auto">Tüm modüller her lisansta açık. Fark yalnızca süre: uzun lisansta aylık maliyet düşer.</p></div>
-<div class="card lic">
-<div class="pr"><span class="big" id="pTotal"></span><span class="mo" id="pMonth"></span></div>
-<div class="sv" id="pSave"></div>
-<div class="opts" id="opts" role="radiogroup" aria-label="Lisans süresi"></div>
-<ul class="lf"><li>Tüm özellikler ve modüller</li><li>Sınırsız kullanım</li><li>Ücretsiz güncellemeler</li><li>7/24 teknik destek</li></ul>
-<a class="btn fill" id="buy" href="https://t.me/MertBrody">🛒 Satın Al</a>
-</div>
-</div></section>
-
-<section id="iletisim"><div class="w">
-<div class="contact">
-<div class="card dev">
-<img src="assets/dashboard.webp" alt="BrodySOFT profil fotoğrafı">
-<div><h3>BrodySOFT</h3><p class="mut" style="margin:0">Her türlü soru ve destek için bizimle iletişime geçebilirsiniz.</p>
-<div class="links"><a class="btn ghost sm" href="https://t.me/MertBrody">Telegram @MertBrody</a><span class="btn ghost sm">Signal MertBrody.38</span></div></div>
-</div>
-<div class="card info">
-<div><b>Destek E-Posta</b>destek@lovelytg.com</div>
-<div><b>Destek Saatleri</b>09:00 – 24:00 (TR)</div>
-</div>
-</div>
-<div class="start"><div><h3>Hemen Başlayın!</h3><p class="mut" style="margin:4px 0 0">LovelyTG ile Telegram deneyiminizi bir üst seviyeye taşıyın.</p></div><a class="btn fill" href="https://t.me/MertBrody">🛒 Lisans Satın Al</a></div>
-</div></section>
+  <section class="block">
+    <h2>Özel içerikler</h2>
+    <div class="grid small" id="exclusive"></div>
+  </section>
 </main>
 
-<footer><div class="w foot">
-<a class="brand" href="#top"><img src="assets/logo-small.png" alt="">Lovely<b>TG</b></a>
-<nav><ul style="display:flex;list-style:none;margin:0;padding:0"><li><a href="#top">Ana Sayfa</a></li><li><a href="#ozellikler">Özellikler</a></li><li><a href="#lisans">Lisans</a></li><li><a href="#iletisim">İletişim</a></li></ul></nav>
-<span>© 2026 LovelyTG · BrodySOFT. Tüm hakları saklıdır.</span>
-</div></footer>
-<script src="js/app.js"></script>
+<footer><p>© 2026 LovelyCam · 18 yaşından küçükler giremez · Tüm yayıncılar kimlik doğrulamasından geçer.</p></footer>
+
+<!-- Canlı oda -->
+<div class="modal" id="room" aria-hidden="true">
+  <div class="panel room-panel">
+    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    <div class="stage" id="stage"><span class="live-tag"><i></i> CANLI</span><div class="hero-avatar big" id="room-avatar"></div><div class="float-gifts" id="room-gifts"></div></div>
+    <aside class="chat">
+      <h3 id="room-name"></h3>
+      <div class="msgs" id="msgs"></div>
+      <div class="gift-bar" id="gift-bar"></div>
+      <div class="send"><input id="msg-input" placeholder="Mesaj yaz…"><button class="btn primary" id="msg-send"><i class="fa-solid fa-paper-plane"></i></button></div>
+    </aside>
+  </div>
+</div>
+
+<!-- Jeton mağazası -->
+<div class="modal" id="shop" aria-hidden="true">
+  <div class="panel narrow">
+    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Jeton yükle</h3>
+    <div class="packs" id="packs"></div>
+    <p class="note">Demo modu: ödeme sağlayıcısı (iyzico/PayTR vb.) bağlanana kadar jetonlar test amaçlı eklenir.</p>
+  </div>
+</div>
+
+<!-- Giriş -->
+<div class="modal" id="login" aria-hidden="true">
+  <div class="panel narrow">
+    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Hoş geldin</h3>
+    <input type="email" placeholder="E-posta" aria-label="E-posta">
+    <input type="password" placeholder="Şifre" aria-label="Şifre">
+    <button class="btn primary wide" id="login-go">Giriş yap</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
