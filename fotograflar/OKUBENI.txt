@@ -1,0 +1,1 @@
+Yayıncı fotoğraflarını bu klasöre koyun, sonra app.js içindeki p alanına yolunu yazın (örn. fotograflar/zeynep.jpg).

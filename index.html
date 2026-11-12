@@ -2,108 +2,46 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LovelyCam – Canlı Yayın, Sohbet ve Hediye</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LovelyCam - Canlı yayın, sohbet ve hediye</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="glow g1"></div><div class="glow g2"></div>
-
 <header class="top">
-  <a class="logo" href="#"><i class="fa-solid fa-heart"></i> LovelyCam</a>
-  <input id="search" type="search" placeholder="Yayıncı ara…" aria-label="Yayıncı ara">
-  <div class="top-right">
-    <button class="coin-pill" id="open-shop" aria-label="Jeton yükle"><i class="fa-solid fa-coins"></i> <b id="balance">0</b> <span class="plus">+</span></button>
-    <button class="btn ghost" id="login-btn"><i class="fa-solid fa-user"></i> Giriş</button>
+  <a class="logo" href="#"><svg viewBox="0 0 24 24" width="28" height="28"><path fill="url(#g)" d="M12 21s-8-5.3-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.7-8 11-8 11z"/><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#ff3c8e"/><stop offset="1" stop-color="#8a4dff"/></linearGradient></defs></svg>LovelyCam</a>
+  <input id="q" type="search" placeholder="Yayıncı veya şehir ara" aria-label="Ara">
+  <div class="acts">
+    <button class="chip-btn" id="bal" aria-label="Jeton yükle"><span class="coin">J</span><b id="balv">0</b> Jeton yükle</button>
+    <button class="ghost" id="login">Giriş yap</button>
   </div>
 </header>
 
-<main>
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Canlı yayında tanış.<br>Hediye gönder, sohbet et.</h1>
-      <p>Yayıncılarla birebir sohbet et, jetonla hediye gönder, özel içeriklerin kilidini aç.</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#streamers">Yayınları keşfet</a>
-        <button class="btn ghost" id="hero-shop">Jeton yükle</button>
-      </div>
-      <ul class="perks">
-        <li><i class="fa-solid fa-gift"></i> Canlı hediyeler</li>
-        <li><i class="fa-solid fa-comments"></i> Gerçek zamanlı sohbet</li>
-        <li><i class="fa-solid fa-lock-open"></i> Özel içerik</li>
-      </ul>
-    </div>
-    <div class="hero-card" id="hero-card">
-      <span class="live-tag"><i></i> CANLI</span>
-      <div class="hero-avatar" style="--h:320">E</div>
-      <p class="hc-name">Elif · İstanbul</p>
-      <p class="hc-meta"><i class="fa-solid fa-eye"></i> <span id="hero-viewers">1.284</span> izliyor</p>
-      <div class="float-gifts" id="float-gifts"></div>
-    </div>
-  </section>
+<section class="hero">
+  <div class="hero-txt">
+    <h1>Yayıncılarla canlı sohbet et, hediye gönder, özel içeriğe eriş.</h1>
+    <p>Jeton yükle, beğendiğin yayıncıya hediye yolla, sohbete katıl ve özel galerilerin kilidini aç.</p>
+    <div class="cta"><button class="btn" id="explore">Canlı yayınları gör</button><button class="ghost big" id="buy">Jeton yükle</button></div>
+    <ul class="feat"><li>Canlı sohbet</li><li>Hediye gönderme</li><li>Özel içerik</li></ul>
+  </div>
+  <div class="hero-art" id="art" aria-hidden="true"><div class="orb"></div></div>
+</section>
 
-  <section id="streamers" class="block">
-    <div class="block-head">
-      <h2 id="grid-title">Şu an canlı</h2>
-      <div class="chips" id="chips"></div>
-    </div>
-    <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" hidden>
-      <p>Bu filtrede yayıncı yok.</p>
-      <button class="btn primary" id="reset">Filtreleri sıfırla</button>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>Özel içerikler</h2>
-    <div class="grid small" id="exclusive"></div>
-  </section>
+<main id="live">
+  <div class="bar"><h2 id="gt">Şu an canlı</h2><div class="chips" id="chips"></div></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden><h3>Sonuç bulunamadı</h3><p>Aramayı değiştir veya şehir filtresini temizle.</p><button class="btn" id="reset">Filtreleri temizle</button></div>
 </main>
 
-<footer><p>© 2026 LovelyCam · 18 yaşından küçükler giremez · Tüm yayıncılar kimlik doğrulamasından geçer.</p></footer>
+<footer><b>LovelyCam</b><span>Yalnızca 18 yaş ve üzeri kullanıcılar içindir. Yayıncılar kimlik doğrulamasından geçer.</span><span>&copy; 2026 LovelyCam</span></footer>
 
-<!-- Canlı oda -->
-<div class="modal" id="room" aria-hidden="true">
-  <div class="panel room-panel">
-    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
-    <div class="stage" id="stage"><span class="live-tag"><i></i> CANLI</span><div class="hero-avatar big" id="room-avatar"></div><div class="float-gifts" id="room-gifts"></div></div>
-    <aside class="chat">
-      <h3 id="room-name"></h3>
-      <div class="msgs" id="msgs"></div>
-      <div class="gift-bar" id="gift-bar"></div>
-      <div class="send"><input id="msg-input" placeholder="Mesaj yaz…"><button class="btn primary" id="msg-send"><i class="fa-solid fa-paper-plane"></i></button></div>
-    </aside>
-  </div>
-</div>
-
-<!-- Jeton mağazası -->
-<div class="modal" id="shop" aria-hidden="true">
-  <div class="panel narrow">
-    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
-    <h3>Jeton yükle</h3>
-    <div class="packs" id="packs"></div>
-    <p class="note">Demo modu: ödeme sağlayıcısı (iyzico/PayTR vb.) bağlanana kadar jetonlar test amaçlı eklenir.</p>
-  </div>
-</div>
-
-<!-- Giriş -->
-<div class="modal" id="login" aria-hidden="true">
-  <div class="panel narrow">
-    <button class="x" data-close aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
-    <h3>Hoş geldin</h3>
-    <input type="email" placeholder="E-posta" aria-label="E-posta">
-    <input type="password" placeholder="Şifre" aria-label="Şifre">
-    <button class="btn primary wide" id="login-go">Giriş yap</button>
-  </div>
-</div>
-
+<div class="ov" id="ov" hidden><div class="modal" id="modal" role="dialog" aria-modal="true"><button class="x" id="x" aria-label="Kapat">&times;</button><div id="mc"></div></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="script.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
