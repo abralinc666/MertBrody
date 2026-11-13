@@ -38,7 +38,7 @@ const game=x=>{
   :'';
  return `<div class="g"><div class="wrap"><button class="art" style="background:${hue(x)}" data-launch="${x.id}" aria-label="${x.name}">${img}<span class="play" aria-hidden="true"><i>${I('play')}</i></span></button><button class="favb ${S.favs.has(x.id)?'on':''}" data-fav="${x.id}" aria-label="Favori">${I('heart')}</button></div><b>${x.name}</b><small>${S.providers.find(p=>p.id===x.provider)?.name||''}</small></div>`;
 };
-const top=()=>{
+const topBar=()=>{
  const site=S.settings.siteName||'BrodyBet';
  const loginChip=S.user?.guest?`<button class="chip-login" data-go="me">Giriş Yap</button>`:'';
  return `<div class="top"><img class="brand" src="assets/brand/logo.png" alt="${site}" data-go="home"><span class="sp"></span>${loginChip}<div class="bal"><span id="bal">${fmt(S.user.balance)}</span><button class="plus" data-go="wallet" aria-label="Cüzdan">${I('plus')}</button></div><button class="ib" data-bell aria-label="Bildirimler">${I('bell')}${S.unread?'<i class="dot"></i>':''}</button></div>`;
@@ -76,7 +76,7 @@ function gateMsg(err){
 const V={
 home:()=>{const gl=byCat(S.games);const live=S.matches.filter(m=>m.live).slice(0,2);
  const featured=(cat==='Casino'?gl.filter(x=>x.isNew):gl).slice(0,10);
- return top()+`<div class="quick"><button data-go="sport">${I('sport')}Spor</button><button data-go="live">${I('live')}Canlı</button><button data-go="games">${I('casino')}Casino</button><button data-go="promo">${I('promo')}Bonus</button><button data-go="wallet">${I('wallet')}Cüzdan</button><button data-go="support">${I('support')}Destek</button></div>
+ return topBar()+`<div class="quick"><button data-go="sport">${I('sport')}Spor</button><button data-go="live">${I('live')}Canlı</button><button data-go="games">${I('casino')}Casino</button><button data-go="promo">${I('promo')}Bonus</button><button data-go="wallet">${I('wallet')}Cüzdan</button><button data-go="support">${I('support')}Destek</button></div>
 <div class="hero"><h1>${S.settings.siteName||'BrodyBet'}</h1><h2>SPOR · CASİNO · CANLI</h2><p>${S.games.length}+ oyun · sanal krediyle demo deneyim.</p><div class="hero-actions"><button class="cta" data-go="sport">Bahis Yap ${I('arrow')}</button><button class="cta alt" data-go="promo">Bonusları Gör</button></div></div>
 <div class="sec">Öne Çıkan Bonuslar<a data-go="promo">Tümü</a></div>
 <div class="swiper swiper-promo"><div class="swiper-wrapper">${S.promos.slice(0,5).map(x=>`<div class="swiper-slide">${promoCard(x)}</div>`).join('')}</div><div class="swiper-pagination"></div></div>
@@ -88,16 +88,16 @@ ${featured.length?`<div class="rail">${featured.map(game).join('')}</div>`:none}
 
 sport:()=>{const list=sportFilter==='all'?S.matches.filter(m=>!m.live):S.matches.filter(m=>!m.live&&m.sport===sportFilter);
  const sports=['all',...new Set(S.matches.map(m=>m.sport))];
- return top()+`<div class="sec" style="padding-top:8px">Spor Bahisleri</div>
+ return topBar()+`<div class="sec" style="padding-top:8px">Spor Bahisleri</div>
 <div class="cats">${sports.map(s=>`<button class="${sportFilter===s?'on':''}" data-sfilter="${s}">${s==='all'?'Tümü':s}</button>`).join('')}</div>
 <div class="mgrid">${list.length?list.map(matchRow).join(''):none}</div>${slipBox()}`},
 
 live:()=>{const list=S.matches.filter(m=>m.live);
- return top()+`<div class="sec" style="padding-top:8px"><span class="live-tag"><i class="live-dot"></i> Canlı Bahis</span></div>
+ return topBar()+`<div class="sec" style="padding-top:8px"><span class="live-tag"><i class="live-dot"></i> Canlı Bahis</span></div>
 <div class="mgrid">${list.length?list.map(matchRow).join(''):'<div class="empty">Şu an canlı maç yok.</div>'}</div>${slipBox()}`},
 
 games:()=>{const gl=byCat(S.games);
- return top()+catRow()+`<div class="sec" style="padding-top:6px">Casino · ${gl.length} oyun</div>${gl.length?`<div class="games">${gl.map(game).join('')}</div>`:none}`},
+ return topBar()+catRow()+`<div class="sec" style="padding-top:6px">Casino · ${gl.length} oyun</div>${gl.length?`<div class="games">${gl.map(game).join('')}</div>`:none}`},
 
 prov:()=>hd('Sağlayıcılar','home')+`<label class="search">${I('search')}<input id="q" placeholder="Sağlayıcı veya altyapı ara…" value="${q}"></label><div id="pl">${plist()}</div>`,
 
@@ -107,7 +107,7 @@ detail:()=>{const p=S.providers.find(x=>x.id==prov),gl=S.games.filter(g=>g.provi
 <div class="seg">${['Oyunlar','Hakkında','Canlı Casino'].map(t=>`<button class="${t==pt?'on':''}" data-pt="${t}">${t}${t=='Oyunlar'?` (${gl.length})`:''}</button>`).join('')}</div>`+
 (pt=='Oyunlar'?`<div class="games">${gl.map(game).join('')||none}</div>`:pt=='Hakkında'?`<div class="card"><h3>${p.name}</h3><p>${p.tagline}. ${p.about}</p></div>`:(g=>g.length?`<div class="games">${g.map(game).join('')}</div>`:'<div class="empty">Bu sağlayıcının canlı masası yok.</div>')(gl.filter(x=>x.category=='live')))},
 
-promo:()=>top()+`<div class="sec" style="padding-top:6px">Promosyonlar & Bonuslar</div>
+promo:()=>topBar()+`<div class="sec" style="padding-top:6px">Promosyonlar & Bonuslar</div>
 <p class="lead">Bonus kartına tıklayarak şartları görüntüle.</p>
 <div class="blist">${S.promos.map(promoCard).join('')}</div>`,
 
@@ -128,7 +128,7 @@ ${(x.exceptions||[]).length?block('İstisnalar',`<ul class="tlist">${x.exception
 <p class="disclaimer">Demo ortamında gerçek para yoktur.</p>`},
 
 wallet:()=>{const u=S.user;
- return top()+`<div class="sec" style="padding-top:6px">Cüzdan</div>
+ return topBar()+`<div class="sec" style="padding-top:6px">Cüzdan</div>
 <div class="card bal-card"><h3>${fmt(u.balance)}</h3><p>Sanal kredi · min oyun ${fmt(S.settings.minPlay||1000)}</p></div>
 <div class="seg">${[['yatir','Yatır'],['cek','Çek'],['yontem','Yöntemler']].map(([k,l])=>`<button class="${walletTab===k?'on':''}" data-wtab="${k}">${l}</button>`).join('')}</div>`+
 (walletTab==='yatir'?`<div class="chips">${[100,250,500,1000].map(a=>`<button data-dep="${a}">+${a} ₺</button>`).join('')}</div>
@@ -137,22 +137,23 @@ walletTab==='cek'?`<div class="card"><p>Çekim simülasyondur.</p></div><div cla
 `<div class="paygrid">${S.payments.map(p=>`<div class="pay static"><strong>${p.name}</strong><small>${p.type} · ${p.eta}</small></div>`).join('')}</div>`)+
 `<div class="sec">Son İşlemler</div>`+(S.tx.length?S.tx.map(t=>`<div class="tx"><span>${t.note||TXN[t.type]||t.type}<small>${when(t.at)}</small></span><span class="${t.amount>=0?'pos':'neg'}">${t.amount>=0?'+':''}${fmt(t.amount)}</span></div>`).join(''):'<div class="empty">Henüz işlem yok.</div>')},
 
-support:()=>top()+`<div class="sec" style="padding-top:6px">Destek & SSS</div>
+support:()=>topBar()+`<div class="sec" style="padding-top:6px">Destek & SSS</div>
 ${S.faq.map(f=>`<details class="faq"><summary>${f.q}</summary><p>${f.a}</p></details>`).join('')}
 <button class="wide alt" data-support>Canlı destek talebi (demo)</button>
 <div class="card"><h3>Sorumlu oyun</h3><p class="muted">18+ · Yalnızca demo / sanal kredi.</p></div>`,
 
 me:()=>{const u=S.user;
- if(u.guest)return top()+authViews();
+ if(u.guest)return topBar()+authViews();
  const tabs=[['ozet','Özet'],['bilgi','Bilgilerim'],['finans','Finansal'],['bahis','Bahisler'],['bonus','Bonuslar'],['guvenlik','Güvenlik']];
- return top()+`<div class="sec" style="padding-top:6px">Profilim</div>
-<div class="card bal-card"><h3>${fmt(u.balance)}</h3><p>${u.firstName||''} ${u.lastName||''} · @${u.username}</p></div>
+ return topBar()+`<div class="sec" style="padding-top:6px">Profilim</div>
+<div class="card bal-card"><h3>${fmt(u.balance)}</h3><p>${esc(u.firstName||'')} ${esc(u.lastName||'')} · @${esc(u.username)}</p></div>
 <div class="seg scroll">${tabs.map(([k,l])=>`<button class="${profileTab===k?'on':''}" data-ptab="${k}">${l}</button>`).join('')}</div>
 ${profileBody(u)}
 <div style="padding:8px 16px 20px"><button class="btn alt" style="width:100%" data-logout>Çıkış yap</button></div>`}
 };
 
-const row=(l,v)=>`<div class="pinfo"><span>${l}</span><b>${v||'—'}</b></div>`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const row=(l,v)=>`<div class="pinfo"><span>${esc(l)}</span><b>${v==null||v===''?'—':esc(v)}</b></div>`;
 const maskTC=t=>t&&t.length===11?t.slice(0,3)+'*****'+t.slice(-3):'—';
 const maskPhone=p=>{const s=String(p||'');return s.length>4?s.slice(0,3)+'***'+s.slice(-2):'—'};
 
@@ -242,11 +243,11 @@ function showWelcome(name){
  const d=document.createElement('div');d.className='welcome-pop';
  d.innerHTML=`<div class="welcome-card"><button class="welcome-x" type="button" aria-label="Kapat">×</button>
  <img src="assets/brand/welcome-popup.png" alt="Hoş geldiniz" onerror="this.src='assets/brand/welcome-banner.png'">
- <div class="welcome-body"><h2>Hoş geldiniz${name?`, ${name}`:''}!</h2>
+ <div class="welcome-body"><h2>Hoş geldiniz${name?`, ${esc(name)}`:''}!</h2>
  <p>BrodyBet hesabın hazır. Bonusları keşfet, spor ve casino’nun tadını çıkar.</p>
  <button type="button" class="btn welcome-ok">Devam et</button></div></div>`;
  document.body.appendChild(d);
- const close=()=>{g.to(d,{opacity:0,duration:.2,onComplete:()=>d.remove()})};
+ const close=()=>{g.to(d,{opacity:0,duration:.2});setTimeout(()=>d.remove(),220)};
  d.querySelector('.welcome-x').onclick=close;
  d.querySelector('.welcome-ok').onclick=close;
  d.addEventListener('click',e=>{if(e.target===d)close()});

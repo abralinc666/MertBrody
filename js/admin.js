@@ -8,7 +8,8 @@ let view='dash',edit=null;
 CMS.snapshot(window.CATALOG);
 CMS.seedFromCatalog(window.CATALOG);
 
-function authed(){return sessionStorage.getItem(SES)==='1'}
+const adminTok=()=>CMS.hash('bw-admin-session');
+function authed(){return sessionStorage.getItem(SES)===adminTok()}
 function requireAuth(){
  if(authed()){showApp();return}
  $('#login').classList.remove('hidden');
@@ -23,7 +24,7 @@ function showApp(){
 $('#loginForm').onsubmit=e=>{
  e.preventDefault();
  const pass=new FormData(e.target).get('pass');
- if(CMS.checkAdmin(pass)){sessionStorage.setItem(SES,'1');$('#loginErr').textContent='';showApp()}
+ if(CMS.checkAdmin(pass)){sessionStorage.setItem(SES,adminTok());$('#loginErr').textContent='';showApp()}
  else $('#loginErr').textContent='Şifre hatalı';
 };
 $('#logout').onclick=()=>{sessionStorage.removeItem(SES);location.reload()};
@@ -38,6 +39,7 @@ $('#sideNav').onclick=e=>{
 
 const titles={dash:'Ana Panel',users:'Kullanıcılar',bonuses:'Bonuslar',payments:'Yatırımlar',games:'Oyunlar',settings:'Ayarlar'};
 const fmt=c=>'₺'+((c||0)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt0=c=>'₺'+((c||0)/100).toLocaleString('tr-TR',{maximumFractionDigits:0});
 
 function db(){try{return JSON.parse(localStorage.getItem('bw_db_v1'))||{users:[],tx:[],claims:{}}}catch{return{users:[],tx:[],claims:{}}}}
@@ -92,7 +94,7 @@ function dash(){
   <div class="panel"><div class="panel-h"><h3>Oyunlara Göre Dağılım</h3></div><div class="panel-b"><div class="donut-wrap">${donut}<div class="legend"><div><b>Slot</b> 42.8%</div><div><b>Canlı Casino</b> 23.6%</div><div><b>Spor</b> 18.4%</div><div><b>Sanal</b> 8.7%</div><div><b>Diğer</b> 6.5%</div></div></div></div></div>
  </div>
  <div class="grid3">
-  <div class="panel"><div class="panel-h"><h3>Son İşlemler</h3></div><div class="panel-b" style="padding:0;max-height:280px;overflow:auto">${recent.length?`<table class="table"><thead><tr><th>Kullanıcı</th><th>Tür</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>${recent.map(t=>{const u=(d.users||[]).find(x=>x.id===t.uid);return `<tr><td>${u?.username||'—'}</td><td>${t.type}</td><td>${fmt(t.amount)}</td><td><span class="badge on">${t.status||'Tamamlandı'}</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">İşlem yok</div>'}</div></div>
+  <div class="panel"><div class="panel-h"><h3>Son İşlemler</h3></div><div class="panel-b" style="padding:0;max-height:280px;overflow:auto">${recent.length?`<table class="table"><thead><tr><th>Kullanıcı</th><th>Tür</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>${recent.map(t=>{const u=(d.users||[]).find(x=>x.id===t.uid);return `<tr><td>${esc(u?.username||'—')}</td><td>${esc(t.type)}</td><td>${fmt(t.amount)}</td><td><span class="badge on">${t.status||'Tamamlandı'}</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">İşlem yok</div>'}</div></div>
   <div class="panel"><div class="panel-h"><h3>En Popüler Oyunlar</h3></div><div class="panel-b">${pop.map((g,i)=>`<div class="pop-row">${g.image?`<img class="thumb" src="${g.image}" alt="">`:'<span class="thumb"></span>'}<b>${i+1}. ${g.name}</b><span>${(92-i*7).toFixed(1)}%</span></div>`).join('')||'<div class="empty">Oyun yok</div>'}</div></div>
   <div class="panel"><div class="panel-h"><h3>Son 24 Saat</h3></div><div class="panel-b"><div class="mini-stats"><div><span>Yeni kayıt</span><strong>${users}</strong></div><div><span>Yatırım yapan</span><strong>${(d.tx||[]).filter(t=>t.type==='deposit').length}</strong></div><div><span>Çekim yapan</span><strong>${(d.tx||[]).filter(t=>t.type==='withdraw').length}</strong></div><div><span>Aktif oyun</span><strong>${gamesList.length}</strong></div></div></div></div>
  </div>`;
@@ -102,7 +104,7 @@ function usersView(){
  const list=(db().users||[]).filter(u=>!u.guest).slice().reverse();
  return `<div class="panel"><div class="panel-h"><h3>Kayıtlı kullanıcılar (${list.length})</h3></div>
  <div class="panel-b" style="padding:0;overflow:auto"><table class="table"><thead><tr><th>Kullanıcı</th><th>E-posta</th><th>İl</th><th>Bakiye</th><th>Kayıt</th></tr></thead><tbody>
- ${list.length?list.map(u=>`<tr><td><b>${u.username}</b><div style="color:var(--mu);font-size:11px">${u.firstName||''} ${u.lastName||''}</div></td><td>${u.email||'—'}</td><td>${u.city||'—'}</td><td>${fmt(u.balance)}</td><td>${u.createdAt?new Date(u.createdAt).toLocaleDateString('tr-TR'):'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz kayıtlı kullanıcı yok.</td></tr>'}
+ ${list.length?list.map(u=>`<tr><td><b>${esc(u.username)}</b><div style="color:var(--mu);font-size:11px">${esc(u.firstName||'')} ${esc(u.lastName||'')}</div></td><td>${esc(u.email||'—')}</td><td>${esc(u.city||'—')}</td><td>${fmt(u.balance)}</td><td>${u.createdAt?new Date(u.createdAt).toLocaleDateString('tr-TR'):'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz kayıtlı kullanıcı yok.</td></tr>'}
  </tbody></table></div></div>`;
 }
 

@@ -43,7 +43,10 @@ window.api=async function(path,method='GET',body={}){
  const need=()=>{if(!user)bad(401,'Oturum geçersiz.');return user};
  const m=(re)=>k.match(re);let r;
 
- if(k==='POST /auth/guest'){throttle();const u=newUser('misafir_'+rid().slice(0,6),null,true);return {user:pub(u)}}
+ if(k==='POST /auth/guest'){throttle();
+  const drop=new Set(db.users.filter(u=>u.guest).map(u=>u.id));
+  if(drop.size){db.users=db.users.filter(u=>!u.guest);db.tx=db.tx.filter(t=>!drop.has(t.uid));db.bets=(db.bets||[]).filter(b=>!drop.has(b.uid));db.notifs=db.notifs.filter(n=>!drop.has(n.uid));save()}
+  const u=newUser('misafir_'+rid().slice(0,6),null,true);return {user:pub(u)}}
  if(k==='POST /auth/register'){throttle();
   const firstName=String(body.firstName||'').trim(),lastName=String(body.lastName||'').trim();
   const tc=String(body.tc||'').replace(/\D/g,''),email=String(body.email||'').trim().toLowerCase();
