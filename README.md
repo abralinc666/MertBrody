@@ -1,6 +1,6 @@
 # LovelyTG Tanıtım Sitesi
 
-BrodySOFT için hazırlanmış, koyu zeminli ve limon-yeşili temalı statik tanıtım sitesi (v6.3.1 özellikleriyle güncel). Font: Plus Jakarta Sans (Google Fonts).
+BrodySOFT için hazırlanmış, koyu zeminli ve limon-yeşili temalı statik tanıtım sitesi (v6.4: bildirim, şablon, zamanlanmış pano, medya, oturum uyarısı, hesap karşılaştır, şifreli yedek, 7g takvim, davet, PWA/kuyruk). Font: Plus Jakarta Sans (Google Fonts).
 
 ## Çalıştırma
 `index.html` dosyasını tarayıcıda aç veya klasörü statik bir hosting servisine yükle. Derleme adımı yoktur.
