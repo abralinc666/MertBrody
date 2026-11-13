@@ -65,3 +65,29 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 .nav button.on{color:var(--ac2)}
 .ind{position:absolute;top:0;left:0;height:2px;width:36px;background:var(--ac);border-radius:0 0 2px 2px}
 .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--s2);border:1px solid var(--ln);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:20}
+/* v3: sticky üst bar, favori, formlar, işlemler */
+.top{position:sticky;top:0;z-index:6;background:rgba(8,6,15,.88);backdrop-filter:blur(12px)}
+.ib{position:relative}
+.dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--ac);border:2px solid var(--bg)}
+.g .wrap{position:relative}
+.g .art{width:100%;margin-bottom:8px;text-align:left;color:var(--tx);cursor:pointer}
+.g .wrap .art{display:flex}
+.favb{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:8px;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff}
+.favb svg{width:16px;height:16px}
+.favb.on{color:#f472b6}.favb.on svg{fill:currentColor}
+.g b,.g small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.form{display:grid;gap:10px;margin:0 16px 12px}
+.form input{background:var(--s1);border:1px solid var(--ln);border-radius:10px;color:var(--tx);font:inherit;font-size:14px;padding:13px 14px}
+.form input:focus{outline:none;border-color:rgba(139,92,246,.6)}
+.form .row{display:flex;gap:8px}.form .row button{flex:1}
+.btn{padding:13px;border-radius:10px;background:var(--ac);font-weight:700;font-size:14px}
+.btn.alt{background:var(--s2);border:1px solid var(--ln)}
+.err{color:#f87171;font-size:13px;min-height:18px;padding:0 16px 8px}
+.chips{display:flex;gap:8px;padding:0 16px 8px}.chips button{flex:1;padding:10px;border-radius:10px;background:var(--s2);border:1px solid var(--ln);font-size:13px;font-weight:600}
+.tx{display:flex;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--ln);font-size:13px}
+.tx small{display:block;color:var(--mu);font-size:11px;margin-top:2px}
+.tx .pos{color:#4fbf8a;font-weight:700}.tx .neg{color:#f87171;font-weight:700}
+.empty{margin:24px 16px;color:var(--mu);font-size:14px;text-align:center;line-height:1.5}
+.pcard{margin:0 16px 10px;padding:14px 16px;border-radius:12px;background:var(--s1);border:1px solid var(--ln);display:flex;align-items:center;gap:12px}
+.pcard div{flex:1}.pcard h3{font-size:15px}.pcard p{color:var(--mu);font-size:13px;margin-top:2px}
+.pcard .btn{padding:9px 14px;font-size:13px}.pcard .btn[disabled]{opacity:.45;cursor:default}

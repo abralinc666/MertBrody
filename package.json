@@ -1,0 +1,1 @@
+{"name":"betwin","version":"1.0.0","private":true,"description":"Betwin demo platform (sanal kredi) – bağımlılıksız Node.js backend + frontend","scripts":{"start":"node server/server.js"},"engines":{"node":">=18"}}
