@@ -20,11 +20,7 @@ live:'<rect x="2" y="5" width="14" height="14" rx="2"/><path d="M22 7l-6 5 6 5z"
 slots:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16"/>',
 table:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>'};
 const I=k=>ic(IC[k]);
-/* ---------- API ---------- */
-let token=localStorage.getItem('bw_token');
-async function api(path,method='GET',body){
- const r=await fetch('/api'+path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(d.error||'İstek başarısız.'),{status:r.status});return d}
+/* ---------- API: js/api.js (tarayıcı içi backend) ---------- */
 const S={user:null,providers:[],games:[],favs:new Set(),promos:[],unread:0,tx:[]};
 const fmt=c=>'$'+(c/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const lgo={pragmatic:'Pragmatic <span style="color:#d9a441">Play</span>',playngo:'Play’n <span style="color:#ef6a6a">GO</span>',bet365:'bet<span style="color:#4fbf8a">365</span>',micro:'<span style="color:#4fbf8a">Micro</span>gaming',hacksaw:'HACKSAW',elk:'<span style="color:#5aa9e6">ELK</span> Studios',netent:'Net<span style="color:#4fbf8a">Ent</span>'};
@@ -89,7 +85,7 @@ async function loadUserData(){
  S.favs=new Set(f.favorites);S.promos=p.promotions;S.unread=n.unread}
 async function loadTx(){S.tx=(await api('/wallet/transactions')).transactions}
 async function auth(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
- try{const r=await api('/auth/'+(authMode=='login'?'login':'register'),'POST',d);token=r.token;localStorage.setItem('bw_token',token);S.user=r.user;authErr='';
+ try{const r=await api('/auth/'+(authMode=='login'?'login':'register'),'POST',d);S.user=r.user;authErr='';
   await Promise.all([loadUserData(),loadTx()]);first=true;toast(authMode=='login'?'Giriş yapıldı':'Hesap oluşturuldu');render()}
  catch(x){authErr=x.message;$('.err').textContent=authErr}}
 async function act(fn){try{await fn()}catch(x){toast(x.message)}}
@@ -106,7 +102,7 @@ document.addEventListener('click',e=>{
  else if(d.dep)act(async()=>{const r=await api('/wallet/deposit','POST',{amount:+d.dep});setBal(r.balance);await loadTx();toast(`+${d.dep} sanal kredi eklendi`);render(false)})
  else if('bell' in d)act(async()=>{const n=await api('/notifications');toast(n.notifications[0]?.title||'Yeni bildirim yok');if(n.unread){await api('/notifications/read','POST');S.unread=0;document.querySelector('.dot')?.remove()}})
  else if('mode' in d){authMode=authMode=='login'?'register':'login';authErr='';render(false)}
- else if('logout' in d){localStorage.removeItem('bw_token');token=null;location.reload()}
+ else if('logout' in d){localStorage.removeItem('bw_session');location.reload()}
  else if(d.t)toast(d.t)});
 document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(b)g.to(b,{scale:.97,duration:.1})});
 ['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,()=>g.to('button',{scale:1,duration:.25,ease:'back.out(3)',overwrite:'auto'}),true));
@@ -114,8 +110,8 @@ document.addEventListener('pointermove',e=>{const h=$('.hero .rings');if(h)g.to(
 addEventListener('resize',moveInd);
 (async()=>{
  try{
-  try{S.user=(await api('/me')).user}catch(x){if(x.status&&x.status!=401)throw x;const r=await api('/auth/guest','POST');token=r.token;localStorage.setItem('bw_token',token);S.user=r.user}
+  try{S.user=(await api('/me')).user}catch(x){if(x.status&&x.status!=401)throw x;S.user=(await api('/auth/guest','POST')).user}
   const [p,gm]=await Promise.all([api('/providers'),api('/games'),]).then(r=>[r[0].providers,r[1].games]);
   S.providers=p;S.games=gm;await Promise.all([loadUserData(),loadTx()]);render();
- }catch(x){$('#app').innerHTML='<div class="empty">Sunucuya bağlanılamadı.<br>Terminalde <b>npm start</b> çalıştırıp <b>http://localhost:3000</b> adresini aç.</div>'}
+ }catch(x){$('#app').innerHTML='<div class="empty">Veriler yüklenemedi.<br>Sayfayı yenile veya tarayıcı verilerine izin ver.</div>'}
 })();
