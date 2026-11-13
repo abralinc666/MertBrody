@@ -146,14 +146,13 @@ me:()=>{const u=S.user;
  if(u.guest)return topBar()+authViews();
  const tabs=[['ozet','Özet'],['bilgi','Bilgilerim'],['finans','Finansal'],['bahis','Bahisler'],['bonus','Bonuslar'],['guvenlik','Güvenlik']];
  return topBar()+`<div class="sec" style="padding-top:6px">Profilim</div>
-<div class="card bal-card"><h3>${fmt(u.balance)}</h3><p>${esc(u.firstName||'')} ${esc(u.lastName||'')} · @${esc(u.username)}</p></div>
+<div class="card bal-card"><h3>${fmt(u.balance)}</h3><p>${u.firstName||''} ${u.lastName||''} · @${u.username}</p></div>
 <div class="seg scroll">${tabs.map(([k,l])=>`<button class="${profileTab===k?'on':''}" data-ptab="${k}">${l}</button>`).join('')}</div>
 ${profileBody(u)}
 <div style="padding:8px 16px 20px"><button class="btn alt" style="width:100%" data-logout>Çıkış yap</button></div>`}
 };
 
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const row=(l,v)=>`<div class="pinfo"><span>${esc(l)}</span><b>${v==null||v===''?'—':esc(v)}</b></div>`;
+const row=(l,v)=>`<div class="pinfo"><span>${l}</span><b>${v||'—'}</b></div>`;
 const maskTC=t=>t&&t.length===11?t.slice(0,3)+'*****'+t.slice(-3):'—';
 const maskPhone=p=>{const s=String(p||'');return s.length>4?s.slice(0,3)+'***'+s.slice(-2):'—'};
 
@@ -243,7 +242,7 @@ function showWelcome(name){
  const d=document.createElement('div');d.className='welcome-pop';
  d.innerHTML=`<div class="welcome-card"><button class="welcome-x" type="button" aria-label="Kapat">×</button>
  <img src="assets/brand/welcome-popup.png" alt="Hoş geldiniz" onerror="this.src='assets/brand/welcome-banner.png'">
- <div class="welcome-body"><h2>Hoş geldiniz${name?`, ${esc(name)}`:''}!</h2>
+ <div class="welcome-body"><h2>Hoş geldiniz${name?`, ${name}`:''}!</h2>
  <p>BrodyBet hesabın hazır. Bonusları keşfet, spor ve casino’nun tadını çıkar.</p>
  <button type="button" class="btn welcome-ok">Devam et</button></div></div>`;
  document.body.appendChild(d);
@@ -266,7 +265,7 @@ function mountPromoSwiper(){
  killPromoSwiper();
  if(!window.Swiper||!$('.swiper-promo'))return;
  promoSwiper=new Swiper('.swiper-promo',{
-  slidesPerView:'auto',spaceBetween:12,speed:650,
+  slidesPerView:'auto',spaceBetween:12,slidesOffsetBefore:16,slidesOffsetAfter:16,speed:650,
   autoplay:REDUCE?false:{delay:3800,disableOnInteraction:false,pauseOnMouseEnter:true},
   pagination:{el:'.swiper-promo .swiper-pagination',clickable:true},
   resistanceRatio:.65
