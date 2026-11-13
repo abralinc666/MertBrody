@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+.vercel
+node_modules/
+.idea/
+.vscode/
+*.zip
+_ornek*/
+ornek*/
+*.bin
+assets/games/_*
+assets/games/_test/

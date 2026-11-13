@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrodyBet Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div id="login" class="login-wrap">
+  <form class="login-card" id="loginForm">
+    <div class="glow"></div>
+    <p class="eyebrow">BrodyBet</p>
+    <h1>Yönetim Paneli</h1>
+    <p class="sub">Dashboard · kullanıcı · bonus · ödeme yönetimi</p>
+    <label>Admin şifresi<input type="password" name="pass" required placeholder="••••••••" autocomplete="current-password"></label>
+    <button type="submit">Giriş yap</button>
+    <p class="hint">Varsayılan: brodyadmin</p>
+    <p class="err" id="loginErr"></p>
+  </form>
+</div>
+
+<div id="shell" class="shell hidden">
+  <aside class="side">
+    <div class="brand"><span class="mark">B</span> Brody<span>Bet</span></div>
+    <nav id="sideNav">
+      <button data-view="dash" class="on">Ana Panel</button>
+      <button data-view="users">Kullanıcılar</button>
+      <button data-view="bonuses">Bonuslar</button>
+      <button data-view="payments">Yatırımlar</button>
+      <button data-view="games">Oyunlar</button>
+      <button data-view="settings">Ayarlar</button>
+    </nav>
+    <div class="side-cards">
+      <div class="aff">Premium Ortaklık Programı</div>
+      <div class="sys"><i></i> Sistem Durumu<br><small>Tüm Sistemler Aktif</small></div>
+    </div>
+    <div class="side-foot">
+      <a href="index.html">Siteye dön</a>
+      <button type="button" id="logout">Çıkış</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button type="button" class="menu" id="menuBtn" aria-label="Menü">☰</button>
+      <h2 id="viewTitle">Ana Panel</h2>
+      <div class="top-right">
+        <span class="pill" id="adminUser">Admin</span>
+        <span class="bal-pill" id="adminBal">Demo</span>
+      </div>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cms.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

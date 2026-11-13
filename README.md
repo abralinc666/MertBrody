@@ -1,12 +1,31 @@
-# Betwin (demo – sanal kredi)
+# BrodyBet
 
-Sadece HTML, CSS ve JavaScript. Kurulum ve sunucu gerekmez: `index.html` dosyasına çift tıkla.
+Statik HTML/CSS/JS demo. Gerçek para yok — sanal kredi.
 
-- `index.html` – sayfa
-- `css/style.css` – tasarım
-- `js/data.js` – sağlayıcı, oyun ve promosyon verisi
-- `js/api.js` – tarayıcı içi backend (kayıt/giriş, cüzdan, favoriler, promosyon, bildirim); veriler `localStorage`'da saklanır
-- `js/app.js` – arayüz ve GSAP animasyonları
+## Canlı
+- Site: `index.html`
+- Admin: `admin.html` — şifre: **`brodyadmin`**
 
-GSAP ve yazı tipi CDN'den yüklenir (internet gerekir). Veriyi sıfırlamak için tarayıcıda site verilerini temizle.
-Veriler yalnızca bu tarayıcıda durur; gerçek bir sunucu güvenliği sağlamaz. Sanal kredi kullanılır, gerçek para yoktur.
+## Deploy (Vercel)
+1. Repo’yu GitHub’a push et
+2. [vercel.com](https://vercel.com) → Import Project → bu repo
+3. Framework preset: **Other** / static — Build Command boş, Output: `.`
+4. Deploy
+
+Yerelde: `index.html`’i tarayıcıda aç veya `npx serve .`
+
+## Yapı
+```
+index.html      public SPA
+admin.html      CMS panel
+css/            stil
+js/data.js      katalog (oyun, bonus, spor…)
+js/cms.js       admin overrides (localStorage)
+js/api.js       tarayıcı “backend”
+js/app.js       UI + GSAP/Swiper
+js/admin.js     yönetim
+assets/         brand, bonuses, games, providers
+```
+
+## Not
+CDN: GSAP, Swiper, Google Fonts. Veri `localStorage`’da (`bw_db_v1`, `bw_cms_v1`, `bw_session`).
