@@ -8,7 +8,7 @@ let view='dash',edit=null;
 CMS.snapshot(window.CATALOG);
 CMS.seedFromCatalog(window.CATALOG);
 
-const adminTok=()=>CMS.hash('bw-admin-session');
+const adminTok=()=>CMS.sessionToken();
 function authed(){return sessionStorage.getItem(SES)===adminTok()}
 function requireAuth(){
  if(authed()){showApp();return}
@@ -37,7 +37,7 @@ $('#sideNav').onclick=e=>{
  render();
 };
 
-const titles={dash:'Ana Panel',users:'Kullanıcılar',bonuses:'Bonuslar',payments:'Yatırımlar',games:'Oyunlar',settings:'Ayarlar'};
+const titles={dash:'Ana Panel',users:'Kullanıcılar',bonuses:'Bonuslar',payments:'Yatırımlar',games:'Oyunlar',tickets:'Destek',settings:'Ayarlar'};
 const fmt=c=>'₺'+((c||0)/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt0=c=>'₺'+((c||0)/100).toLocaleString('tr-TR',{maximumFractionDigits:0});
@@ -65,6 +65,7 @@ function render(){
  else if(view==='bonuses')v.innerHTML=bonuses();
  else if(view==='payments')v.innerHTML=payments();
  else if(view==='games')v.innerHTML=games();
+ else if(view==='tickets')v.innerHTML=ticketsView();
  else if(view==='settings')v.innerHTML=settings();
  bindView();
 }
@@ -79,10 +80,21 @@ function dash(){
  const bonus=(d.tx||[]).filter(t=>t.type==='bonus').reduce((s,t)=>s+t.amount,0);
  const users=(d.users||[]).filter(u=>!u.guest).length;
  const recent=(d.tx||[]).slice(-10).reverse();
- const pop=gamesList.slice(0,5);
- const line=`<svg class="chart-line" viewBox="0 0 400 160" preserveAspectRatio="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B8F520" stop-opacity=".35"/><stop offset="100%" stop-color="#B8F520" stop-opacity="0"/></linearGradient></defs><path d="M0,120 C40,110 70,60 110,70 C150,80 170,40 210,55 C250,70 280,30 320,45 C350,55 380,25 400,35 L400,160 L0,160 Z" fill="url(#lg)"/><path d="M0,120 C40,110 70,60 110,70 C150,80 170,40 210,55 C250,70 280,30 320,45 C350,55 380,25 400,35" fill="none" stroke="#B8F520" stroke-width="3"/><path d="M0,100 C50,95 90,80 130,90 C180,105 220,70 270,85 C320,100 360,75 400,80" fill="none" stroke="#E4FF6B" stroke-width="2" opacity=".7"/><path d="M0,130 C60,125 100,115 160,120 C220,125 280,100 340,110 C370,115 390,105 400,108" fill="none" stroke="#6ee7a8" stroke-width="2" opacity=".55"/></svg>`;
- const donut=`<svg width="120" height="120" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#243022" stroke-width="5"/><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#B8F520" stroke-width="5" stroke-dasharray="43 57" stroke-dashoffset="25"/><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#E4FF6B" stroke-width="5" stroke-dasharray="24 76" stroke-dashoffset="-18"/><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#6ee7a8" stroke-width="5" stroke-dasharray="18 82" stroke-dashoffset="-42"/><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#93A089" stroke-width="5" stroke-dasharray="9 91" stroke-dashoffset="-60"/><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#3d4a3d" stroke-width="5" stroke-dasharray="6 94" stroke-dashoffset="-69"/></svg>`;
- return `<div class="hero-banner"><img src="assets/brand/welcome-banner.png" alt=""><div class="hb"><h3>%100 RİSKSİZ İADE BONUSU</h3><a class="cta" href="index.html">Hemen Katıl!</a></div></div>
+ const favCount={};Object.values(d.favs||{}).forEach(a=>(a||[]).forEach(id=>{favCount[id]=(favCount[id]||0)+1}));
+ const pop=gamesList.slice().sort((a,b)=>(favCount[b.id]||0)-(favCount[a.id]||0)).slice(0,5);
+ const days=[...Array(7)].map((_,i)=>{const s=new Date();s.setHours(0,0,0,0);s.setDate(s.getDate()-(6-i));const a=s.getTime(),b=a+86400000;const sum=ty=>(d.tx||[]).filter(t=>t.type===ty&&t.at>=a&&t.at<b).reduce((n,t)=>n+Math.abs(t.amount),0);return {dep:sum('deposit'),wd:sum('withdraw'),bonus:sum('bonus')}});
+ const lineOf=(key,color)=>{const vals=days.map(x=>x[key]);const max=Math.max(1,...days.flatMap(x=>[x.dep,x.wd,x.bonus]));const pts=vals.map((v,i)=>`${(i*400/6).toFixed(1)},${(148-(v/max)*120).toFixed(1)}`);return `<path d="M${pts.join(' L')}" fill="none" stroke="${color}" stroke-width="3"/>`};
+ const line=`<svg class="chart-line" viewBox="0 0 400 160" preserveAspectRatio="none">${lineOf('dep','#C6F54A')}${lineOf('wd','#E2FF6A')}${lineOf('bonus','#6ee7a8')}</svg>`;
+ const TBL=/blackjack|roulette|rulet|baccarat|poker|hold.?em|craps|sic ?bo|dragon tiger|andar|fan tan|stud|teen patti/i,isT=g=>g.category==='table'||TBL.test(g.name);
+ const slotN=gamesList.filter(g=>g.category==='slots').length,tableN=gamesList.filter(isT).length,liveN=gamesList.filter(g=>g.category==='live'&&!isT(g)).length,allN=gamesList.length||1;
+ const pct=(n)=>Math.round(n/allN*1000)/10;
+ const arc=(n,color,offset)=>`<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${color}" stroke-width="5" stroke-dasharray="${(n/allN*100).toFixed(1)} ${(100-n/allN*100).toFixed(1)}" stroke-dashoffset="${offset}"/>`;
+ const donut=`<svg width="120" height="120" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#243022" stroke-width="5"/>${arc(slotN,'#C6F54A',25)}${arc(liveN,'#E2FF6A',25-(slotN/allN*100))}${arc(tableN,'#6ee7a8',25-((slotN+liveN)/allN*100))}</svg>`;
+ const since=Date.now()-86400000;
+ const newUsers=(d.users||[]).filter(u=>!u.guest&&u.createdAt>=since).length;
+ const dep24=new Set((d.tx||[]).filter(t=>t.type==='deposit'&&t.at>=since).map(t=>t.uid)).size;
+ const wd24=new Set((d.tx||[]).filter(t=>t.type==='withdraw'&&t.at>=since).map(t=>t.uid)).size;
+ return `<div class="hero-banner"><img src="assets/brand/welcome-banner.jpg" alt=""><div class="hb"><h3>%100 RİSKSİZ İADE BONUSU</h3><a class="cta" href="index.html">Hemen Katıl!</a></div></div>
  <div class="stats">
   <div class="stat"><small>Toplam Dağıtılan Bonus</small><strong>${fmt0(bonus)}</strong><em>+ claim ${claims}</em></div>
   <div class="stat"><small>Toplam Yatırımlar</small><strong>${fmt0(dep)}</strong><em>demo yatırımlar</em></div>
@@ -90,13 +102,13 @@ function dash(){
   <div class="stat"><small>Aktif Kullanıcılar</small><strong>${users}</strong><em>${promos.filter(p=>p.active!==false).length} aktif bonus</em></div>
  </div>
  <div class="grid2">
-  <div class="panel"><div class="panel-h"><h3>Son 7 Günlük Finansal Özet</h3></div><div class="panel-b">${line}<div style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--mu)"><span style="color:#B8F520">● Yatırımlar</span><span style="color:#E4FF6B">● Çekimler</span><span style="color:#6ee7a8">● Bonuslar</span></div></div></div>
-  <div class="panel"><div class="panel-h"><h3>Oyunlara Göre Dağılım</h3></div><div class="panel-b"><div class="donut-wrap">${donut}<div class="legend"><div><b>Slot</b> 42.8%</div><div><b>Canlı Casino</b> 23.6%</div><div><b>Spor</b> 18.4%</div><div><b>Sanal</b> 8.7%</div><div><b>Diğer</b> 6.5%</div></div></div></div></div>
+  <div class="panel"><div class="panel-h"><h3>Son 7 Günlük Finansal Özet</h3></div><div class="panel-b">${line}<div style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--mu)"><span style="color:#C6F54A">● Yatırımlar</span><span style="color:#E2FF6A">● Çekimler</span><span style="color:#6ee7a8">● Bonuslar</span></div></div></div>
+  <div class="panel"><div class="panel-h"><h3>Oyunlara Göre Dağılım</h3></div><div class="panel-b"><div class="donut-wrap">${donut}<div class="legend"><div><b>Slot</b> ${pct(slotN)}%</div><div><b>Canlı Show</b> ${pct(liveN)}%</div><div><b>Masa Oyunları</b> ${pct(tableN)}%</div></div></div></div></div>
  </div>
  <div class="grid3">
-  <div class="panel"><div class="panel-h"><h3>Son İşlemler</h3></div><div class="panel-b" style="padding:0;max-height:280px;overflow:auto">${recent.length?`<table class="table"><thead><tr><th>Kullanıcı</th><th>Tür</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>${recent.map(t=>{const u=(d.users||[]).find(x=>x.id===t.uid);return `<tr><td>${esc(u?.username||'—')}</td><td>${esc(t.type)}</td><td>${fmt(t.amount)}</td><td><span class="badge on">${t.status||'Tamamlandı'}</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">İşlem yok</div>'}</div></div>
-  <div class="panel"><div class="panel-h"><h3>En Popüler Oyunlar</h3></div><div class="panel-b">${pop.map((g,i)=>`<div class="pop-row">${g.image?`<img class="thumb" src="${g.image}" alt="">`:'<span class="thumb"></span>'}<b>${i+1}. ${g.name}</b><span>${(92-i*7).toFixed(1)}%</span></div>`).join('')||'<div class="empty">Oyun yok</div>'}</div></div>
-  <div class="panel"><div class="panel-h"><h3>Son 24 Saat</h3></div><div class="panel-b"><div class="mini-stats"><div><span>Yeni kayıt</span><strong>${users}</strong></div><div><span>Yatırım yapan</span><strong>${(d.tx||[]).filter(t=>t.type==='deposit').length}</strong></div><div><span>Çekim yapan</span><strong>${(d.tx||[]).filter(t=>t.type==='withdraw').length}</strong></div><div><span>Aktif oyun</span><strong>${gamesList.length}</strong></div></div></div></div>
+  <div class="panel"><div class="panel-h"><h3>Son İşlemler</h3></div><div class="panel-b" style="padding:0;max-height:280px;overflow:auto">${recent.length?`<table class="table"><thead><tr><th>Kullanıcı</th><th>Tür</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>${recent.map(t=>{const u=(d.users||[]).find(x=>x.id===t.uid);return `<tr><td>${esc(u?.username||'—')}</td><td>${esc(t.type)}</td><td>${fmt(t.amount)}</td><td><span class="badge on">${esc(t.status||'Tamamlandı')}</span></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">İşlem yok</div>'}</div></div>
+  <div class="panel"><div class="panel-h"><h3>En Popüler Oyunlar</h3></div><div class="panel-b">${pop.map((g,i)=>`<div class="pop-row">${g.image?`<img class="thumb" src="${esc(g.image)}" alt="">`:'<span class="thumb"></span>'}<b>${i+1}. ${esc(g.name)}</b><span>${favCount[g.id]||0} favori</span></div>`).join('')||'<div class="empty">Oyun yok</div>'}</div></div>
+  <div class="panel"><div class="panel-h"><h3>Son 24 Saat</h3></div><div class="panel-b"><div class="mini-stats"><div><span>Yeni kayıt</span><strong>${newUsers}</strong></div><div><span>Yatırım yapan</span><strong>${dep24}</strong></div><div><span>Çekim yapan</span><strong>${wd24}</strong></div><div><span>Aktif oyun</span><strong>${gamesList.length}</strong></div></div></div></div>
  </div>`;
 }
 
@@ -114,8 +126,8 @@ function bonuses(){
  <div class="panel-b" style="padding:0;overflow:auto">
  <table class="table"><thead><tr><th></th><th>İsim</th><th>Tutar</th><th>Durum</th><th></th></tr></thead><tbody>
  ${list.map(p=>`<tr>
-  <td>${p.image?`<img class="thumb" src="${p.image}" alt="">`:'—'}</td>
-  <td><b>${p.title}</b><div style="color:var(--mu);font-size:12px">${p.badge||''} · ${p.subtitle||''}</div></td>
+  <td>${p.image?`<img class="thumb" src="${esc(p.image)}" alt="">`:'—'}</td>
+  <td><b>${esc(p.title)}</b><div style="color:var(--mu);font-size:12px">${esc(p.badge||'')} · ${esc(p.subtitle||'')}</div></td>
   <td>${fmt(p.bonus)}</td>
   <td><span class="badge ${p.active===false?'off':'on'}">${p.active===false?'Pasif':'Aktif'}</span></td>
   <td class="actions"><button class="btn ghost sm" data-edit-bonus="${p.id}">Düzenle</button>
@@ -153,7 +165,7 @@ function payments(){
  const list=CMS.getAllPayments(C());
  return `<div class="panel"><div class="panel-h"><h3>Yatırım yöntemleri</h3><button class="btn" data-new-pay>+ Ekle</button></div>
  <div class="panel-b" style="padding:0;overflow:auto"><table class="table"><thead><tr><th>İsim</th><th>Tip</th><th>ETA</th><th>Durum</th><th></th></tr></thead><tbody>
- ${list.map(p=>`<tr><td><b>${p.name}</b></td><td>${p.type||''}</td><td>${p.eta||''}</td>
+ ${list.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.type||'')}</td><td>${esc(p.eta||'')}</td>
  <td><span class="badge ${p.active===false?'off':'on'}">${p.active===false?'Pasif':'Aktif'}</span></td>
  <td class="actions"><button class="btn ghost sm" data-edit-pay="${p.id}">Düzenle</button>
  <button class="btn ghost sm" data-toggle-pay="${p.id}">${p.active===false?'Aktifleştir':'Pasifleştir'}</button>
@@ -181,8 +193,8 @@ function games(){
  <button class="btn" data-new-game>+ Oyun</button></div>
  <div class="panel-b" style="padding:0;overflow:auto;max-height:65vh"><table class="table"><thead><tr><th></th><th>İsim</th><th>Kategori</th><th>Provider</th><th>Durum</th><th></th></tr></thead><tbody>
  ${filtered.slice(0,80).map(g=>`<tr>
-  <td>${g.image?`<img class="thumb" src="${g.image}" alt="">`:'—'}</td>
-  <td><b>${g.name}</b></td><td>${g.category}</td><td>${g.provider}</td>
+  <td>${g.image?`<img class="thumb" src="${esc(g.image)}" alt="">`:'—'}</td>
+  <td><b>${esc(g.name)}</b></td><td>${esc(g.category)}</td><td>${esc(g.provider)}</td>
   <td><span class="badge ${g.active===false?'off':'on'}">${g.active===false?'Pasif':'Aktif'}</span></td>
   <td class="actions"><button class="btn ghost sm" data-edit-game="${g.id}">Düzenle</button>
   <button class="btn ghost sm" data-toggle-game="${g.id}">${g.active===false?'Aktif':'Pasif'}</button></td>
@@ -205,6 +217,14 @@ function gameForm(g={}){
  </form>`;
 }
 
+function ticketsView(){
+ const list=(db().tickets||[]).slice().reverse();
+ return `<div class="panel"><div class="panel-h"><h3>Destek talepleri (${list.length})</h3></div>
+ <div class="panel-b" style="padding:0;overflow:auto"><table class="table"><thead><tr><th>Kullanıcı</th><th>Mesaj</th><th>Durum</th><th>Tarih</th></tr></thead><tbody>
+ ${list.length?list.map(t=>`<tr><td><b>${esc(t.username||'—')}</b></td><td>${esc(t.message)}</td><td>${esc(t.status||'Açık')}</td><td>${t.at?new Date(t.at).toLocaleString('tr-TR'):'—'}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Talep yok</td></tr>'}
+ </tbody></table></div></div>`;
+}
+
 function settings(){
  const s=CMS.load().settings||{};
  return `<div class="panel"><div class="panel-h"><h3>Site ayarları</h3></div><div class="panel-b">
@@ -218,7 +238,6 @@ function settings(){
  </div></div>`;
 }
 
-function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
 function rid(){return 'b_'+Math.random().toString(36).slice(2,9)}
 
 function bindView(){
@@ -250,9 +269,14 @@ function bindView(){
 
  $('#setForm')?.addEventListener('submit',e=>{
   e.preventDefault();const fd=new FormData(e.target);
-  const patch={siteName:String(fd.get('siteName')||'BrodyBet'),minPlay:Math.round(Number(fd.get('minPlayTl')||10)*100)};
-  CMS.setSettings(patch);
-  const np=String(fd.get('newPass')||'');if(np)CMS.setAdminPass(np);
+  const tl=Number(fd.get('minPlayTl'));
+  if(!Number.isFinite(tl)||tl<1||tl>100000){alert('Min oyun bakiyesi 1 ile 100.000 TL arasında olmalı.');return}
+  const name=String(fd.get('siteName')||'').trim();
+  if(name.length<2||name.length>40){alert('Site adı 2-40 karakter olmalı.');return}
+  const np=String(fd.get('newPass')||'');
+  if(np&&np.length<8){alert('Yeni şifre en az 8 karakter olmalı.');return}
+  CMS.setSettings({siteName:name,minPlay:Math.round(tl*100)});
+  if(np){CMS.setAdminPass(np);sessionStorage.setItem(SES,adminTok())}
   alert('Ayarlar kaydedildi');render();
  });
 }
@@ -266,15 +290,20 @@ function openBonus(id){
   e.preventDefault();const fd=new FormData(e.target);
   let image=String(fd.get('image')||'');
   const file=fd.get('file');if(file&&file.size)image=(await readFileAsDataURL(file))||image;
+  const title=String(fd.get('title')||'').trim();
+  const bonusTl=Number(fd.get('bonusTl'));
+  if(title.length<2){alert('Bonus adı gerekli.');return}
+  if(!Number.isFinite(bonusTl)||bonusTl<0||bonusTl>1000000){alert('Bonus tutarı 0 ile 1.000.000 TL arasında olmalı.');return}
   const item={
-   id:p?.id||rid(),title:String(fd.get('title')),badge:String(fd.get('badge')||''),subtitle:String(fd.get('subtitle')||''),
+   id:p?.id||rid(),title,badge:String(fd.get('badge')||''),subtitle:String(fd.get('subtitle')||''),
    desc:String(fd.get('desc')||''),summary:String(fd.get('summary')||''),wager:String(fd.get('wager')||''),
    duration:String(fd.get('duration')||''),minDeposit:String(fd.get('minDeposit')||''),maxBonus:String(fd.get('maxBonus')||''),
    eligible:String(fd.get('eligible')||''),withdraw:String(fd.get('withdraw')||''),
    terms:String(fd.get('terms')||'').split('\n').map(s=>s.trim()).filter(Boolean),
-   bonus:Math.round(Number(fd.get('bonusTl')||0)*100),image,active:fd.get('active')==='1',
+   bonus:Math.round(bonusTl*100),image,active:fd.get('active')==='1',
    example:p?.example||'',exceptions:p?.exceptions||[]
   };
+  if(!id&&list.some(x=>x.id===item.id)){alert('Bu bonus kimliği zaten var.');return}
   const next=id?list.map(x=>x.id===id?item:x):[...list,item];
   CMS.setPromotions(next);m.remove();render();
  };
@@ -287,7 +316,10 @@ function openPay(id){
  m.querySelector('[data-close]').onclick=()=>m.remove();
  m.querySelector('#payForm').onsubmit=e=>{
   e.preventDefault();const fd=new FormData(e.target);
-  const item={id:p?.id||('pay_'+rid().slice(2)),name:String(fd.get('name')),type:String(fd.get('type')||''),eta:String(fd.get('eta')||''),active:fd.get('active')==='1'};
+  const name=String(fd.get('name')||'').trim();
+  if(name.length<2){alert('Yöntem adı gerekli.');return}
+  const item={id:p?.id||('pay_'+rid().slice(2)),name,type:String(fd.get('type')||''),eta:String(fd.get('eta')||''),active:fd.get('active')==='1'};
+  if(!id&&list.some(x=>x.id===item.id)){alert('Bu yöntem kimliği zaten var.');return}
   const next=id?list.map(x=>x.id===id?item:x):[...list,item];
   CMS.setPayments(next);m.remove();render();
  };
@@ -302,7 +334,13 @@ function openGame(id){
   e.preventDefault();const fd=new FormData(e.target);
   let image=String(fd.get('image')||'');
   const file=fd.get('file');if(file&&file.size)image=(await readFileAsDataURL(file))||image;
-  const item={id:String(fd.get('id')).trim(),name:String(fd.get('name')),category:String(fd.get('category')),provider:String(fd.get('provider')),
+  const gid=String(fd.get('id')||'').trim(),gname=String(fd.get('name')||'').trim(),cat=String(fd.get('category')),prov=String(fd.get('provider')||'').trim();
+  if(!/^[a-z0-9-]{2,40}$/.test(gid)){alert('Oyun kimliği 2-40 karakter, küçük harf, rakam ve tire olmalı.');return}
+  if(gname.length<2){alert('Oyun adı gerekli.');return}
+  if(!['slots','live','table'].includes(cat)){alert('Geçersiz kategori.');return}
+  if(!(C().providers||[]).some(p=>p.id===prov)){alert('Bu sağlayıcı kimliği katalogda yok.');return}
+  if(!id&&list.some(x=>x.id===gid)){alert('Bu oyun kimliği zaten var.');return}
+  const item={id:gid,name:gname,category:cat,provider:prov,
    image,hue:Number(fd.get('hue')||200),active:fd.get('active')==='1',isNew:!!g?.isNew};
   const next=id?list.map(x=>x.id===id?{...x,...item}:x):[...list,item];
   CMS.setGames(next);m.remove();render();

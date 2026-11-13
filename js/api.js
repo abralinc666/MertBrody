@@ -4,11 +4,12 @@ const KEY='bw_db_v1',SES='bw_session';
 let C=window.CATALOG;
 if(window.CMS){window.CMS.seedFromCatalog(C);C=window.CMS.applyToCatalog(C);window.CATALOG=C}
 const START=100000,MAX_BAL=100000000,MAX_DEP=500000;
-const fresh=()=>({users:[],tx:[],favs:{},claims:{},notifs:[],bets:[]});
+const fresh=()=>({users:[],tx:[],favs:{},claims:{},notifs:[],bets:[],tickets:[]});
 let db;try{db=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{db=fresh()}
 if(!db.bets)db.bets=[];
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch{}};
+if(!db.tickets)db.tickets=[];
 const bad=(status,m)=>{throw Object.assign(new Error(m),{status,code:status})};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch{bad(507,'Kayıt yazılamadı. Tarayıcı depolama alanı dolu olabilir.')}};
 const rid=()=>Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,'0')).join('');
 const hex=a=>Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');
 async function hash(pw,salt=rid()){
@@ -32,7 +33,8 @@ const validPhone=p=>/^(\+90|0)?5\d{9}$/.test(String(p).replace(/[\s-]/g,''));
 const money=(v,min,max)=>{const n=Math.round(Number(v)*100);if(!Number.isFinite(n)||n<min||n>max)bad(400,`Tutar ${min/100} ile ${max/100} arasında olmalı.`);return n};
 const tries=[];const throttle=()=>{const n=Date.now();while(tries.length&&n-tries[0]>60000)tries.shift();if(tries.length>=10)bad(429,'Çok fazla deneme. Biraz bekle.');tries.push(n)};
 const refreshC=()=>{if(window.CMS){const merged=window.CMS.applyToCatalog(window.CATALOG_BASE||window.CATALOG);Object.keys(merged).forEach(k=>{window.CATALOG[k]=merged[k]});C=window.CATALOG}else C=window.CATALOG;return C};
-const minPlay=()=>((refreshC().settings||{}).minPlay)||1000;
+const minPlay=()=>{const n=Number((refreshC().settings||{}).minPlay);return Number.isFinite(n)&&n>=100&&n<=10000000?n:1000};
+const minDepositOf=x=>{const m=String(x.minDeposit||'').replace(/\./g,'').match(/(\d+)/);return m?Number(m[1])*100:0};
 const needAuth=u=>{if(!u||u.guest)bad(401,'Oynamak için giriş yap');return u};
 const needBalance=(u,min)=>{if(u.balance<min)bad(400,'Yetersiz bakiye');return u};
 
@@ -58,10 +60,13 @@ window.api=async function(path,method='GET',body={}){
   if(!validMail(email))bad(400,'Geçerli e-posta gir.');
   if(!validPhone(phone))bad(400,'Geçerli cep telefonu gir (05xxxxxxxxx).');
   if(address.length<5)bad(400,'Adres en az 5 karakter olmalı.');
-  if(!city||!district)bad(400,'İl ve ilçe seç.');
+  const places=window.TR_PLACES||{};
+  if(!places[city])bad(400,'Listeden bir il seç.');
+  if(!places[city].includes(district))bad(400,'Seçilen ile ait bir ilçe seç.');
   if(!/^[a-zA-Z0-9_]{3,20}$/.test(un))bad(400,'Kullanıcı adı 3-20 karakter olmalı (harf, rakam, _).');
   if(pw.length<8)bad(400,'Şifre en az 8 karakter olmalı.');
   if(pw!==String(body.password2||''))bad(400,'Şifreler eşleşmiyor.');
+  if(!body.terms)bad(400,'18+ onayı gerekli.');
   if(db.users.some(u=>u.username.toLowerCase()===un.toLowerCase()))bad(409,'Bu kullanıcı adı alınmış.');
   if(db.users.some(u=>u.email&&u.email===email))bad(409,'Bu e-posta kayıtlı.');
   if(db.users.some(u=>u.tc&&u.tc===tc))bad(409,'Bu T.C. kimlik no kayıtlı.');
@@ -108,14 +113,21 @@ window.api=async function(path,method='GET',body={}){
  if(r=m(/^POST \/promotions\/([^/]+)\/claim$/)){const u=needAuth(need());
   const x=(C.promotions||[]).find(v=>v.id===r[1]);if(!x||x.active===false)bad(404,'Promosyon bulunamadı.');
   const a=db.claims[u.id]=db.claims[u.id]||[];if(a.includes(x.id))bad(409,'Bu promosyonu zaten aldın.');
-  a.push(x.id);addTx(u,'bonus',x.bonus||0,x.title);notify(u.id,`${x.title} hesabına eklendi.`);save();return {balance:u.balance}}
+  const needDep=minDepositOf(x);
+  if(needDep){const dep=db.tx.filter(t=>t.uid===u.id&&t.type==='deposit').reduce((s,t)=>s+t.amount,0);if(dep<needDep)bad(400,`Bu bonus için en az ${needDep/100} TL yatırım gerekli.`)}
+  const bonusAmt=Math.round(Number(x.bonus)||0);
+  if(!Number.isFinite(bonusAmt)||bonusAmt<0)bad(400,'Bonus tutarı geçersiz.');
+  a.push(x.id);addTx(u,'bonus',bonusAmt,x.title);notify(u.id,`${x.title} hesabına eklendi.`);save();return {balance:u.balance}}
 
  if(k==='GET /sports'){let l=C.sports||[];if(q.get('live')==='1')l=l.filter(x=>x.live);if(q.get('sport'))l=l.filter(x=>x.sport===q.get('sport'));return {matches:l}}
  if(k==='POST /bets'){const u=needAuth(need());needBalance(u,minPlay());
   const stake=money(body.stake,100,MAX_DEP),odd=Number(body.odd);
-  if(!Number.isFinite(odd)||odd<1.01)bad(400,'Geçersiz oran.');
+  if(!Number.isFinite(odd)||odd<1.01||odd>1000)bad(400,'Oran 1.01 ile 1000 arasında olmalı.');
   if(u.balance<stake)bad(400,'Yetersiz bakiye');
-  const win=Math.random()>.48;const payout=win?Math.round(stake*odd):0;
+  const win=Math.random()>.48;let payout=win?Math.round(stake*odd):0;
+  if(!Number.isFinite(payout)||payout<0)bad(400,'Kazanç hesaplanamadı.');
+  if(payout>50000000)payout=50000000;
+  if(u.balance-stake+payout>MAX_BAL)bad(400,'Bakiye üst sınırına ulaşıldı.');
   addTx(u,'bet',-stake,`${body.selection||'Bahis'} @ ${odd}`);
   if(win)addTx(u,'win',payout,'Bahis kazancı');
   db.bets.push({id:rid(),uid:u.id,selection:body.selection||'Bahis',odd,stake,payout:win?payout:0,won:win,status:win?'Kazandı':'Kaybetti',at:Date.now()});
@@ -125,22 +137,13 @@ window.api=async function(path,method='GET',body={}){
  if(k==='GET /payments')return {payments:C.payments||[]};
  if(k==='GET /faq')return {faq:C.faq||[]};
  if(k==='GET /settings')return {settings:C.settings||{minPlay:1000,siteName:'BrodyBet'}};
- if(k==='POST /support'){const u=need();notify(u.id,'Destek talebin alındı (demo).');save();return {ok:true,message:'Destek talebin kaydedildi.'}}
+ if(k==='POST /support'){const u=need();const message=String(body.message||'').trim();
+  if(message.length<5||message.length>1000)bad(400,'Mesaj 5-1000 karakter olmalı.');
+  db.tickets.push({id:rid(),uid:u.id,username:u.username,message,at:Date.now(),status:'Açık'});
+  notify(u.id,'Destek talebin alındı (demo).');save();return {ok:true,message:'Destek talebin kaydedildi.'}}
  if(k==='GET /notifications'){const l=db.notifs.filter(n=>n.uid===need().id).slice(-20).reverse();return {notifications:l,unread:l.filter(n=>!n.read).length}}
  if(k==='POST /notifications/read'){const u=need();db.notifs.forEach(n=>{if(n.uid===u.id)n.read=true});save();return {ok:true}}
 
- /* Admin stats (no secret beyond knowing the endpoint — panel uses CMS password) */
- if(k==='GET /admin/stats'){
-  const claims=Object.values(db.claims||{}).reduce((n,a)=>n+a.length,0);
-  const dep=db.tx.filter(t=>t.type==='deposit').reduce((s,t)=>s+t.amount,0);
-  const wd=db.tx.filter(t=>t.type==='withdraw').reduce((s,t)=>s+Math.abs(t.amount),0);
-  const bonus=db.tx.filter(t=>t.type==='bonus').reduce((s,t)=>s+t.amount,0);
-  const users=db.users.map(u=>({id:u.id,username:u.username,guest:!!u.guest,email:u.email||'',balance:u.balance,createdAt:u.createdAt,city:u.city||''}));
-  return {stats:{users:db.users.filter(u=>!u.guest).length,guests:db.users.filter(u=>u.guest).length,tx:db.tx.length,claims,bets:db.bets.length,
-   deposits:dep,withdrawals:wd,bonuses:bonus,
-   promotions:(C.promotions||[]).length,payments:(C.payments||[]).length,games:(C.games||[]).filter(g=>g.active!==false).length},
-   recent:db.tx.slice(-20).reverse().map(t=>{const u=db.users.find(x=>x.id===t.uid);return {...t,username:u?.username||'—'}}),
-   users:users.filter(u=>!u.guest).slice(-30).reverse(),
-   popular:(C.games||[]).filter(g=>g.active!==false).slice(0,5)}}
+ /* Admin istatistikleri panelde doğrudan hesaplanıyor; yetkisiz /admin/stats uç noktası kaldırıldı. */
  bad(404,'Bulunamadı.')};
 })();

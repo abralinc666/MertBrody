@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BrodyBet Admin</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="css/admin.css?v=5">
+<link rel="icon" href="assets/brand/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="css/admin.css?v=6">
 </head>
 <body>
 <div id="login" class="login-wrap">
   <form class="login-card" id="loginForm">
     <div class="glow"></div>
-    <p class="eyebrow">BrodyBet</p>
+    <img src="assets/brand/logo.svg" alt="BrodyBet" class="login-logo">
     <h1>Yönetim Paneli</h1>
     <p class="sub">Dashboard · kullanıcı · bonus · ödeme yönetimi</p>
     <label>Admin şifresi<input type="password" name="pass" required placeholder="••••••••" autocomplete="current-password"></label>
@@ -23,13 +24,14 @@
 
 <div id="shell" class="shell hidden">
   <aside class="side">
-    <div class="brand"><span class="mark">B</span> Brody<span>Bet</span></div>
+    <div class="brand"><img src="assets/brand/logo.svg" alt="BrodyBet"></div>
     <nav id="sideNav">
       <button data-view="dash" class="on">Ana Panel</button>
       <button data-view="users">Kullanıcılar</button>
       <button data-view="bonuses">Bonuslar</button>
       <button data-view="payments">Yatırımlar</button>
       <button data-view="games">Oyunlar</button>
+      <button data-view="tickets">Destek</button>
       <button data-view="settings">Ayarlar</button>
     </nav>
     <div class="side-cards">
@@ -54,8 +56,8 @@
   </main>
 </div>
 
-<script src="js/data.js?v=5"></script>
-<script src="js/cms.js?v=5"></script>
-<script src="js/admin.js?v=5"></script>
+<script src="js/data.js?v=9"></script>
+<script src="js/cms.js?v=9"></script>
+<script src="js/admin.js?v=9"></script>
 </body>
 </html>
