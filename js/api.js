@@ -3,7 +3,7 @@
 const KEY='bw_db_v1',SES='bw_session';
 let C=window.CATALOG;
 if(window.CMS){window.CMS.seedFromCatalog(C);C=window.CMS.applyToCatalog(C);window.CATALOG=C}
-const START=100000,MAX_BAL=100000000,MAX_DEP=500000;
+const START=100000,MAX_BAL=100000000,MAX_DEP=50000000;
 const fresh=()=>({users:[],tx:[],favs:{},claims:{},notifs:[],bets:[],tickets:[]});
 let db;try{db=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{db=fresh()}
 if(!db.bets)db.bets=[];
@@ -102,10 +102,12 @@ window.api=async function(path,method='GET',body={}){
  if(k==='GET /wallet')return {balance:need().balance};
  if(k==='GET /wallet/transactions')return {transactions:db.tx.filter(t=>t.uid===need().id).slice(-30).reverse()};
  if(k==='POST /wallet/deposit'){const u=need(),n=money(body.amount,100,MAX_DEP);if(u.balance+n>MAX_BAL)bad(400,'Bakiye üst sınırına ulaşıldı.');
-  const method=(C.payments||[]).find(p=>p.id===body.method)?.name||'Sanal kredi';
+  const pm=(C.payments||[]).find(p=>p.id===body.method);const method=pm?.name||'Sanal kredi';
+  if(pm){const lo=Number(pm.min)||0,hi=Number(pm.max)||0;if(lo&&n<lo*100)bad(400,`${pm.name} için minimum ${lo} TL.`);if(hi&&n>hi*100)bad(400,`${pm.name} için maksimum ${hi} TL.`)}
   addTx(u,'deposit',n,method+' ile yükleme');save();return {balance:u.balance}}
  if(k==='POST /wallet/withdraw'){const u=needAuth(need()),n=money(body.amount,100,MAX_DEP);if(u.balance<n)bad(400,'Yetersiz bakiye');
-  addTx(u,'withdraw',-n,'Sanal çekim talebi');notify(u.id,'Çekim talebin simüle edildi.');save();return {balance:u.balance}}
+  const wm=(C.payments||[]).find(p=>p.id===body.method);
+  addTx(u,'withdraw',-n,(wm?wm.name+' ile ':'')+'çekim talebi');notify(u.id,'Çekim talebin simüle edildi.');save();return {balance:u.balance}}
 
  if(k==='GET /promotions'){const u=need();return {promotions:(C.promotions||[]).filter(x=>x.active!==false).map(x=>({...x,claimed:(db.claims[u.id]||[]).includes(x.id)}))}}
  if(r=m(/^GET \/promotions\/([^/]+)$/)){const u=need(),x=(C.promotions||[]).find(v=>v.id===r[1]);if(!x||x.active===false)bad(404,'Promosyon bulunamadı.');

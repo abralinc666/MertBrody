@@ -2,7 +2,7 @@
 (()=>{
 const KEY='bw_cms_v1';
 const DEF_SETTINGS={minPlay:1000,siteName:'BrodyBet',adminPassHash:null};
-const SCHEMA=2;
+const SCHEMA=3;
 /* v2: eski oturumlarda localStorage'a kopyalanmış katalog görsel yolları (ör. .png → .jpg, yeni banner)
    güncel katalogla senkronlanır. Admin'in yüklediği data: görselleri ve harici URL'ler korunur. */
 function migrate(o){
@@ -11,6 +11,11 @@ function migrate(o){
  const sync=(list,baseList)=>{if(!Array.isArray(list))return;const m=new Map((baseList||[]).map(x=>[x.id,x]));
   list.forEach(x=>{const b=x&&m.get(x.id);if(b&&b.image&&typeof x.image==='string'&&x.image.startsWith('assets/')&&x.image!==b.image)x.image=b.image})};
  sync(o.promotions,base.promotions);sync(o.games,base.games);
+ if(Array.isArray(o.payments)&&o.schema!==undefined&&o.schema<3||Array.isArray(o.payments)&&o.schema===undefined){
+  const bm=new Map((base.payments||[]).map(x=>[x.id,x]));
+  o.payments.forEach(x=>{const b=bm.get(x.id);if(b)['min','max','group','coin'].forEach(k=>{if(x[k]==null&&b[k]!=null)x[k]=b[k]})});
+  (base.payments||[]).forEach(b=>{if(!o.payments.some(x=>x.id===b.id))o.payments.push({...b,active:true})});
+ }
  o.schema=SCHEMA;return true}
 function loadRaw(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch{return{}}}
 function saveRaw(o){try{localStorage.setItem(KEY,JSON.stringify(o));return true}catch{alert('Kayıt yazılamadı. Tarayıcı depolama alanı dolu olabilir.');return false}}

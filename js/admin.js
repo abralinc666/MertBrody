@@ -164,8 +164,8 @@ function bonusForm(p={}){
 function payments(){
  const list=CMS.getAllPayments(C());
  return `<div class="panel"><div class="panel-h"><h3>Yatırım yöntemleri</h3><button class="btn" data-new-pay>+ Ekle</button></div>
- <div class="panel-b" style="padding:0;overflow:auto"><table class="table"><thead><tr><th>İsim</th><th>Tip</th><th>ETA</th><th>Durum</th><th></th></tr></thead><tbody>
- ${list.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.type||'')}</td><td>${esc(p.eta||'')}</td>
+ <div class="panel-b" style="padding:0;overflow:auto"><table class="table"><thead><tr><th>Logo</th><th>İsim</th><th>Tip</th><th>Limit</th><th>ETA</th><th>Durum</th><th></th></tr></thead><tbody>
+ ${list.map(p=>`<tr><td>${p.logo?`<img class="thumb logo" src="${esc(p.logo)}" alt="">`:'<span class="nologo">Otomatik</span>'}</td><td><b>${esc(p.name)}</b></td><td>${esc(p.type||'')}</td><td>${p.min||'—'} – ${p.max||'—'} ₺</td><td>${esc(p.eta||'')}</td>
  <td><span class="badge ${p.active===false?'off':'on'}">${p.active===false?'Pasif':'Aktif'}</span></td>
  <td class="actions"><button class="btn ghost sm" data-edit-pay="${p.id}">Düzenle</button>
  <button class="btn ghost sm" data-toggle-pay="${p.id}">${p.active===false?'Aktifleştir':'Pasifleştir'}</button>
@@ -179,6 +179,11 @@ function payForm(p={}){
   <div class="field"><label>İsim</label><input name="name" required value="${esc(p.name||'')}"></div>
   <div class="field"><label>Tip</label><input name="type" value="${esc(p.type||'E-cüzdan')}"></div>
   <div class="field"><label>ETA</label><input name="eta" value="${esc(p.eta||'Anında')}"></div>
+  <div class="field"><label>Grup</label><select name="group">${[['banka','Banka'],['ecuzdan','E-cüzdan'],['kart','Kart / QR'],['kripto','Kripto']].map(([k,l])=>`<option value="${k}" ${(p.group||'banka')===k?'selected':''}>${l}</option>`).join('')}</select></div>
+  <div class="field"><label>Min (₺)</label><input name="min" type="number" min="1" step="1" value="${p.min||100}"></div>
+  <div class="field"><label>Maks (₺)</label><input name="max" type="number" min="1" step="1" value="${p.max||50000}"></div>
+  <div class="field full"><label>Logo URL / yol</label><input name="logo" value="${esc(String(p.logo||'').startsWith('data:')?'':p.logo||'')}" placeholder="assets/payments/papara.png — boş = otomatik rozet"></div>
+  <div class="field full"><label>veya logo yükle (PNG/SVG, şeffaf zemin önerilir)</label><input name="file" type="file" accept="image/*">${p.logo?`<label class="chk"><input type="checkbox" name="clearLogo"> Mevcut logoyu kaldır</label>`:''}</div>
   <div class="field"><label>Aktif</label><select name="active"><option value="1" ${p.active!==false?'selected':''}>Evet</option><option value="0" ${p.active===false?'selected':''}>Hayır</option></select></div>
   <div class="form-actions full"><button type="button" class="btn ghost" data-close>İptal</button><button class="btn" type="submit">Kaydet</button></div>
  </form>`;
@@ -314,11 +319,17 @@ function openPay(id){
  const p=id?list.find(x=>x.id===id):{};
  const m=modal(payForm(p||{}));
  m.querySelector('[data-close]').onclick=()=>m.remove();
- m.querySelector('#payForm').onsubmit=e=>{
+ m.querySelector('#payForm').onsubmit=async e=>{
   e.preventDefault();const fd=new FormData(e.target);
   const name=String(fd.get('name')||'').trim();
   if(name.length<2){alert('Yöntem adı gerekli.');return}
-  const item={id:p?.id||('pay_'+rid().slice(2)),name,type:String(fd.get('type')||''),eta:String(fd.get('eta')||''),active:fd.get('active')==='1'};
+  const min=Number(fd.get('min')),max=Number(fd.get('max'));
+  if(!Number.isFinite(min)||!Number.isFinite(max)||min<1||max<min||max>500000){alert('Limitler geçersiz (1 ≤ min ≤ maks ≤ 500.000).');return}
+  let logo=String(fd.get('logo')||'').trim()||(String(p?.logo||'').startsWith('data:')?p.logo:'');
+  if(logo&&!/^(assets\/|https:\/\/|data:image\/)/.test(logo)){alert('Logo yolu assets/ ile ya da https:// ile başlamalı.');return}
+  const file=fd.get('file');if(file&&file.size)logo=(await readFileAsDataURL(file))||logo;
+  if(fd.get('clearLogo'))logo='';
+  const item={...(p||{}),id:p?.id||('pay_'+rid().slice(2)),name,type:String(fd.get('type')||''),eta:String(fd.get('eta')||''),group:String(fd.get('group')||'banka'),min:Math.round(min),max:Math.round(max),logo,active:fd.get('active')==='1'};
   if(!id&&list.some(x=>x.id===item.id)){alert('Bu yöntem kimliği zaten var.');return}
   const next=id?list.map(x=>x.id===id?item:x):[...list,item];
   CMS.setPayments(next);m.remove();render();
