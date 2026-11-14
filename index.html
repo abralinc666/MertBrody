@@ -1,33 +1,88 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BrodyBet — Spor, Canlı Bahis & Casino (Demo)</title>
-<meta name="description" content="BrodyBet demo — spor bahisleri, canlı maçlar, casino ve bonuslar. Gerçek para yok, sanal kredi.">
-<meta name="theme-color" content="#080B09">
-<link rel="icon" href="assets/brand/mark.svg" type="image/svg+xml">
-<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
-<meta property="og:title" content="BrodyBet">
-<meta property="og:description" content="Spor, canlı bahis ve casino — demo / sanal kredi.">
-<meta property="og:image" content="assets/bonuses/hosgeldin-v2.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="css/style.css?v=12">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BöcekAdam • Canlı Sohbet (Demo)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
-<div id="app"><div class="boot"><img class="logo-mark" src="assets/brand/mark.svg" alt=""><p>Yükleniyor</p></div></div>
-<nav class="nav" id="nav" aria-label="Ana menü"></nav>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-<script src="js/tr-places.js?v=10" defer></script>
-<script src="js/data.js?v=11" defer></script>
-<script src="js/cms.js?v=10" defer></script>
-<script src="js/api.js?v=10" defer></script>
-<script src="js/icons.js?v=11" defer></script>
-<script src="js/app.js?v=12" defer></script>
+  <!-- ===== 3D SAHNE ===== -->
+  <section id="stage">
+    <canvas id="scene"></canvas>
+
+    <!-- Canlı yayın üst bilgileri -->
+    <div class="hud hud-top-left">
+      <div class="profile-pill">
+        <div class="avatar">🪲</div>
+        <div class="profile-text">
+          <div class="name">BöcekAdam <span class="verified">✔</span></div>
+          <div class="likes"><span id="likeCount">412.7K</span> beğeni</div>
+        </div>
+        <button class="follow-btn" id="followBtn">+ Takip Et</button>
+      </div>
+      <div class="rank-pill">🔥 Saatlik Sıralama No. 1</div>
+    </div>
+
+    <div class="hud hud-top-right">
+      <div class="live-badge"><span class="dot"></span> CANLI</div>
+      <div class="viewer-pill">👤 <span id="viewerCount">24.8K</span></div>
+    </div>
+
+    <!-- Karakterin konuşma balonu -->
+    <div id="speechBubble" class="speech-bubble hidden"></div>
+
+    <!-- Uçan kalpler -->
+    <div id="hearts"></div>
+    <button id="heartBtn" class="heart-btn" title="Kalp gönder">❤</button>
+
+    <!-- Yükleme ekranı -->
+    <div id="loader">
+      <div class="loader-inner">
+        <div class="loader-bug">🪲</div>
+        <div class="loader-title">BöcekAdam yayına hazırlanıyor…</div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div id="progressText">%0</div>
+        <div id="loaderError" class="loader-error hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SOHBET ===== -->
+  <section id="chat">
+    <div class="chat-header">
+      <div class="chat-title">💬 BöcekAdam ile Sohbet Et</div>
+      <div class="chat-actions">
+        <button id="voiceBtn" class="icon-btn" title="Sesi aç/kapat">🔊</button>
+      </div>
+    </div>
+
+    <div id="messages" class="messages" aria-live="polite"></div>
+
+    <div class="quick-replies" id="quickReplies">
+      <button data-q="Selam kral!">👋 Selam</button>
+      <button data-q="Kaç yaşındasın?">🎂 Kaç yaşındasın?</button>
+      <button data-q="Bize bir dans göster!">🕺 Dans et</button>
+      <button data-q="Bir fıkra anlat">😂 Fıkra</button>
+      <button data-q="Sana gül gönderdim 🌹">🌹 Gül gönder</button>
+    </div>
+
+    <form id="chatForm" class="chat-form" autocomplete="off">
+      <input id="chatInput" type="text" placeholder="Yorum ekleyin…" maxlength="200" />
+      <button type="submit" class="send-btn">Gönder ➤</button>
+    </form>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

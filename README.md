@@ -1,38 +1,48 @@
-# BrodyBet
+# BöcekAdam — 3D Canlı Sohbet Demosu
 
-Statik HTML/CSS/JS demo. Gerçek para yok — sanal kredi.
+Koltukta oturan 3D BöcekAdam karakteri + altta sohbet kutusu.
+Three.js, HTML, CSS ve JavaScript ile yapıldı.
 
-## Canlı
-- Site: `index.html`
-- Admin: `admin.html` — şifre: **`brodyadmin`**
+## Nasıl açılır?
 
-## Deploy (Vercel)
-1. Repo’yu GitHub’a push et
-2. [vercel.com](https://vercel.com) → Import Project → bu repo
-3. Framework preset: **Other** / static — Build Command boş, Output: `.`
-4. Deploy
+Tarayıcılar 3D model dosyalarını (`.glb`) doğrudan çift tıklayarak açılan sayfada yüklemez,
+bu yüzden küçük bir yerel sunucu gerekir:
 
-Yerelde: `index.html`’i tarayıcıda aç veya `npx serve .`
+- **Windows:** `baslat.bat` dosyasına çift tıkla
+- **Mac / Linux:** klasörde terminal aç → `sh baslat.sh`
 
-## Yapı
+Sonra tarayıcıda **http://localhost:8000** adresine git.
+(Python yüklü olmalı. Alternatif: VS Code "Live Server" eklentisi ya da `npx serve`.)
+
+İnternet bağlantısı gerekir — Three.js CDN'den (jsdelivr) yüklenir.
+
+## Dosyalar
+
 ```
-index.html      public SPA
-admin.html      CMS panel
-css/            stil
-js/data.js      katalog (oyun, bonus, spor…)
-js/cms.js       admin overrides (localStorage)
-js/api.js       tarayıcı “backend”
-js/app.js       UI, canlı maç simülasyonu (saat/skor/oran), Swiper
-js/admin.js     yönetim
-assets/         brand (logo.svg, mark.svg, ikonlar), bonuses, games, providers
+index.html        → sayfa yapısı
+css/style.css     → tasarım (neon canlı yayın teması)
+js/main.js        → 3D sahne, oturma pozu, animasyonlar, sohbet arayüzü
+js/chat.js        → karakterin cevapları (kural tabanlı demo)
+models/bocek.glb  → karakter
+models/koltuk.glb → koltuk
 ```
 
-## Not
-CDN: GSAP, Swiper, Google Fonts. Veri `localStorage`’da (`bw_db_v1`, `bw_cms_v1`, `bw_session`).
+## Özellikler
 
-## v2 notları
-- Yeni marka: `assets/brand/logo.svg` (mark + yazı, vektör) ve `assets/brand/mark.svg` (favicon/uygulama ikonu).
-- Tasarım sistemi `css/style.css` başındaki değişkenlerde (`--ac`, `--s1`… ). Font: Inter + Inter Tight.
-- Canlı maçlarda süre her saniye, oranlar birkaç saniyede bir, skor rastgele güncellenir (yalnızca istemci simülasyonu).
-- `bw_cms_v1` şema 2: eski oturumlardaki katalog görsel yolları otomatik güncellenir.
-- Sağlayıcı kutularının zemin rengi `data.js` içindeki `tile` alanından gelir (`dark`, `light` veya `#hex`).
+- Karakter kemikleri kodla oturma pozuna getiriliyor (modelde oturma animasyonu yok)
+- Nefes alma, fareyi kafasıyla takip etme, konuşurken kafa/kol hareketi
+- Mesaja göre hareket: el sallama, dans, gülme, kafa sallama, utanma
+- Başının üstünde konuşma balonu + tarayıcıda Türkçe ses varsa sesli okuma (🔊 ile kapatılır)
+- Kalp gönderme, takip butonu, canlı izleyici sayacı
+
+## Gerçek yapay zekâ bağlamak için
+
+`js/chat.js` içindeki `getReply()` fonksiyonunu async yapıp bir sunucuya
+(`fetch("/api/chat", ...)`) istek atacak şekilde değiştir. API anahtarını asla
+tarayıcı koduna koyma; araya küçük bir backend koy.
+
+## Pozu ayarlamak
+
+`js/main.js` → `applySittingPose()` içindeki yön vektörlerini değiştirerek
+kolların/bacakların duruşunu ince ayarlayabilirsin. Koltuk boyutu ve karakterin
+oturduğu nokta `setupScene()` içinde (`buttOffset`, `hipsTargetZ`).
